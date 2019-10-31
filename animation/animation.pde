@@ -1,17 +1,21 @@
+/*  The Nature of Code
+    Daniel Shiffman
+    http://natureofcode.com */
 
-// The Nature of Code
-// Daniel Shiffman
-// http://natureofcode.com
+/* ANIMATION SETTINGS */
+int N = 10;             // number of aircrafts
+int BS = 10;            // base stations on a row
+int t = 360;            // handover period
+float offset = 0.1;     // TODO -- what is this?
+float gridWidth = 0.8;  // TODO -- what is this?
 
-int N = 20;
-int BS = 5;
-int M = BS-1;
-int t = 10;
-float offset = 0.1;
-float gridWidth = 0.8;
-// A Aircraft object
+/* Automatically calculated parameters */
+int M = BS-1;          // intervals between base stations in a row
+
 Aircraft[] aircrafts;
 BaseStation[] bs;
+
+/* SETUP */
 void setup() {
   size(800, 800);
   aircrafts = new Aircraft[N];
@@ -26,45 +30,58 @@ void setup() {
 }
 
 void draw() {
-  background(255);
-  fill(180);
-  stroke(0);
-  strokeWeight(1);
+  /* PREPARE FIELD */
+  background(255);  // background color
+  fill(180);        // inner-grid color
+  stroke(0);        // lines
+  strokeWeight(1);  // lines tickness
+  
+  /* main field rectangle (filled) */
   rect(width*offset, height*offset, width*gridWidth, height*gridWidth );
-  for ( int i = 0; i < BS; i++ ) {
+  
+  /* grid lines */
+  for (int i = 0; i < BS; i++) {
     line(width*offset+(i*width*gridWidth/M), height*offset, width*offset+(i*width*gridWidth/M), height-height*offset);
     line(width*offset, height*offset+(i*width*gridWidth/M), width-width*offset, height*offset+(i*width*gridWidth/M));
   }
+  
+  /* draw BS at intersection of grid lines */
   for ( int i = 0; i < BS; i++ ) {
     for ( int j = 0; j < BS; j++ ) {
       bs[i*BS+j].display();
     }
   }
-  for ( int i = 0; i < N; i++ ) {
-    // Update the position
-    aircrafts[i].update();
-    // Display the Aircraft
-    aircrafts[i].display(); 
+  
+  /* Aircraft Loop */
+  for ( int i = 0; i < N; i++ ) {  /* for each AC... */
+    aircrafts[i].update();   // update AC position
+    aircrafts[i].display();  // display AC 
     pushMatrix();
     translate(aircrafts[i].position.x, aircrafts[i].position.y);
+    /* compute minimum distance between AC and BS */
     PVector min = PVector.sub(bs[0].position, aircrafts[i].position);
     for ( int k = 0; k < BS; k++ ) {
       for ( int j = 0; j < BS; j++ ) {
         if (PVector.sub(bs[k*BS+j].position, aircrafts[i].position).mag() < min.mag() ) {
           min = PVector.sub(bs[k*BS+j].position, aircrafts[i].position);
-          if ( frameCount < 2 || frameCount%(t*60) == 0 ) {
+          if ( frameCount < 2 || frameCount%t == 0 ) {
             aircrafts[i].serverBS = bs[k*BS+j].position;
           }
         }
       }
     }
+
+    /* show nearest BS connection */
     PVector anchor = PVector.sub(aircrafts[i].serverBS, aircrafts[i].position);
-    stroke(255, 0, 0);
-    strokeWeight(1);
+    stroke(0, 255, 0);
+    strokeWeight(2);
     line(0, 0, min.x, min.y);
-    stroke(0,255,0);
+    
+    /* show current BS connection */
+    stroke(255, 0, 0);
     strokeWeight(2);
     line(0, 0, anchor.x, anchor.y);
+    
     popMatrix();
   }
 }
