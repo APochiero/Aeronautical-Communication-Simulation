@@ -1,0 +1,158 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+
+% Larger borders -- we do not want do waste paper, even if it is only paper on screen =)
+\usepackage[top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+% Remove auto indentation of paragraphs.
+\setlength\parindent{0pt}
+
+% Palatino font (nicer serif font: Times is for oldies)
+\renewcommand*\rmdefault{ppl}
+
+% Nested itemize list bullet style
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelitemiii}{--}
+
+% Math packages
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+% Graphic packages
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{adjustbox}
+\usepackage{tikz}
+\usepackage{forest,array}
+\usetikzlibrary{shadows}
+
+% Graphs styles
+\forestset{
+  giombatree/.style={
+    for tree={
+      grow = east,
+      parent anchor=east,
+      child anchor=west,
+      edge={rounded corners=2mm},
+      fill=violet!5,
+      drop shadow,
+      l sep=10mm,
+      edge path={
+        \noexpand\path [draw, \forestoption{edge}] (!u.parent anchor) -- +(5mm,0) -- (.child anchor)\forestoption{edge label};
+      }
+    }
+  }
+}
+\forestset{
+  qtree/.style={
+    for tree={
+      parent anchor=south,
+      child anchor=north,
+      align=center,
+      edge={rounded corners=2mm},
+      fill=violet!5,
+      drop shadow,
+      l sep=10mm,
+    }
+  }
+}
+
+% BAN logic macros
+\newcommand{\believes}{\mid\!\equiv}
+\newcommand{\sees}{\triangleleft}
+\newcommand{\oncesaid}{\mid\!\sim}
+\newcommand{\controls}{\Rightarrow}
+\newcommand{\fresh}[1]{\#(#1)}
+\newcommand{\combine}[2]{{\langle #1 \rangle}_{#2}}
+\newcommand{\encrypt}[2]{{ \{ #1 \} }_{#2}}
+\newcommand{\sharekey}[1]{\xleftrightarrow{#1}}
+\newcommand{\pubkey}[1]{\xmapsto{#1}}
+\newcommand{\secret}[1]{\xleftrightharpoons{#1}}
+
+\newcommand{\projectname}{Aeronautical Communication System}
+
+% Hides ugly links from the index
+\usepackage[hidelinks]{hyperref}
+% Landscape format pdf pagess
+\usepackage{pdflscape}
+
+
+\begin{document}
+\pagenumbering{gobble}
+
+{\setstretch{1.0}
+  \begin{titlepage}
+  	\centering
+  	\includegraphics[width=6cm]{img/unipi.pdf}\par
+    \vspace{1.5cm}
+    {\Large Department of Information Engineering \par}
+  	\vspace{1.5cm}
+  	{\huge\textsc{\projectname{}}\par}
+    \vspace{0.5cm}
+    {\Large Performance Evaluation of Computer Systems and Networks project \par}
+  	\vspace{2cm}
+  	Pietro \textsc{Gronchi}\par
+  	Amedeo \textsc{Pochiero}\par
+    Giovan Battista \textsc{Rolandi}
+
+  	\vfill
+
+    % Bottom of the page
+  	{\large A.Y. 2019-2020\par}
+  \end{titlepage}
+}
+
+
+\clearpage
+~
+\clearpage
+\tableofcontents
+\clearpage
+~
+\clearpage
+\pagenumbering{arabic}
+
+\section{Introduction}
+\projectname{} is a simulation for TODO
+
+\section{Application}
+\subsection{Requirements}
+
+\subsection{Compile}
+To compile the application, just run:
+\begin{verbatim}
+  $ cd $REPO
+  $ make -j$(nproc)
+\end{verbatim}
+
+Application's two executables, \texttt{client} and \texttt{server}, will be found in the \texttt{bin} directory.
+For simplicity, it is suggested to run them from the repository's root directory.
+
+To compile this documentation, just run:
+\begin{verbatim}
+  $ cd $REPO/doc
+  $ make
+\end{verbatim}
+
+\subsection{Run}
+To run the application just type the following commands in your shell.
+
+\subsection{Repository}% TODO
+\projectname{}'s repository is organized in directories:
+\begin{itemize}
+  \item \texttt{bin} contains the \texttt{client} and \texttt{server} executable files;
+  \item \texttt{cert} contains all the certificates; if the application's server is run on the same host as the client, then this directory can be shared.
+  \item \texttt{conf} contains server configuration, eg. a file with authorized clients list;
+  \item \texttt{debug} contains some useful commands and configuration files for some common debugging tools like \emph{valgrind} and \emph{gdb};
+  \item \texttt{doc} contains the \LaTeX source code of this document;
+  \item \texttt{downloads} is the default location for files downloaded from the server by the client;
+  \item \texttt{obj} contains object files before their linking;
+  \item \texttt{root} is the default and only location allowed for files uploaded to the server;
+  \item \texttt{src} contains the application's source code.
+\end{itemize}
+
+\end{document}
