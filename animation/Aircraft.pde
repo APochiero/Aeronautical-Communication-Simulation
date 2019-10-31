@@ -1,9 +1,4 @@
-// The Nature of Code
-// Daniel Shiffman
-// http://natureofcode.com
-
 class Aircraft {
-
   // The Aircraft tracks position, velocity, and acceleration 
   PVector position;
   PVector velocity;
@@ -16,31 +11,28 @@ class Aircraft {
   int size; 
   float offset;
   float speed;
-
-  Aircraft( float offset) {
+  
+  Aircraft(float offset) {
     this.offset = offset;
     position = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-    serverBS = new PVector(0, 0);
-    //desiredPosition = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
-    desiredPosition = new PVector(random(0, width), random(0, height));
-    tick = floor(random(90, 120));
+    serverBS = new PVector(0,0);
+    desiredPosition = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
+    tick = floor(random(30, 120));
     c = color(random(0, 255), random(0, 255), random(0, 255));
     size = 10;
     speed = 1;
   }
 
   void update() {
+    /* when handover procedure must be performed */
+    if ( frameCount % tick == 0 ) { 
+      desiredPosition = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
+    }
 
-    //float changeCoordinate = random(0, 1);
-
-    if ( frameCount%tick== 0 ) 
-      desiredPosition = new PVector(random(0, width), random(0, height));
-
-    PVector acceleration = PVector.sub(desiredPosition, position);
-    // Set magnitude of acceleration
-    acceleration.setMag(0.03);
+    PVector acceleration = PVector.sub(desiredPosition, position);  // vector for new position direction
+    acceleration.setMag(0.03);  // use that direction, but fix magnitude
 
     // Velocity changes according to acceleration
     velocity.add(acceleration);
@@ -50,7 +42,6 @@ class Aircraft {
     // position changes by velocity
     position.add(velocity);
   }
-
 
   void display() {
     stroke(0);
