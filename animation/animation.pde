@@ -3,11 +3,11 @@
     http://natureofcode.com */
 
 /* ANIMATION SETTINGS */
-int N = 10;             // number of aircrafts
-int BS = 10;            // base stations on a row
-int t = 360;            // handover period
-float offset = 0.1;     // TODO -- what is this?
-float gridWidth = 0.8;  // TODO -- what is this?
+int N = 2;             // number of aircrafts
+int BS = 5;            // base stations on a row
+int t = 1200;            // handover period
+float offset = 0.1;     // percentage of left and right margin of the grid
+float gridWidth = 0.8;  // percentage of grid's width wrt windows width 
 
 /* Automatically calculated parameters */
 int M = BS-1;          // intervals between base stations in a row
@@ -74,7 +74,7 @@ void draw() {
     /* show nearest BS connection */
     PVector anchor = PVector.sub(aircrafts[i].serverBS, aircrafts[i].position);
     stroke(0, 255, 0);
-    strokeWeight(2);
+    strokeWeight(1);
     line(0, 0, min.x, min.y);
     
     /* show current BS connection */

@@ -22,7 +22,7 @@ class Aircraft {
     tick = floor(random(30, 120));
     c = color(random(0, 255), random(0, 255), random(0, 255));
     size = 10;
-    speed = 1;
+    speed = 0.5;
   }
 
   void update() {
@@ -32,7 +32,7 @@ class Aircraft {
     }
 
     PVector acceleration = PVector.sub(desiredPosition, position);  // vector for new position direction
-    acceleration.setMag(0.03);  // use that direction, but fix magnitude
+    acceleration.setMag(0.01);  // use that direction, but fix magnitude
 
     // Velocity changes according to acceleration
     velocity.add(acceleration);
@@ -46,8 +46,8 @@ class Aircraft {
   void display() {
     stroke(0);
     strokeWeight(1);
-    fill(127);
-    circle(desiredPosition.x, desiredPosition.y, 2 );
+    fill(0,0,255);
+    circle(desiredPosition.x, desiredPosition.y, 5 );
 
     pushMatrix();
     fill(c);
