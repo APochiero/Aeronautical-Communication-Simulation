@@ -3,11 +3,12 @@
     http://natureofcode.com */
 
 /* ANIMATION SETTINGS */
-int N = 2;             // number of aircrafts
+int N = 1;             // number of aircrafts
 int BS = 5;            // base stations on a row
 int t = 1200;            // handover period
 float offset = 0.1;     // percentage of left and right margin of the grid
 float gridWidth = 0.8;  // percentage of grid's width wrt windows width 
+float T;
 
 /* Automatically calculated parameters */
 int M = BS-1;          // intervals between base stations in a row
@@ -78,12 +79,15 @@ void draw() {
     line(0, 0, min.x, min.y);
     
     /* show current BS connection */
-    if ( frameCount%aircrafts[i].k  <= 20 ) {
-      stroke(255, 0, 0);
-      strokeWeight(2);
-      line(0, 0, anchor.x, anchor.y);
-      println(aircrafts[i].k);
-    }
+    if ( frameCount%aircrafts[i].k  == 0 ) {
+      aircrafts[i].serviceTime = 0.0005*pow(anchor.mag(),2);
+     println(aircrafts[i].serviceTime); 
+    } else if ( frameCount%aircrafts[i].k > 0 && frameCount%aircrafts[i].k  <= aircrafts[i].serviceTime ) 
+      stroke(0, 0, 255);
+    else 
+      stroke(255,0,0);
+    strokeWeight(2);
+    line(0, 0, anchor.x, anchor.y);
     popMatrix();
   }
 }

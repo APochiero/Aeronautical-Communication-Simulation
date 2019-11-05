@@ -13,19 +13,20 @@ class Aircraft {
   float speed;
   int k;
   float serviceTime;
-  
+
   Aircraft(float offset) {
     this.offset = offset;
     position = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-    serverBS = new PVector(0,0);
+    serverBS = new PVector(0, 0);
     desiredPosition = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
     tick = floor(random(30, 120));
     c = color(random(0, 255), random(0, 255), random(0, 255));
     size = 10;
     speed = 0.5;
-    k =floor(random(90,360));  }
+    k =floor(random(90, 360));
+  }
 
   void update() {
     /* when handover procedure must be performed */
@@ -48,7 +49,7 @@ class Aircraft {
   void display() {
     stroke(0);
     strokeWeight(1);
-    fill(0,0,255);
+    fill(0, 0, 255);
     circle(desiredPosition.x, desiredPosition.y, 5 );
 
     pushMatrix();
