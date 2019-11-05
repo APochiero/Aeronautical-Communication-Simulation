@@ -11,6 +11,8 @@ class Aircraft {
   int size; 
   float offset;
   float speed;
+  int k;
+  float serviceTime;
   
   Aircraft(float offset) {
     this.offset = offset;
@@ -23,7 +25,7 @@ class Aircraft {
     c = color(random(0, 255), random(0, 255), random(0, 255));
     size = 10;
     speed = 0.5;
-  }
+    k =floor(random(90,360));  }
 
   void update() {
     /* when handover procedure must be performed */

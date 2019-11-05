@@ -64,7 +64,7 @@ void draw() {
       for ( int j = 0; j < BS; j++ ) {
         if (PVector.sub(bs[k*BS+j].position, aircrafts[i].position).mag() < min.mag() ) {
           min = PVector.sub(bs[k*BS+j].position, aircrafts[i].position);
-          if ( frameCount < 2 || frameCount%t == 0 ) {
+          if ( frameCount < 10 || frameCount%t == 0 ) {
             aircrafts[i].serverBS = bs[k*BS+j].position;
           }
         }
@@ -78,10 +78,12 @@ void draw() {
     line(0, 0, min.x, min.y);
     
     /* show current BS connection */
-    stroke(255, 0, 0);
-    strokeWeight(2);
-    line(0, 0, anchor.x, anchor.y);
-    
+    if ( frameCount%aircrafts[i].k  <= 20 ) {
+      stroke(255, 0, 0);
+      strokeWeight(2);
+      line(0, 0, anchor.x, anchor.y);
+      println(aircrafts[i].k);
+    }
     popMatrix();
   }
 }
