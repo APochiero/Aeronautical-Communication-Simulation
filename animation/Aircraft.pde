@@ -25,7 +25,7 @@ class Aircraft {
     c = color(random(0, 255), random(0, 255), random(0, 255));
     size = 10;
     speed = 0.5;
-    k =floor(random(90, 360));
+    k =floor(random(60, 120));
   }
 
   void update() {
@@ -44,6 +44,14 @@ class Aircraft {
     velocity.mult(speed);
     // position changes by velocity
     position.add(velocity);
+    if ( position.x >= width-width*offset )
+        position.x = width*offset;
+    else if ( position.x <= width*offset )
+        position.x = width-width*offset;
+     else if ( position.y >= height-height*offset )
+        position.y = height*offset;
+    else if ( position.y <= height*offset )
+        position.y = height-height*offset;   
   }
 
   void display() {

@@ -1,6 +1,6 @@
 /*  The Nature of Code
-    Daniel Shiffman
-    http://natureofcode.com */
+ Daniel Shiffman
+ http://natureofcode.com */
 
 /* ANIMATION SETTINGS */
 int N = 1;             // number of aircrafts
@@ -8,7 +8,7 @@ int BS = 5;            // base stations on a row
 int t = 1200;            // handover period
 float offset = 0.1;     // percentage of left and right margin of the grid
 float gridWidth = 0.8;  // percentage of grid's width wrt windows width 
-float T;
+float T = 0.0005;       // serviceTime constant
 
 /* Automatically calculated parameters */
 int M = BS-1;          // intervals between base stations in a row
@@ -36,23 +36,23 @@ void draw() {
   fill(180);        // inner-grid color
   stroke(0);        // lines
   strokeWeight(1);  // lines tickness
-  
+
   /* main field rectangle (filled) */
   rect(width*offset, height*offset, width*gridWidth, height*gridWidth );
-  
+
   /* grid lines */
   for (int i = 0; i < BS; i++) {
     line(width*offset+(i*width*gridWidth/M), height*offset, width*offset+(i*width*gridWidth/M), height-height*offset);
     line(width*offset, height*offset+(i*width*gridWidth/M), width-width*offset, height*offset+(i*width*gridWidth/M));
   }
-  
+
   /* draw BS at intersection of grid lines */
   for ( int i = 0; i < BS; i++ ) {
     for ( int j = 0; j < BS; j++ ) {
       bs[i*BS+j].display();
     }
   }
-  
+
   /* Aircraft Loop */
   for ( int i = 0; i < N; i++ ) {  /* for each AC... */
     aircrafts[i].update();   // update AC position
@@ -77,15 +77,15 @@ void draw() {
     stroke(0, 255, 0);
     strokeWeight(1);
     line(0, 0, min.x, min.y);
-    
+
     /* show current BS connection */
     if ( frameCount%aircrafts[i].k  == 0 ) {
-      aircrafts[i].serviceTime = 0.0005*pow(anchor.mag(),2);
-     println(aircrafts[i].serviceTime); 
+      aircrafts[i].serviceTime = T*pow(anchor.mag(), 2);
+      println(aircrafts[i].serviceTime);
     } else if ( frameCount%aircrafts[i].k > 0 && frameCount%aircrafts[i].k  <= aircrafts[i].serviceTime ) 
       stroke(0, 0, 255);
     else 
-      stroke(255,0,0);
+    stroke(255, 0, 0);
     strokeWeight(2);
     line(0, 0, anchor.x, anchor.y);
     popMatrix();
