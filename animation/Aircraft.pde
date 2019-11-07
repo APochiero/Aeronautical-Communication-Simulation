@@ -13,6 +13,9 @@ class Aircraft {
   float speed;
   int k;
   float serviceTime;
+  boolean sending;
+  int sendingFrame;
+  int queued;
 
   Aircraft(float offset) {
     this.offset = offset;
@@ -25,10 +28,17 @@ class Aircraft {
     c = color(random(0, 255), random(0, 255), random(0, 255));
     size = 10;
     speed = 0.5;
-    k =floor(random(60, 120));
+    k = 20;//floor(random(20, 30));
+    sending = false;
+    queued = 0;
+    sendingFrame = 0;
   }
 
   void update() {
+    //println(queued);
+    if ( frameCount % k == 0 ) { 
+      queued++;
+    }
     /* when handover procedure must be performed */
     if ( frameCount % tick == 0 ) { 
       desiredPosition = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
@@ -45,13 +55,13 @@ class Aircraft {
     // position changes by velocity
     position.add(velocity);
     if ( position.x >= width-width*offset )
-        position.x = width*offset;
+      position.x = width*offset;
     else if ( position.x <= width*offset )
-        position.x = width-width*offset;
-     else if ( position.y >= height-height*offset )
-        position.y = height*offset;
+      position.x = width-width*offset;
+    else if ( position.y >= height-height*offset )
+      position.y = height*offset;
     else if ( position.y <= height*offset )
-        position.y = height-height*offset;   
+      position.y = height-height*offset;
   }
 
   void display() {
