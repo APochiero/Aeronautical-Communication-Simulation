@@ -4,32 +4,33 @@ class Aircraft {
   PVector velocity;
   PVector acceleration;
   PVector desiredPosition;
-  PVector serverBS;
+  BaseStation serverBS;
   int tick;
   PImage img;
   color c;
   int size; 
-  float offset;
   float speed;
   int k;
   float serviceTime;
   boolean sending;
-  int sendingFrame;
+  boolean waiting;
+  int sendingFrame; //<>//
+  int waitingFrame;
   int queued;
 
-  Aircraft(float offset) {
-    this.offset = offset;
-    position = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
+  Aircraft() {    
+    position = new PVector(random(leftBorder, rightBorder), random(upperBorder, bottomBorder));
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-    serverBS = new PVector(0, 0);
-    desiredPosition = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
+    serverBS = new BaseStation(-1,-1);
+    desiredPosition = new PVector(random(outerLeftBorder, outerRightBorder), random(outerUpperBorder, outerBottomBorder));
     tick = floor(random(30, 120));
     c = color(random(0, 255), random(0, 255), random(0, 255));
     size = 10;
     speed = 0.5;
     k = 20;//floor(random(20, 30));
     sending = false;
+    waiting = false;
     queued = 0;
     sendingFrame = 0;
   }
@@ -39,9 +40,10 @@ class Aircraft {
     if ( frameCount % k == 0 ) { 
       queued++;
     }
-    /* when handover procedure must be performed */
+     
+    /* change desired position every tick frames */
     if ( frameCount % tick == 0 ) { 
-      desiredPosition = new PVector(random(width*offset, width-width*offset), random(height*offset, height-height*offset));
+      desiredPosition = new PVector(random(outerLeftBorder, outerRightBorder), random(outerUpperBorder, outerBottomBorder));
     }
 
     PVector acceleration = PVector.sub(desiredPosition, position);  // vector for new position direction
@@ -54,14 +56,15 @@ class Aircraft {
     velocity.mult(speed);
     // position changes by velocity
     position.add(velocity);
-    if ( position.x >= width-width*offset )
-      position.x = width*offset;
-    else if ( position.x <= width*offset )
-      position.x = width-width*offset;
-    else if ( position.y >= height-height*offset )
-      position.y = height*offset;
-    else if ( position.y <= height*offset )
-      position.y = height-height*offset;
+    if ( position.x >= rightBorder )
+      position.x = leftBorder;
+    else if ( position.x <= leftBorder )
+      position.x = rightBorder;
+    else if ( position.y >= bottomBorder )
+      position.y = upperBorder;
+    else if ( position.y <= upperBorder )
+      position.y = bottomBorder;
+
   }
 
   void display() {
@@ -71,11 +74,11 @@ class Aircraft {
     circle(desiredPosition.x, desiredPosition.y, 5 );
 
     pushMatrix();
-    fill(c);
-    translate(position.x, position.y);
-    line(0, 0, velocity.x*velocity.mag()*20, velocity.y*velocity.mag()*20);
-    rotate(velocity.heading());
-    triangle(-size*2, -size/2, 0, 0, -size*2, size/2);
+      fill(c);
+      translate(position.x, position.y);
+      line(0, 0, velocity.x*velocity.mag()*20, velocity.y*velocity.mag()*20);
+      rotate(velocity.heading());
+      triangle(-size*2, -size/2, 0, 0, -size*2, size/2);
     popMatrix();
   }
 }

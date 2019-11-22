@@ -1,0 +1,27 @@
+version 2
+run General-0-20191121-16:07:30-20304
+attr configname General
+attr datetime 20191121-16:07:30
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars $0=1.5
+attr iterationvarsf 1.5-
+attr measurement $0=1.5
+attr network Bar
+attr processid 20304
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.waitress.sendInitialMessage true
+param **.kitchen.T 1.5
+param **.kitchen.policy 1
+
+scalar Bar.kitchen.chef1 countMsg:sum 16775
+attr "" ""
+attr source arrival
+scalar Bar.kitchen.chef2 countMsg:sum 16747
+attr "" ""
+attr source arrival
+
