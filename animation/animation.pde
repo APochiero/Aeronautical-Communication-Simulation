@@ -2,18 +2,23 @@
 import garciadelcastillo.dashedlines.*;
 
 /* ANIMATION SETTINGS */
-int N = 1;             // number of aircrafts
-int BS = 2;            // base stations on a row
-int t = 60;            // handover period
+int N = 100;             // number of aircrafts
+int BS = 3;            // base stations on a row
+int t = 360;            // handover period
 float offset = 0.1;    // percentage of left and right margin of the grid
 float gridWidth = 0.8; // percentage of grid's width wrt windows width 
+
 float T = 0.001;       // serviceTime constant
-float p = 180;          // penalty time
+
+// time is expressed in frame ( 1s = 60 frames ) 
+float p = 60;          // penalty time
+float lambda = 40;     // interrarrival time
+
 int maxQueued = 0;
 DashedLines dash;
 
 /* Automatically calculated parameters */
-int M = BS*BS-1;          // intervals between base stations in a row
+int M = BS+1;          // intervals between base stations in a row
 float leftBorder;
 float rightBorder; 
 float upperBorder;
@@ -90,56 +95,69 @@ void draw() {
     pushMatrix();
     translate(aircrafts[i].position.x, aircrafts[i].position.y);
     /* compute minimum distance between AC and BS */
-    PVector min = PVector.sub(bs[0].position, aircrafts[i].position);
     for ( int k = 0; k < BS; k++ ) {
       for ( int j = 0; j < BS; j++ ) {
-        if (PVector.sub(bs[k*BS+j].position, aircrafts[i].position).mag() < min.mag() ) {
-          min = PVector.sub(bs[k*BS+j].position, aircrafts[i].position);
-          if ( frameCount < 10 || frameCount%t == 0 ) {
-            if ( aircrafts[i].serverBS.id != bs[k*BS+j].id ) {
-              aircrafts[i].serverBS = bs[k*BS+j];
-              aircrafts[i].waiting = true;
-              aircrafts[i].waitingFrame = frameCount;
-              println("Handover");
-            }
-          }
+        if ( PVector.sub(bs[k*BS+j].position, aircrafts[i].position).mag() < PVector.sub( aircrafts[i].nearestBS.position, aircrafts[i].position).mag()) {
+          //println("Change nearestBS to " + bs[k*BS+j].id );
+          aircrafts[i].nearestBS = bs[k*BS+j];
         }
       }
     }
 
+    if ( frameCount == 1 ) {
+      // At the first frame connect to the nearest BS
+      aircrafts[i].serverBS = aircrafts[i].nearestBS;
+    }
+
+    // Check handover
+    if ( frameCount%t == 0 ) {
+      if ( aircrafts[i].serverBS.id != aircrafts[i].nearestBS.id ) {
+        aircrafts[i].serverBS = aircrafts[i].nearestBS;
+        aircrafts[i].waiting = true;
+        aircrafts[i].waitingFrame = frameCount;
+        //println("Handover, connecting to " +  aircrafts[i].nearestBS.id );
+      } else { 
+        //println("Trying to connect to the same BS " + aircrafts[i].serverBS.id  );
+      }
+    }
+
     /* show nearest BS connection */
-    PVector anchor = PVector.sub(aircrafts[i].serverBS.position, aircrafts[i].position);
     stroke(0, 255, 0);
     strokeWeight(1);
-    line(0, 0, min.x, min.y);
+    PVector nearestBSVector = PVector.sub( aircrafts[i].nearestBS.position, aircrafts[i].position);
+    //line(0, 0, nearestBSVector.x, nearestBSVector.y);
 
     /* show current BS connection */
+    PVector anchor = PVector.sub(aircrafts[i].serverBS.position, aircrafts[i].position);
 
-    // show blue connection when sending packet
-    if ( aircrafts[i].queued > 0 && !aircrafts[i].sending ) {
-      if ( aircrafts[i].queued > maxQueued ) {
-        maxQueued = aircrafts[i].queued;
-      }
-      aircrafts[i].serviceTime = T*pow(anchor.mag(), 2);
-      aircrafts[i].sendingFrame = frameCount-1;
-      aircrafts[i].queued--;
-      aircrafts[i].sending = true;
-    }
 
     if ( aircrafts[i].waiting && frameCount%aircrafts[i].waitingFrame <= p ) {
+      // Waiting
       stroke(255, 255, 0);
+      //println("Waiting for " +  ( aircrafts[i].waitingFrame + p - frameCount ) );
     } else {
+      // Not waiting => aircraft can send
       aircrafts[i].waiting = false;
+
+      // check for packet to send
+      if ( aircrafts[i].queued > 0 && !aircrafts[i].sending ) {
+        if ( aircrafts[i].queued > maxQueued ) {
+          maxQueued = aircrafts[i].queued;
+          println(maxQueued);
+        }
+        aircrafts[i].serviceTime = floor(T*pow(anchor.mag(), 2));
+        aircrafts[i].sendingFrame = frameCount;
+        aircrafts[i].queued--;
+        aircrafts[i].sending = true;
+      }
       stroke(255, 0, 0);
+      if ( aircrafts[i].sending && frameCount%aircrafts[i].sendingFrame <= aircrafts[i].serviceTime ) {
+        stroke(0, 0, 255);
+      } else {
+        aircrafts[i].sending = false;
+      }
     }
 
-    // keep connection blue for serviceTime seconds otherwise red and update serving state
-    if ( aircrafts[i].sending && frameCount%aircrafts[i].sendingFrame <= aircrafts[i].serviceTime ) {
-      stroke(0, 0, 255);
-    } else {
-      aircrafts[i].sending = false;
-      stroke(255, 0, 0);
-    }
     strokeWeight(2);
     line(0, 0, anchor.x, anchor.y);
     popMatrix();
