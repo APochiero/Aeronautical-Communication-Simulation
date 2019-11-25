@@ -17,13 +17,14 @@ class Aircraft { //<>//
   int sendingFrame;
   int waitingFrame;
   int queued;
+  int nextArrival;
 
   Aircraft() {    
     position = new PVector(random(leftBorder, rightBorder), random(upperBorder, bottomBorder));
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
     serverBS = new BaseStation(-1, -1);
-    nearestBS = new BaseStation(0,0);
+    nearestBS = new BaseStation(0, 0);
     desiredPosition = new PVector(random(outerLeftBorder, outerRightBorder), random(outerUpperBorder, outerBottomBorder));
     tick = floor(random(30, 120));
     c = color(random(0, 255), random(0, 255), random(0, 255));
@@ -33,12 +34,14 @@ class Aircraft { //<>//
     waiting = false;
     queued = 0;
     sendingFrame = 0;
+    nextArrival = floor((float)exp.sample()) + 10;
   }
 
   void update() {
     //println(queued);
-    if ( frameCount % lambda == 0 ) { 
+    if ( frameCount % nextArrival == 0 ) { 
       queued++;
+      nextArrival = floor((float)exp.sample()) + 10;
     }
 
     /* change desired position every tick frames */

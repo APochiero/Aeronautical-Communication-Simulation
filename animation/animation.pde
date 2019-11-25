@@ -1,5 +1,6 @@
 //<>// //<>//
 import garciadelcastillo.dashedlines.*;
+import org.apache.commons.math3.distribution.*;
 
 /* ANIMATION SETTINGS */
 int N = 100;             // number of aircrafts
@@ -12,7 +13,8 @@ float T = 0.001;       // serviceTime constant
 
 // time is expressed in frame ( 1s = 60 frames ) 
 float p = 60;          // penalty time
-float lambda = 40;     // interrarrival time
+float lambda = 40;     // mean interrarrival time
+ExponentialDistribution exp = new ExponentialDistribution(lambda);
 
 int maxQueued = 0;
 DashedLines dash;
