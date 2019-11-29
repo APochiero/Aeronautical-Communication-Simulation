@@ -15,14 +15,15 @@ total = fifo.merge(lifo, on='time', how='outer').merge(gi, on='time', how='outer
 total.columns = ['time' , 'serviceTimeFifo', 'serviceTimeLifo', 'serviceTimeGreaterIndexFirst', 'serviceTimeLessIndexFirst']
 print(total.describe())
 
-# plt.plot(total['time'][:tail], total['serviceTimeGreaterIndexFirst'][:tail] ,color="r",marker="^", linewidth=0.5, markersize=3)
-# plt.plot(total['time'][:tail], total['serviceTimeLessIndexFirst'][:tail] ,color="g",marker="s", linewidth=0.5, markersize=3)
-# plt.plot(total['time'][:tail], total['serviceTimeLifo'][:tail] ,color="y",marker="x", linewidth=0.5, markersize=3)
-# plt.plot(total['time'][:tail], total['serviceTimeFifo'][:tail] ,color="b",marker="o", linewidth=0.5, markersize=3)
+plt.plot(total['time'][:tail], total['serviceTimeGreaterIndexFirst'][:tail] ,color="r",marker="^", linewidth=0.5, markersize=3)
+plt.plot(total['time'][:tail], total['serviceTimeLessIndexFirst'][:tail] ,color="g",marker="s", linewidth=0.5, markersize=3)
+plt.plot(total['time'][:tail], total['serviceTimeLifo'][:tail] ,color="y",marker="x", linewidth=0.5, markersize=3)
+plt.plot(total['time'][:tail], total['serviceTimeFifo'][:tail] ,color="b",marker="o", linewidth=0.5, markersize=3)
 
-# plt.ylabel('Time')
-# plt.legend(loc='upper right')
-# plt.grid(True)
+plt.ylabel('Time')
+plt.legend(loc='upper right')
+plt.grid(True)
+plt.show()
 
 labels = ['mean', 'std', 'min', '25%', '50%', '75%', 'max']
 fifoStats = total.describe()['serviceTimeFifo'][1:]

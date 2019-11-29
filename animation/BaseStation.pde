@@ -20,8 +20,12 @@ class BaseStation {
     fill(250, 22, 95);
     text(id, position.x, position.y- 20 );
 
+    fill(127, 127, 127, 63 );
+    strokeWeight(1);
+    dash.rect(position.x-width*0.8/(2*M), position.y-width*0.8/(2*M), width*0.8/M-2, width*0.8/M-2);
     fill(255, 255, 0);
-    circle(position.x,position.y, 10);
+    circle(position.x, position.y, 10);
+
     popMatrix();
   }
 }

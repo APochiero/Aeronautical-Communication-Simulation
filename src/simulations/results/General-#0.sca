@@ -1,0 +1,89 @@
+version 2
+run General-0-20191129-15:37:57-9788
+attr configname General
+attr datetime 20191129-15:37:57
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network AeronauticalCommunicationNetwork
+attr processid 9788
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param **.nAircratfs 2
+param **.nBS 16
+param **.constraintAreaMinX 0m
+param **.constraintAreaMaxX 100000m
+param **.constraintAreaMinY 0m
+param **.constraintAreaMaxY 100000m
+param **.constraintAreaMinZ 0m
+param **.constraintAreaMaxZ 0m
+param **.aircraft[*].mobility.typename "\"TurtleMobility\""
+param **.aircraft[*].mobility.turtleScript "xmldoc(\"movimentDescription.xml\")"
+param **.*bs[*].mobility.typename "\"StaticGridMobility\""
+param **.*bs[*].mobility.numHosts 16
+param **.controlTower.mobility.initFromDisplayString false
+param **.controlTower.mobility.typename "\"StationaryMobility\""
+param **.controlTower.mobility.initialX 50000m
+param **.controlTower.mobility.initialY 50000m
+param **.controlTower.mobility.initialZ 0m
+param **.visualizer.*.mobilityVisualizer.animationSpeed 1
+param **.visualizer.*.mobilityVisualizer.displayMobility true
+param **.visualizer.*.mobilityVisualizer.displayPositions true
+param **.visualizer.*.mobilityVisualizer.displayOrientations false
+param **.visualizer.*.mobilityVisualizer.displayVelocities true
+param **.visualizer.*.mobilityVisualizer.displayMovementTrails false
+
+scalar AeronauticalCommunicationNetwork.bs[0].mobility x 12500
+scalar AeronauticalCommunicationNetwork.bs[0].mobility y 12500
+scalar AeronauticalCommunicationNetwork.bs[0].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[1].mobility x 37500
+scalar AeronauticalCommunicationNetwork.bs[1].mobility y 12500
+scalar AeronauticalCommunicationNetwork.bs[1].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[2].mobility x 62500
+scalar AeronauticalCommunicationNetwork.bs[2].mobility y 12500
+scalar AeronauticalCommunicationNetwork.bs[2].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[3].mobility x 87500
+scalar AeronauticalCommunicationNetwork.bs[3].mobility y 12500
+scalar AeronauticalCommunicationNetwork.bs[3].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[4].mobility x 12500
+scalar AeronauticalCommunicationNetwork.bs[4].mobility y 37500
+scalar AeronauticalCommunicationNetwork.bs[4].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[5].mobility x 37500
+scalar AeronauticalCommunicationNetwork.bs[5].mobility y 37500
+scalar AeronauticalCommunicationNetwork.bs[5].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[6].mobility x 62500
+scalar AeronauticalCommunicationNetwork.bs[6].mobility y 37500
+scalar AeronauticalCommunicationNetwork.bs[6].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[7].mobility x 87500
+scalar AeronauticalCommunicationNetwork.bs[7].mobility y 37500
+scalar AeronauticalCommunicationNetwork.bs[7].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[8].mobility x 12500
+scalar AeronauticalCommunicationNetwork.bs[8].mobility y 62500
+scalar AeronauticalCommunicationNetwork.bs[8].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[9].mobility x 37500
+scalar AeronauticalCommunicationNetwork.bs[9].mobility y 62500
+scalar AeronauticalCommunicationNetwork.bs[9].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[10].mobility x 62500
+scalar AeronauticalCommunicationNetwork.bs[10].mobility y 62500
+scalar AeronauticalCommunicationNetwork.bs[10].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[11].mobility x 87500
+scalar AeronauticalCommunicationNetwork.bs[11].mobility y 62500
+scalar AeronauticalCommunicationNetwork.bs[11].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[12].mobility x 12500
+scalar AeronauticalCommunicationNetwork.bs[12].mobility y 87500
+scalar AeronauticalCommunicationNetwork.bs[12].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[13].mobility x 37500
+scalar AeronauticalCommunicationNetwork.bs[13].mobility y 87500
+scalar AeronauticalCommunicationNetwork.bs[13].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[14].mobility x 62500
+scalar AeronauticalCommunicationNetwork.bs[14].mobility y 87500
+scalar AeronauticalCommunicationNetwork.bs[14].mobility z 0
+scalar AeronauticalCommunicationNetwork.bs[15].mobility x 87500
+scalar AeronauticalCommunicationNetwork.bs[15].mobility y 87500
+scalar AeronauticalCommunicationNetwork.bs[15].mobility z 0
+

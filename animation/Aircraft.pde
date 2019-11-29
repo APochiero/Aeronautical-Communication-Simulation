@@ -26,10 +26,10 @@ class Aircraft { //<>//
     serverBS = new BaseStation(-1, -1);
     nearestBS = new BaseStation(0, 0);
     desiredPosition = new PVector(random(outerLeftBorder, outerRightBorder), random(outerUpperBorder, outerBottomBorder));
-    tick = floor(random(30, 120));
+    tick = 600;//floor(random(30, 120));
     c = color(random(0, 255), random(0, 255), random(0, 255));
     size = 10;
-    speed = 0.5;
+    speed = 0.2;
     sending = false;
     waiting = false;
     queued = 0;
@@ -38,7 +38,6 @@ class Aircraft { //<>//
   }
 
   void update() {
-    //println(queued);
     if ( frameCount % nextArrival == 0 ) { 
       queued++;
       nextArrival = floor((float)exp.sample()) + 10;
@@ -50,7 +49,7 @@ class Aircraft { //<>//
     }
 
     PVector acceleration = PVector.sub(desiredPosition, position);  // vector for new position direction
-    acceleration.setMag(0.01);  // use that direction, but fix magnitude
+    acceleration.setMag(0.001);  // use that direction, but fix magnitude
 
     // Velocity changes according to acceleration
     velocity.add(acceleration);

@@ -3,9 +3,9 @@ import garciadelcastillo.dashedlines.*;
 import org.apache.commons.math3.distribution.*;
 
 /* ANIMATION SETTINGS */
-int N = 100;             // number of aircrafts
-int BS = 3;            // base stations on a row
-int t = 360;            // handover period
+int N = 1;             // number of aircrafts
+int BS = 4;            // base stations on a row
+int t = 120;            // handover period
 float offset = 0.1;    // percentage of left and right margin of the grid
 float gridWidth = 0.8; // percentage of grid's width wrt windows width 
 
@@ -13,7 +13,7 @@ float T = 0.001;       // serviceTime constant
 
 // time is expressed in frame ( 1s = 60 frames ) 
 float p = 60;          // penalty time
-float lambda = 40;     // mean interrarrival time
+float lambda = 20;     // mean interrarrival time
 ExponentialDistribution exp = new ExponentialDistribution(lambda);
 
 int maxQueued = 0;
@@ -38,7 +38,7 @@ BaseStation[] bs;
 void setup() {
   size(800, 800);
   leftBorder = width*offset+width*gridWidth/(2*M);
-  rightBorder = width*gridWidth-width*gridWidth/(2*M);
+  rightBorder = width-width*offset-width*gridWidth/(2*M);
   upperBorder = height*offset+height*gridWidth/(2*M);
   bottomBorder =  height-height*offset-height*gridWidth/(2*M);
 
@@ -67,15 +67,15 @@ void draw() {
   /* PREPARE FIELD */
   background(255);  // background color
   stroke(0);        // lines
-  strokeWeight(1);  // lines tickness
+  strokeWeight(0.5);  // lines tickness
 
   /* main field rectangle (filled) */
   fill(200);        // inner-grid color
-  float x = width*offset+(width*gridWidth/(2*M));
-  float y = height*offset+(height*gridWidth/(2*M));
-  float w = width*gridWidth-width*gridWidth/M;
-  float h = height*gridWidth-height*gridWidth/M;
-  dash.rect(x, y, w, h);
+  //float x = width*offset+(width*gridWidth/(2*M));
+  //float y = height*offset+(height*gridWidth/(2*M));
+  //float w = width*gridWidth-width*gridWidth/M;
+  //float h = height*gridWidth-height*gridWidth/M;
+  //dash.rect(x, y, w, h);
 
   /* grid lines */
   for (int i = 0; i < BS*BS; i++) {
