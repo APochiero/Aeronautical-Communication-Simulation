@@ -20,6 +20,8 @@ module Aircraft
 {
     parameters:
         // TODO
+	   	@display("i=device/cellphone_s");
+	
     submodules:
         transmitter: Transmitter;
         mobility: <> like IMobility;

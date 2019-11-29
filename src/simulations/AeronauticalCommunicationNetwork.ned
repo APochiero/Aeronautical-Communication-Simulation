@@ -31,9 +31,12 @@ network AeronauticalCommunicationNetwork
         @display("bgb=100000,100000,white;");
     submodules:
         aircraft[nAircratfs]: Aircraft;
-        bs[nBS]: Station;
-        controlTower: Station; // utile per collezionare statistiche sull'intero sistema
-        
+        bs[nBS]: Station {
+	    	@display("i=device/accesspoint_s");           
+        };
+        controlTower: Station { // utile per collezionare statistiche sull'intero sistema
+	    	@display("i=device/antennatower");   
+        };         
         visualizer: IntegratedVisualizer {
             parameters:
                 @display("p=100,50");
