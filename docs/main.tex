@@ -9,7 +9,7 @@
 \setlength\parindent{0pt}
 
 % Palatino font (nicer serif font: Times is for oldies)
-\renewcommand*\rmdefault{ppl}
+%\renewcommand*\rmdefault{ppl}
 
 % Nested itemize list bullet style
 \renewcommand{\labelitemi}{$\bullet$}
@@ -74,6 +74,7 @@
 \newcommand{\secret}[1]{\xleftrightharpoons{#1}}
 
 \newcommand{\projectname}{Aeronautical Communication System}
+\newcommand{\projectnameabbr}{ACS}
 
 % Hides ugly links from the index
 \usepackage[hidelinks]{hyperref}
@@ -118,6 +119,43 @@
 
 \section{Introduction}
 \projectname{} is a simulation for TODO
+
+BS are deployed over a grid, at a distance M from neighbors.
+
+T: value of T is the same for every AC in the system.
+
+\section{Parameters}
+\begin{itemize}
+  \item \textbf{k}: interarrival time of packets, RV
+  \item \textbf{M}: 25 km
+  \item \textbf{d}: distance between AC and BS
+  \item \textbf{T}:
+  \item \textbf{s}: service time, given by $s = T*d^2$
+\end{itemize}
+
+\section{Model}
+% TODO high level model
+
+Service time depends on distance between AC and BS.
+Distance between AC and BS, namely \emph{d}, belongs to interval $[ 0, d_{max} [$ where $d_{max}$ can be computed as $d_{max\_in} + d_{max\_out}$, where:
+\begin{itemize}
+  \item $d_{max\_in} = \frac{M \sqrt{2}}{2} $
+  \item $d_{max\_out} = vt$
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics{img/dmax.pdf}
+  \caption{Computation of $d_{max}$}
+  \label{fig:dmax}
+\end{figure}
+
+What is the worst case? Referring to Figure~\ref{fig:dmax}, let's assume that an AC is moving in direction $BS_g \rightarrow B$, and that, at a given time $t_g$, $\overrightarrow{AC} \in cell$ and $\overrightarrow{AC} - \overrightarrow{A} < \epsilon$ with $\epsilon$ small as you wish, eg. AC is at point A but still inside the cell where the nearest BS is $BS_g$; and let's assume that, at this time, AC initiates the handover procedure and discovers that the nearest BS is $BS_g$. Immediately after this handover procedure, performed without any penalty time, AC is out of the cell and will not initiate the handover procedure before $t$ time: this means that, when it is in point B, it has traveled for, at least, $d_{max_out} = v t$, since the last handover procedure, and that the longest distance $d$ between AC and BS $d_{max}$ is given by:
+
+$$ d_{max} = \frac{M \sqrt{2}}{2} + vt $$
+
+
+\subsection{Movement of AC}
 
 \section{Application}
 \subsection{Requirements}
