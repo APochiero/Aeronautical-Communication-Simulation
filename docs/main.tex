@@ -118,19 +118,42 @@
 \pagenumbering{arabic}
 
 \section{Introduction}
-\projectname{} is a simulation for TODO
+\projectname{} is a cummunication system between aircrafts (AC) and a control tower (CT).
+Connection between AC and CT is provided by ground base stations (BS), which are deployed over a grid, at a distance M from neighbors.
 
-BS are deployed over a grid, at a distance M from neighbors.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=6cm]{img/grid.pdf}
+  \caption{System topology}
+  \label{fig:grid}
+\end{figure}
 
-T: value of T is the same for every AC in the system.
+Deployment grid has a square topology, eg. number of rows is equal to number of columns.
+In Figure~\ref{fig:grid}, deployment grid is drawn with dotted blue lines, while solid black lines delimit the area, called \emph{cell}, where an AC is closer to the inner base station.
+$M_T$ is a shortcut to indicate $M_T \cdot n_{l}$, where $n_{l}$ is the number of BSs that lay on a row (or a column).
 
-\section{Parameters}
+Each AC selects only one BS at a time as its serving BS, and can transmit only one packet at a time.
+Possibly, packets are backlogged in a queue on the AC.
+
+ACs execute the handover procedure every $t$ seconds, accordingly with the following algorithm:
+\begin{verbatim}
+if (serving BS is the closest one) then
+  do nothing
+else
+  select closest BS as serving BS
+  pause transmissions for penalty time (p)
+endif
+\end{verbatim}
+
+\subsection{Constant and variables summary}
 \begin{itemize}
-  \item \textbf{k}: interarrival time of packets, RV
-  \item \textbf{M}: 25 km
-  \item \textbf{d}: distance between AC and BS
-  \item \textbf{T}:
-  \item \textbf{s}: service time, given by $s = T*d^2$
+  \item \textbf{k}: it represents the interarrival time of packets;
+  \item \textbf{M}: it represents the distance between two consecutive BS on the same row, or column, and it is fixed at 25 km;
+  \item \textbf{d}: it represents the distance between AC and BS;
+  \item \textbf{s}: it represents the service time of a packet, and is given by $s = T \cdot d^{2}$;
+  \item \textbf{T}: it is a tuning parameter for service time, whose value is costant for every AC in the system;
+  \item \textbf{t}: it represents the handover period;
+  \item \textbf{p}: it represents the handover penalty;
 \end{itemize}
 
 \section{Model}
@@ -150,12 +173,17 @@ Distance between AC and BS, namely \emph{d}, belongs to interval $[ 0, d_{max} [
   \label{fig:dmax}
 \end{figure}
 
-What is the worst case? Referring to Figure~\ref{fig:dmax}, let's assume that an AC is moving in direction $BS_g \rightarrow B$, and that, at a given time $t_g$, $\overrightarrow{AC} \in cell$ and $\overrightarrow{AC} - \overrightarrow{A} < \epsilon$ with $\epsilon$ small as you wish, eg. AC is at point A but still inside the cell where the nearest BS is $BS_g$; and let's assume that, at this time, AC initiates the handover procedure and discovers that the nearest BS is $BS_g$. Immediately after this handover procedure, performed without any penalty time, AC is out of the cell and will not initiate the handover procedure before $t$ time: this means that, when it is in point B, it has traveled for, at least, $d_{max_out} = v t$, since the last handover procedure, and that the longest distance $d$ between AC and BS $d_{max}$ is given by:
+What is the worst case? Referring to Figure~\ref{fig:dmax}, let's assume that an AC is moving in direction $BS_g \rightarrow B$, and that, at a given time $t_g$, $\overrightarrow{AC} \in cell$ and $\overrightarrow{AC} - \overrightarrow{A} < \epsilon$ with $\epsilon$ small as you wish, eg. AC is at point A but still inside the cell where the nearest BS is $BS_g$; and let's assume that, at this time, AC initiates the handover procedure and discovers that the nearest BS is $BS_g$. Immediately after this handover procedure, performed without any penalty time, AC is out of the cell and will not initiate the handover procedure before $t$ time: this means that, when it is in point B, it has traveled for, $d_{max_out} = v t$, since the last handover procedure, and that the longest distance $d_{max}$ between AC and BS is given by:
 
 $$ d_{max} = \frac{M \sqrt{2}}{2} + vt $$
 
-
 \subsection{Movement of AC}
+Movement of AC is given by the following algorithm, implemented using the \texttt{TurtleMobility} module from INET:
+\begin{itemize}
+  \item generate a vector $\vec{s}$ such that $|\vec{s}| \in \mathcal{U}(0, M_{T}\sqrt{2})$ and $\angle{s} \in \mathcal{U}(0, 2\pi)$; upper bound of $\vec{s}$ is maximum possibile distance before AC surely wraps around;
+  \item given that AC is in position $\vec{a}$, move to position $\vec{a} + \vec{s}$, at constant $v$ speed, possibly wrapping around at the edges of the simulated topology;
+  \item once reached new position, re-do from the beginning;
+\end{itemize}
 
 \section{Application}
 \subsection{Requirements}
