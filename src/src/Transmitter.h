@@ -17,6 +17,7 @@
 #define __AERONAUTICALCOMMUNICATIONSIMULATOR_TRANSMITTER_H_
 
 #include <omnetpp.h>
+#include "inet/mobility/contract/IMobility.h"
 
 using namespace omnetpp;
 
@@ -28,8 +29,14 @@ namespace aeronauticalcommunicationsimulator {
 class Transmitter : public cSimpleModule
 {
   protected:
-    virtual void initialize();
+    virtual void initialize(int stage);
+    virtual int numInitStages() const { return 11; }
     virtual void handleMessage(cMessage *msg);
+  private:
+    int connectedBS;
+    inet::IMobility* mobility;
+
+    int getClosestBS();
 };
 
 } //namespace

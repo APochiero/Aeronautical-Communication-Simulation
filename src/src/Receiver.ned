@@ -19,6 +19,8 @@ simple Receiver
 {
     parameters:
         // TODO
+        int nAircrafts;
     gates:
-        // TODO
+        input in[nAircrafts];
+        output out;
 }

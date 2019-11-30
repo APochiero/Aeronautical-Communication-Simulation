@@ -21,10 +21,14 @@ module Aircraft
     parameters:
         // TODO
 	   	@display("i=device/cellphone_s");
-	
+	   	int nBS;
+	gates:
+	    output out[nBS];
     submodules:
-        transmitter: Transmitter;
         mobility: <> like IMobility;
+        transmitter: Transmitter;
     connections:
-         // TODO 
+    	for i=0..nBS-1 {
+    		transmitter.out[i] --> out[i];
+    	}
 }

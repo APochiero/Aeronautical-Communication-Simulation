@@ -2,7 +2,7 @@
 # OMNeT++/OMNEST Makefile for AeronauticalCommunicationSimulator
 #
 # This file was generated with the command:
-#  opp_makemake -f --deep -KINET4_PROJ=C:/omnetpp-5.5.1/samples/inet4 -DINET_IMPORT -L$$\(INET4_PROJ\)/src -lINET$$\(D\)
+#  opp_makemake -f --deep -KINET4_PROJ=C:/omnetpp-5.5.1/samples/inet4 -DINET_IMPORT -L$$\(INET4_PROJ\)/src/inet -L$$\(INET4_PROJ\)/src -lINET$$\(D\)
 #
 
 # Name of target to be created (-o option)
@@ -22,7 +22,7 @@ INCLUDE_PATH =
 EXTRA_OBJS =
 
 # Additional libraries (-L, -l options)
-LIBS = $(LDFLAG_LIBPATH)$(INET4_PROJ)/src  -lINET$(D)
+LIBS = $(LDFLAG_LIBPATH)$(INET4_PROJ)/src/inet $(LDFLAG_LIBPATH)$(INET4_PROJ)/src  -lINET$(D)
 
 # Output directory
 PROJECT_OUTPUT_DIR = ../out
@@ -30,7 +30,7 @@ PROJECTRELATIVE_PATH = src
 O = $(PROJECT_OUTPUT_DIR)/$(CONFIGNAME)/$(PROJECTRELATIVE_PATH)
 
 # Object files for local .cc, .msg and .sm files
-OBJS = $O/Receiver.o $O/Transmitter.o $O/MessageACS_m.o
+OBJS = $O/ControlTower.o $O/Receiver.o $O/Transmitter.o $O/MessageACS_m.o
 
 # Message files
 MSGFILES = \
@@ -65,7 +65,7 @@ include $(CONFIGFILE)
 # Simulation kernel and user interface libraries
 OMNETPP_LIBS = $(OPPMAIN_LIB) $(USERIF_LIBS) $(KERNEL_LIBS) $(SYS_LIBS)
 ifneq ($(TOOLCHAIN_NAME),clangc2)
-LIBS += -Wl,-rpath,$(abspath $(INET4_PROJ)/src)
+LIBS += -Wl,-rpath,$(abspath $(INET4_PROJ)/src/inet) -Wl,-rpath,$(abspath $(INET4_PROJ)/src)
 endif
 
 COPTS = $(CFLAGS) $(IMPORT_DEFINES) -DINET_IMPORT $(INCLUDE_PATH) -I$(OMNETPP_INCL_DIR)
@@ -83,6 +83,9 @@ endif
 #------------------------------------------------------------------------------
 # User-supplied makefile fragment(s)
 # >>>
+# inserted from file 'makefrag':
+CFLAGS += -IC:\omnetpp-5.5.1\samples\inet4\src
+
 # <<<
 #------------------------------------------------------------------------------
 

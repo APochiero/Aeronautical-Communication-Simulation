@@ -20,10 +20,16 @@ module Station
 {
     parameters:
         // TODO
-    	 	
+        int nAircrafts;
+    gates:
+    	input in[nAircrafts];
+    	output out; 	    
     submodules:
-        receiver: Receiver;
         mobility: <> like IMobility;
+        receiver: Receiver;        
     connections:
-         // TODO 
+		for i=0..nAircrafts-1 {
+    		receiver.in[i] <-- in[i];
+    	}
+    	receiver.out --> out;
 }

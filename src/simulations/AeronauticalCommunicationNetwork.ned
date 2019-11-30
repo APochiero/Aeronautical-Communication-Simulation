@@ -17,6 +17,7 @@ package aeronauticalcommunicationsimulator.simulations;
 
 import aeronauticalcommunicationsimulator.Aircraft; 
 import aeronauticalcommunicationsimulator.Station; 
+import aeronauticalcommunicationsimulator.ControlTower; 
 import aeronauticalcommunicationsimulator.Receiver; 
 
 
@@ -26,16 +27,16 @@ import inet.visualizer.scene.SceneVisualizer;
 network AeronauticalCommunicationNetwork
 {
     parameters:
-        int nAircratfs;
+        int nAircrafts;
         int nBS;
         @display("bgb=100000,100000,white;");
     submodules:
-        aircraft[nAircratfs]: Aircraft;
+        aircraft[nAircrafts]: Aircraft;
         bs[nBS]: Station {
-	    	@display("i=device/accesspoint_s");           
+	    	@display("i=device/antennatower_s");           
         };
-        controlTower: Station { // utile per collezionare statistiche sull'intero sistema
-	    	@display("i=device/antennatower");   
+        controlTower: ControlTower { // utile per collezionare statistiche sull'intero sistema
+	    	@display("i=device/mainframe");   
         };         
         visualizer: IntegratedVisualizer {
             parameters:
@@ -43,5 +44,10 @@ network AeronauticalCommunicationNetwork
         }
       
      connections:
-         // TODO
+         for i=0..nAircrafts-1, for j=0..nBS-1 {
+    		aircraft[i].out[j] --> {@display("ls=,0");} -->  bs[j].in[i];
+         }
+         for i=0..nBS-1 {
+         	bs[i].out --> controlTower.in[i];
+         }
 }
