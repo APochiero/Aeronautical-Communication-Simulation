@@ -1,0 +1,5 @@
+out/
+simulations/results/
+*.exe
+src/AeronauticalCommunicationSimulator
+.qtenvrc
