@@ -3,3 +3,7 @@ simulations/results/
 *.exe
 src/AeronauticalCommunicationSimulator
 .qtenvrc
+.cproject
+.settings/language.settings.xml
+src/Makefile
+
