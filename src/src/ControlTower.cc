@@ -13,35 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-#ifndef __AERONAUTICALCOMMUNICATIONSIMULATOR_TRANSMITTER_H_
-#define __AERONAUTICALCOMMUNICATIONSIMULATOR_TRANSMITTER_H_
-
-#include <omnetpp.h>
-#include "inet/mobility/contract/IMobility.h"
-#include <vector>
-
-using namespace omnetpp;
+#include "ControlTower.h"
 
 namespace aeronauticalcommunicationsimulator {
 
-/**
- * TODO - Generated class
- */
-class Transmitter : public cSimpleModule
-{
-  protected:
-    virtual void initialize(int stage);
-    virtual int numInitStages() const { return 11; }
-    virtual void handleMessage(cMessage *msg);
-  private:
-    int nBS;
-    int connectedBS;
-    inet::IMobility* mobility;
-    std::vector<inet::IMobility*> bsMobilities;
+Define_Module(ControlTower);
 
-    int getClosestBS();
-};
+void ControlTower::initialize()
+{
+    // TODO - Generated method body
+}
+
+void ControlTower::handleMessage(cMessage *msg)
+{
+    // TODO - Generated method body
+}
 
 } //namespace
-
-#endif

@@ -15,8 +15,10 @@
 
 #include "Transmitter.h"
 #include "inet/mobility/contract/IMobility.h"
+#include <string>
 
 using namespace inet;
+using namespace std;
 
 namespace aeronauticalcommunicationsimulator {
 
@@ -24,15 +26,14 @@ Define_Module(Transmitter);
 
 void Transmitter::initialize(int stage)
 {
-    if ( stage == 11 ) { // a quanto pare ci sono 11 stage
-        cModule *aircraft;
-        aircraft = getParentModule();
-
-        cModule *temp = (aircraft->getSubmodule("mobility"));
-        mobility = reinterpret_cast<IMobility*> (temp);
-
-        EV<< mobility->getCurrentPosition()<< endl;
+    nBS = par("nBS").intValue();
+    mobility = reinterpret_cast<IMobility*> ( getModuleByPath(".mobility"));
+//    EV<< mobility->getCurrentPosition().getX()<<endl;
+    for ( int i = 0; i < nBS; i++ ) {
+        string path = "bs[" + std::to_string(i) + "].mobility";
+        bsMobilities.push_back(reinterpret_cast<IMobility*> (getModuleByPath(path.c_str())));
     }
+//        EV << "Closest BS " << getClosestBS()<<endl;
 }
 
 void Transmitter::handleMessage(cMessage *msg)
@@ -41,7 +42,19 @@ void Transmitter::handleMessage(cMessage *msg)
 }
 
 int Transmitter::getClosestBS() {
-
+    Coord aircraftPosition = mobility->getCurrentPosition();
+    double max = 0;
+    int closest;
+    double distance;
+    for ( int i = 0; i < nBS; i++ ) {
+        Coord bsPosition = bsMobilities.at(i)->getCurrentPosition();
+        distance = bsPosition.distance(aircraftPosition);
+        if ( distance > max ) {
+            max = distance;
+            closest = i;
+        }
+    }
+    return closest;
 }
 
 } //namespace
