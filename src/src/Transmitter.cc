@@ -14,19 +14,34 @@
 // 
 
 #include "Transmitter.h"
+#include "inet/mobility/contract/IMobility.h"
+
+using namespace inet;
 
 namespace aeronauticalcommunicationsimulator {
 
 Define_Module(Transmitter);
 
-void Transmitter::initialize()
+void Transmitter::initialize(int stage)
 {
-    // TODO - Generated method body
+    if ( stage == 11 ) { // a quanto pare ci sono 11 stage
+        cModule *aircraft;
+        aircraft = getParentModule();
+
+        cModule *temp = (aircraft->getSubmodule("mobility"));
+        mobility = reinterpret_cast<IMobility*> (temp);
+
+        EV<< mobility->getCurrentPosition()<< endl;
+    }
 }
 
 void Transmitter::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+
+}
+
+int Transmitter::getClosestBS() {
+
 }
 
 } //namespace

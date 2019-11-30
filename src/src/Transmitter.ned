@@ -21,7 +21,11 @@ package aeronauticalcommunicationsimulator;
 simple Transmitter
 {
     parameters:
-        // TODO
+       // TODO
+    	int nBS;
+    	double k;
+    	double T;
+    	double p;   
     gates:
-        // TODO
+        output out[nBS];
 }
