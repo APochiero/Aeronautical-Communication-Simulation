@@ -2,6 +2,7 @@ out/
 simulations/results/
 *.exe
 src/AeronauticalCommunicationSimulator
+src/AeronauticalCommunicationSimulator_dbg
 .qtenvrc
 .cproject
 .settings/language.settings.xml
