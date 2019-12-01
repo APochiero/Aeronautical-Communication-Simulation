@@ -26,7 +26,7 @@ void ControlTower::initialize()
 
 void ControlTower::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    delete msg;
 }
 
 } //namespace

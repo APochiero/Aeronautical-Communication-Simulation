@@ -29,12 +29,12 @@ namespace aeronauticalcommunicationsimulator {
 class Transmitter : public cSimpleModule
 {
   protected:
-    virtual void initialize(int stage);
-    virtual int numInitStages() const { return 11; }
+    virtual void initialize();
     virtual void handleMessage(cMessage *msg);
   private:
     int nBS;
     int connectedBS;
+    double k;
     inet::TurtleMobility* mobility;
     inet::Coord* bsPositions;
 

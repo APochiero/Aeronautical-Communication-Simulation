@@ -13,13 +13,16 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-namespace aeronauticalcommunicationsimulator;
+package aeronauticalcommunicationsimulator;
 
 //
-// TODO generated message class
+// TODO auto-generated module
 //
-packet DiscoveryMessage {
-    int bsID;
-    double x;
-    double y;
+simple BaseStation
+{
+    parameters:
+        int nAircrafts;
+    gates:
+        input in[nAircrafts];
+        output out;
 }

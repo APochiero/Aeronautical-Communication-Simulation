@@ -18,9 +18,7 @@ namespace aeronauticalcommunicationsimulator;
 //
 // TODO generated message class
 //
-packet MessageACS {
-    int someField;
-    string anotherField;
-    double arrayField1[];
-    double arrayField2[10];
+packet AircraftPacket {
+	int aircraftID;
+	double creationTime;
 }

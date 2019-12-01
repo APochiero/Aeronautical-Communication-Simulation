@@ -13,23 +13,20 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package aeronauticalcommunicationsimulator;
-import inet.mobility.contract.IMobility;
+#include "BaseStation.h"
 
-module Station
+namespace aeronauticalcommunicationsimulator {
+
+Define_Module(BaseStation);
+
+void BaseStation::initialize()
 {
-    parameters:
-        // TODO
-        int nAircrafts;
-    gates:
-    	inout in[nAircrafts];
-    	output out; 	    
-    submodules:
-        mobility: <> like IMobility;
-        receiver: Receiver;        
-    connections:
-		for i=0..nAircrafts-1 {
-    		receiver.in[i] <--> in[i];
-    	}
-    	receiver.out --> out;
+    // TODO - Generated method body
 }
+
+void BaseStation::handleMessage(cMessage *msg)
+{
+    send(msg, "out");
+}
+
+} //namespace

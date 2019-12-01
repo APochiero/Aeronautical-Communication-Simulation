@@ -1,5 +1,5 @@
 //
-// Generated file, do not edit! Created by nedtool 5.5 from DiscoveryMessage.msg.
+// Generated file, do not edit! Created by nedtool 5.5 from AircraftPacket.msg.
 //
 
 // Disable warnings about unused variables, empty switch stmts, etc:
@@ -26,7 +26,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "DiscoveryMessage_m.h"
+#include "AircraftPacket_m.h"
 
 namespace omnetpp {
 
@@ -178,25 +178,24 @@ inline std::ostream& operator<<(std::ostream& out, const std::vector<T,A>& vec)
     return out;
 }
 
-Register_Class(DiscoveryMessage)
+Register_Class(AircraftPacket)
 
-DiscoveryMessage::DiscoveryMessage(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
+AircraftPacket::AircraftPacket(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
-    this->bsID = 0;
-    this->x = 0;
-    this->y = 0;
+    this->aircraftID = 0;
+    this->creationTime = 0;
 }
 
-DiscoveryMessage::DiscoveryMessage(const DiscoveryMessage& other) : ::omnetpp::cPacket(other)
+AircraftPacket::AircraftPacket(const AircraftPacket& other) : ::omnetpp::cPacket(other)
 {
     copy(other);
 }
 
-DiscoveryMessage::~DiscoveryMessage()
+AircraftPacket::~AircraftPacket()
 {
 }
 
-DiscoveryMessage& DiscoveryMessage::operator=(const DiscoveryMessage& other)
+AircraftPacket& AircraftPacket::operator=(const AircraftPacket& other)
 {
     if (this==&other) return *this;
     ::omnetpp::cPacket::operator=(other);
@@ -204,66 +203,53 @@ DiscoveryMessage& DiscoveryMessage::operator=(const DiscoveryMessage& other)
     return *this;
 }
 
-void DiscoveryMessage::copy(const DiscoveryMessage& other)
+void AircraftPacket::copy(const AircraftPacket& other)
 {
-    this->bsID = other.bsID;
-    this->x = other.x;
-    this->y = other.y;
+    this->aircraftID = other.aircraftID;
+    this->creationTime = other.creationTime;
 }
 
-void DiscoveryMessage::parsimPack(omnetpp::cCommBuffer *b) const
+void AircraftPacket::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
-    doParsimPacking(b,this->bsID);
-    doParsimPacking(b,this->x);
-    doParsimPacking(b,this->y);
+    doParsimPacking(b,this->aircraftID);
+    doParsimPacking(b,this->creationTime);
 }
 
-void DiscoveryMessage::parsimUnpack(omnetpp::cCommBuffer *b)
+void AircraftPacket::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
-    doParsimUnpacking(b,this->bsID);
-    doParsimUnpacking(b,this->x);
-    doParsimUnpacking(b,this->y);
+    doParsimUnpacking(b,this->aircraftID);
+    doParsimUnpacking(b,this->creationTime);
 }
 
-int DiscoveryMessage::getBsID() const
+int AircraftPacket::getAircraftID() const
 {
-    return this->bsID;
+    return this->aircraftID;
 }
 
-void DiscoveryMessage::setBsID(int bsID)
+void AircraftPacket::setAircraftID(int aircraftID)
 {
-    this->bsID = bsID;
+    this->aircraftID = aircraftID;
 }
 
-double DiscoveryMessage::getX() const
+double AircraftPacket::getCreationTime() const
 {
-    return this->x;
+    return this->creationTime;
 }
 
-void DiscoveryMessage::setX(double x)
+void AircraftPacket::setCreationTime(double creationTime)
 {
-    this->x = x;
+    this->creationTime = creationTime;
 }
 
-double DiscoveryMessage::getY() const
-{
-    return this->y;
-}
-
-void DiscoveryMessage::setY(double y)
-{
-    this->y = y;
-}
-
-class DiscoveryMessageDescriptor : public omnetpp::cClassDescriptor
+class AircraftPacketDescriptor : public omnetpp::cClassDescriptor
 {
   private:
     mutable const char **propertynames;
   public:
-    DiscoveryMessageDescriptor();
-    virtual ~DiscoveryMessageDescriptor();
+    AircraftPacketDescriptor();
+    virtual ~AircraftPacketDescriptor();
 
     virtual bool doesSupport(omnetpp::cObject *obj) const override;
     virtual const char **getPropertyNames() const override;
@@ -285,24 +271,24 @@ class DiscoveryMessageDescriptor : public omnetpp::cClassDescriptor
     virtual void *getFieldStructValuePointer(void *object, int field, int i) const override;
 };
 
-Register_ClassDescriptor(DiscoveryMessageDescriptor)
+Register_ClassDescriptor(AircraftPacketDescriptor)
 
-DiscoveryMessageDescriptor::DiscoveryMessageDescriptor() : omnetpp::cClassDescriptor("aeronauticalcommunicationsimulator::DiscoveryMessage", "omnetpp::cPacket")
+AircraftPacketDescriptor::AircraftPacketDescriptor() : omnetpp::cClassDescriptor("aeronauticalcommunicationsimulator::AircraftPacket", "omnetpp::cPacket")
 {
     propertynames = nullptr;
 }
 
-DiscoveryMessageDescriptor::~DiscoveryMessageDescriptor()
+AircraftPacketDescriptor::~AircraftPacketDescriptor()
 {
     delete[] propertynames;
 }
 
-bool DiscoveryMessageDescriptor::doesSupport(omnetpp::cObject *obj) const
+bool AircraftPacketDescriptor::doesSupport(omnetpp::cObject *obj) const
 {
-    return dynamic_cast<DiscoveryMessage *>(obj)!=nullptr;
+    return dynamic_cast<AircraftPacket *>(obj)!=nullptr;
 }
 
-const char **DiscoveryMessageDescriptor::getPropertyNames() const
+const char **AircraftPacketDescriptor::getPropertyNames() const
 {
     if (!propertynames) {
         static const char *names[] = {  nullptr };
@@ -313,19 +299,19 @@ const char **DiscoveryMessageDescriptor::getPropertyNames() const
     return propertynames;
 }
 
-const char *DiscoveryMessageDescriptor::getProperty(const char *propertyname) const
+const char *AircraftPacketDescriptor::getProperty(const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     return basedesc ? basedesc->getProperty(propertyname) : nullptr;
 }
 
-int DiscoveryMessageDescriptor::getFieldCount() const
+int AircraftPacketDescriptor::getFieldCount() const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
-    return basedesc ? 3+basedesc->getFieldCount() : 3;
+    return basedesc ? 2+basedesc->getFieldCount() : 2;
 }
 
-unsigned int DiscoveryMessageDescriptor::getFieldTypeFlags(int field) const
+unsigned int AircraftPacketDescriptor::getFieldTypeFlags(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -336,12 +322,11 @@ unsigned int DiscoveryMessageDescriptor::getFieldTypeFlags(int field) const
     static unsigned int fieldTypeFlags[] = {
         FD_ISEDITABLE,
         FD_ISEDITABLE,
-        FD_ISEDITABLE,
     };
-    return (field>=0 && field<3) ? fieldTypeFlags[field] : 0;
+    return (field>=0 && field<2) ? fieldTypeFlags[field] : 0;
 }
 
-const char *DiscoveryMessageDescriptor::getFieldName(int field) const
+const char *AircraftPacketDescriptor::getFieldName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -350,24 +335,22 @@ const char *DiscoveryMessageDescriptor::getFieldName(int field) const
         field -= basedesc->getFieldCount();
     }
     static const char *fieldNames[] = {
-        "bsID",
-        "x",
-        "y",
+        "aircraftID",
+        "creationTime",
     };
-    return (field>=0 && field<3) ? fieldNames[field] : nullptr;
+    return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
 
-int DiscoveryMessageDescriptor::findField(const char *fieldName) const
+int AircraftPacketDescriptor::findField(const char *fieldName) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
-    if (fieldName[0]=='b' && strcmp(fieldName, "bsID")==0) return base+0;
-    if (fieldName[0]=='x' && strcmp(fieldName, "x")==0) return base+1;
-    if (fieldName[0]=='y' && strcmp(fieldName, "y")==0) return base+2;
+    if (fieldName[0]=='a' && strcmp(fieldName, "aircraftID")==0) return base+0;
+    if (fieldName[0]=='c' && strcmp(fieldName, "creationTime")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
-const char *DiscoveryMessageDescriptor::getFieldTypeString(int field) const
+const char *AircraftPacketDescriptor::getFieldTypeString(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -378,12 +361,11 @@ const char *DiscoveryMessageDescriptor::getFieldTypeString(int field) const
     static const char *fieldTypeStrings[] = {
         "int",
         "double",
-        "double",
     };
-    return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
+    return (field>=0 && field<2) ? fieldTypeStrings[field] : nullptr;
 }
 
-const char **DiscoveryMessageDescriptor::getFieldPropertyNames(int field) const
+const char **AircraftPacketDescriptor::getFieldPropertyNames(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -396,7 +378,7 @@ const char **DiscoveryMessageDescriptor::getFieldPropertyNames(int field) const
     }
 }
 
-const char *DiscoveryMessageDescriptor::getFieldProperty(int field, const char *propertyname) const
+const char *AircraftPacketDescriptor::getFieldProperty(int field, const char *propertyname) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -409,7 +391,7 @@ const char *DiscoveryMessageDescriptor::getFieldProperty(int field, const char *
     }
 }
 
-int DiscoveryMessageDescriptor::getFieldArraySize(void *object, int field) const
+int AircraftPacketDescriptor::getFieldArraySize(void *object, int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -417,13 +399,13 @@ int DiscoveryMessageDescriptor::getFieldArraySize(void *object, int field) const
             return basedesc->getFieldArraySize(object, field);
         field -= basedesc->getFieldCount();
     }
-    DiscoveryMessage *pp = (DiscoveryMessage *)object; (void)pp;
+    AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
         default: return 0;
     }
 }
 
-const char *DiscoveryMessageDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
+const char *AircraftPacketDescriptor::getFieldDynamicTypeString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -431,13 +413,13 @@ const char *DiscoveryMessageDescriptor::getFieldDynamicTypeString(void *object, 
             return basedesc->getFieldDynamicTypeString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    DiscoveryMessage *pp = (DiscoveryMessage *)object; (void)pp;
+    AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }
 }
 
-std::string DiscoveryMessageDescriptor::getFieldValueAsString(void *object, int field, int i) const
+std::string AircraftPacketDescriptor::getFieldValueAsString(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -445,16 +427,15 @@ std::string DiscoveryMessageDescriptor::getFieldValueAsString(void *object, int 
             return basedesc->getFieldValueAsString(object,field,i);
         field -= basedesc->getFieldCount();
     }
-    DiscoveryMessage *pp = (DiscoveryMessage *)object; (void)pp;
+    AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
-        case 0: return long2string(pp->getBsID());
-        case 1: return double2string(pp->getX());
-        case 2: return double2string(pp->getY());
+        case 0: return long2string(pp->getAircraftID());
+        case 1: return double2string(pp->getCreationTime());
         default: return "";
     }
 }
 
-bool DiscoveryMessageDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
+bool AircraftPacketDescriptor::setFieldValueAsString(void *object, int field, int i, const char *value) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -462,16 +443,15 @@ bool DiscoveryMessageDescriptor::setFieldValueAsString(void *object, int field, 
             return basedesc->setFieldValueAsString(object,field,i,value);
         field -= basedesc->getFieldCount();
     }
-    DiscoveryMessage *pp = (DiscoveryMessage *)object; (void)pp;
+    AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
-        case 0: pp->setBsID(string2long(value)); return true;
-        case 1: pp->setX(string2double(value)); return true;
-        case 2: pp->setY(string2double(value)); return true;
+        case 0: pp->setAircraftID(string2long(value)); return true;
+        case 1: pp->setCreationTime(string2double(value)); return true;
         default: return false;
     }
 }
 
-const char *DiscoveryMessageDescriptor::getFieldStructName(int field) const
+const char *AircraftPacketDescriptor::getFieldStructName(int field) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -484,7 +464,7 @@ const char *DiscoveryMessageDescriptor::getFieldStructName(int field) const
     };
 }
 
-void *DiscoveryMessageDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
+void *AircraftPacketDescriptor::getFieldStructValuePointer(void *object, int field, int i) const
 {
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     if (basedesc) {
@@ -492,7 +472,7 @@ void *DiscoveryMessageDescriptor::getFieldStructValuePointer(void *object, int f
             return basedesc->getFieldStructValuePointer(object, field, i);
         field -= basedesc->getFieldCount();
     }
-    DiscoveryMessage *pp = (DiscoveryMessage *)object; (void)pp;
+    AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
         default: return nullptr;
     }

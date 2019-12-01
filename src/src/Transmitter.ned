@@ -22,10 +22,7 @@ simple Transmitter
 {
     parameters:
        // TODO
-    	int nBS;
-    	double k;
-    	double T;
-    	double p;   
+       int nBS;  
     gates:
-        inout out[nBS];
+        output out[nBS];
 }

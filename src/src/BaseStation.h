@@ -13,14 +13,25 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package aeronauticalcommunicationsimulator;
+#ifndef __AERONAUTICALCOMMUNICATIONSIMULATOR_BASESTATION_H_
+#define __AERONAUTICALCOMMUNICATIONSIMULATOR_BASESTATION_H_
 
-simple Receiver
+#include <omnetpp.h>
+
+using namespace omnetpp;
+
+namespace aeronauticalcommunicationsimulator {
+
+/**
+ * TODO - Generated class
+ */
+class BaseStation : public cSimpleModule
 {
-    parameters:
-        // TODO
-        int nAircrafts;
-    gates:
-        inout in[nAircrafts];
-        output out;
-}
+  protected:
+    virtual void initialize();
+    virtual void handleMessage(cMessage *msg);
+};
+
+} //namespace
+
+#endif
