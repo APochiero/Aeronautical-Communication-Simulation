@@ -17,8 +17,7 @@
 #define __AERONAUTICALCOMMUNICATIONSIMULATOR_TRANSMITTER_H_
 
 #include <omnetpp.h>
-#include "inet/mobility/contract/IMobility.h"
-#include <vector>
+#include "inet/mobility/single/TurtleMobility.h"
 
 using namespace omnetpp;
 
@@ -36,8 +35,8 @@ class Transmitter : public cSimpleModule
   private:
     int nBS;
     int connectedBS;
-    inet::IMobility* mobility;
-    std::vector<inet::IMobility*> bsMobilities;
+    inet::TurtleMobility* mobility;
+    inet::Coord* bsPositions;
 
     int getClosestBS();
 };

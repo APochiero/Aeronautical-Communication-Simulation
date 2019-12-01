@@ -22,14 +22,14 @@ module Station
         // TODO
         int nAircrafts;
     gates:
-    	input in[nAircrafts];
+    	inout in[nAircrafts];
     	output out; 	    
     submodules:
         mobility: <> like IMobility;
         receiver: Receiver;        
     connections:
 		for i=0..nAircrafts-1 {
-    		receiver.in[i] <-- in[i];
+    		receiver.in[i] <--> in[i];
     	}
     	receiver.out --> out;
 }

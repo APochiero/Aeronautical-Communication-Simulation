@@ -27,5 +27,5 @@ simple Transmitter
     	double T;
     	double p;   
     gates:
-        output out[nBS];
+        inout out[nBS];
 }

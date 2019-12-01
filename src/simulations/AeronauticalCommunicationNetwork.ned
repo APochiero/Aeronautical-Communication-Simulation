@@ -45,7 +45,8 @@ network AeronauticalCommunicationNetwork
       
      connections:
          for i=0..nAircrafts-1, for j=0..nBS-1 {
-    		aircraft[i].out[j] --> {@display("ls=,0");} -->  bs[j].in[i];
+//    		aircraft[i].out[j] --> {@display("ls=,0");} -->  bs[j].in[i];
+    		aircraft[i].out[j] <-->  bs[j].in[i];
          }
          for i=0..nBS-1 {
          	bs[i].out --> controlTower.in[i];

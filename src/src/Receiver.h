@@ -17,6 +17,7 @@
 #define __AERONAUTICALCOMMUNICATIONSIMULATOR_RECEIVER_H_
 
 #include <omnetpp.h>
+#include "inet/mobility/static/StaticGridMobility.h"
 
 using namespace omnetpp;
 
@@ -30,6 +31,9 @@ class Receiver : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+  private:
+    inet::StaticGridMobility* mobility;
+
 };
 
 } //namespace

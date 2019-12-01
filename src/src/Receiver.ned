@@ -21,6 +21,6 @@ simple Receiver
         // TODO
         int nAircrafts;
     gates:
-        input in[nAircrafts];
+        inout in[nAircrafts];
         output out;
 }
