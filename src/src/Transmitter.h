@@ -35,10 +35,20 @@ class Transmitter : public cSimpleModule
     int nBS;
     int connectedBS;
     double k;
+    double t;
+    double T;
+    bool transmitting;
+
     inet::TurtleMobility* mobility;
     inet::Coord* bsPositions;
+    cPacketQueue queue;
 
     int getClosestBS();
+    void handleInitialize(cMessage* msg);
+    void handlePacketArrival(cMessage* msg);
+    void handleCheckHandover(cMessage* msg);
+    void handlePacketSent(cMessage* msg);
+    void sendPacket(cPacket* pkt);
 };
 
 } //namespace

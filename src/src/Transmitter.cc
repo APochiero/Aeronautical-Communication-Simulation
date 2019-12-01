@@ -29,15 +29,18 @@ void Transmitter::initialize()
 
     nBS = par("nBS").intValue();
     k = getAncestorPar("k").doubleValue();
+    t = getAncestorPar("t").doubleValue();
+    T = getAncestorPar("T").doubleValue();
+
     int rows = getAncestorPar("rows").intValue();
     int cols = getAncestorPar("cols").intValue();
     int M = getAncestorPar("M").intValue();
 
     bsPositions = new Coord[nBS];
+    transmitting = false;
 
     // Reference to own mobility module
     mobility = reinterpret_cast<TurtleMobility*> ( getModuleByPath("^.mobility") );
-//    EV<< mobility->getCurrentPosition()<<endl;
 
     for ( int i = 0; i < rows; i++ ) {
         for ( int j = 0; j < cols; j++ ) {
@@ -51,28 +54,80 @@ void Transmitter::initialize()
 
 void Transmitter::handleMessage(cMessage *msg)
 {
-    AircraftPacket* ap = NULL;
     if ( msg->isSelfMessage() ) {
         if ( strcmp(msg->getName(), "Initialize") == 0 ) {
-            connectedBS = getClosestBS();
-            EV<<"Closest BS: " << connectedBS <<endl;
-            ap =  new AircraftPacket("AircraftPacket");
-            ap->setAircraftID(getIndex());
-            ap->setCreationTime(0.0);
-            scheduleAt(simTime() + k + uniform(0,0.5), ap ); // random offset to desynchronize aircratfs
-        } else if ( strcmp(msg->getFullName(),"AircraftPacket") == 0 ) {
-
-            ap = (AircraftPacket*) msg;
-            ap->setCreationTime(simTime().dbl());
-            EV<< "Sending to " << connectedBS <<endl;
-            send(ap, "out", connectedBS);
-            ap =  new AircraftPacket("AircraftPacket");
-            ap->setAircraftID(getIndex());
-            ap->setCreationTime(0.0);
-            scheduleAt(simTime() + k, ap );
+            handleInitialize(msg);
+        } else if ( strcmp(msg->getName(),"packetArrival") == 0 ) {
+            handlePacketArrival(msg);
+        } else if ( strcmp(msg->getName(),"checkHandover") == 0 ) {
+            handleCheckHandover(msg);
+        } else if ( strcmp(msg->getName(),"packetSent") == 0 ) {
+            handlePacketSent(msg);
         }
     }
 
+}
+
+void Transmitter::handleInitialize(cMessage *msg) {
+    connectedBS = getClosestBS();
+    EV<<"Closest BS: " << connectedBS <<endl;
+
+    //Send first packet
+    AircraftPacket* ap = new AircraftPacket("AircraftPacket");
+    ap->setArrivalTime(simTime().dbl());
+    ap->setAircraftID(getIndex());
+    sendPacket(ap);
+
+    // random offset in order to desynchronize aircrafts
+    scheduleAt(simTime() + k + uniform(0,0.5), new cMessage("packetArrival")); // first packet generated
+//    scheduleAt(simTime() + t + uniform(0,5), new cMessage("checkHandover")); // Start handover period
+}
+
+void Transmitter::handlePacketArrival(cMessage *msg) {
+    EV<< "PacketArrival, queue length " << queue.length() <<endl;
+
+    // Insert message into queue and schedule another arrival
+    AircraftPacket* ap = new AircraftPacket("AircraftPacket");
+    ap->setArrivalTime(simTime().dbl());
+    ap->setAircraftID(getIndex());
+    if ( !transmitting ) {
+        if ( queue.isEmpty() ) {
+            EV<< "Queue is empty, sending packet"<<endl;
+            sendPacket(ap);
+        }
+    } else {
+        EV<< "Queuing"<<endl;
+        queue.insert(ap);
+    }
+    scheduleAt(simTime() + k, msg );
+}
+
+void Transmitter::handleCheckHandover(cMessage *msg) {
+    int closest = getClosestBS();
+    // TODO
+
+    scheduleAt(simTime() + t + uniform(0,5), msg); // Start handover period
+}
+
+void Transmitter::handlePacketSent(cMessage *msg) {
+    EV<< "PacketSent" <<endl;
+
+    transmitting = false;
+    if ( !queue.isEmpty() ) {
+        EV<< "sendPacket" <<endl;
+
+        AircraftPacket* ap = (AircraftPacket*) queue.front();
+        queue.pop();
+        sendPacket(ap);
+    }
+}
+
+void Transmitter::sendPacket(cPacket* pkt) {
+    send(pkt, "out", connectedBS);
+    double s = T*pow(bsPositions[connectedBS].distance(mobility->getCurrentPosition()),2);
+    transmitting = true;
+    scheduleAt(simTime() + s, new cMessage("packetSent"));
+    EV<<"Service time "<< s <<endl;
 }
 
 int Transmitter::getClosestBS() {

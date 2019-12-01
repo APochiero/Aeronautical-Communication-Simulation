@@ -25,6 +25,7 @@ module Aircraft
     	int rows;
     	int cols;
     	int M;
+    	double t @unit(s);
     	double k @unit(s);
     	double T;
     	double p @unit(s); 

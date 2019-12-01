@@ -183,7 +183,7 @@ Register_Class(AircraftPacket)
 AircraftPacket::AircraftPacket(const char *name, short kind) : ::omnetpp::cPacket(name,kind)
 {
     this->aircraftID = 0;
-    this->creationTime = 0;
+    this->arrivalTime = 0;
 }
 
 AircraftPacket::AircraftPacket(const AircraftPacket& other) : ::omnetpp::cPacket(other)
@@ -206,21 +206,21 @@ AircraftPacket& AircraftPacket::operator=(const AircraftPacket& other)
 void AircraftPacket::copy(const AircraftPacket& other)
 {
     this->aircraftID = other.aircraftID;
-    this->creationTime = other.creationTime;
+    this->arrivalTime = other.arrivalTime;
 }
 
 void AircraftPacket::parsimPack(omnetpp::cCommBuffer *b) const
 {
     ::omnetpp::cPacket::parsimPack(b);
     doParsimPacking(b,this->aircraftID);
-    doParsimPacking(b,this->creationTime);
+    doParsimPacking(b,this->arrivalTime);
 }
 
 void AircraftPacket::parsimUnpack(omnetpp::cCommBuffer *b)
 {
     ::omnetpp::cPacket::parsimUnpack(b);
     doParsimUnpacking(b,this->aircraftID);
-    doParsimUnpacking(b,this->creationTime);
+    doParsimUnpacking(b,this->arrivalTime);
 }
 
 int AircraftPacket::getAircraftID() const
@@ -233,14 +233,14 @@ void AircraftPacket::setAircraftID(int aircraftID)
     this->aircraftID = aircraftID;
 }
 
-double AircraftPacket::getCreationTime() const
+double AircraftPacket::getArrivalTime() const
 {
-    return this->creationTime;
+    return this->arrivalTime;
 }
 
-void AircraftPacket::setCreationTime(double creationTime)
+void AircraftPacket::setArrivalTime(double arrivalTime)
 {
-    this->creationTime = creationTime;
+    this->arrivalTime = arrivalTime;
 }
 
 class AircraftPacketDescriptor : public omnetpp::cClassDescriptor
@@ -336,7 +336,7 @@ const char *AircraftPacketDescriptor::getFieldName(int field) const
     }
     static const char *fieldNames[] = {
         "aircraftID",
-        "creationTime",
+        "arrivalTime",
     };
     return (field>=0 && field<2) ? fieldNames[field] : nullptr;
 }
@@ -346,7 +346,7 @@ int AircraftPacketDescriptor::findField(const char *fieldName) const
     omnetpp::cClassDescriptor *basedesc = getBaseClassDescriptor();
     int base = basedesc ? basedesc->getFieldCount() : 0;
     if (fieldName[0]=='a' && strcmp(fieldName, "aircraftID")==0) return base+0;
-    if (fieldName[0]=='c' && strcmp(fieldName, "creationTime")==0) return base+1;
+    if (fieldName[0]=='a' && strcmp(fieldName, "arrivalTime")==0) return base+1;
     return basedesc ? basedesc->findField(fieldName) : -1;
 }
 
@@ -430,7 +430,7 @@ std::string AircraftPacketDescriptor::getFieldValueAsString(void *object, int fi
     AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getAircraftID());
-        case 1: return double2string(pp->getCreationTime());
+        case 1: return double2string(pp->getArrivalTime());
         default: return "";
     }
 }
@@ -446,7 +446,7 @@ bool AircraftPacketDescriptor::setFieldValueAsString(void *object, int field, in
     AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
         case 0: pp->setAircraftID(string2long(value)); return true;
-        case 1: pp->setCreationTime(string2double(value)); return true;
+        case 1: pp->setArrivalTime(string2double(value)); return true;
         default: return false;
     }
 }

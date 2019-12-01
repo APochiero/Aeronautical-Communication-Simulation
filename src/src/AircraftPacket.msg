@@ -20,5 +20,5 @@ namespace aeronauticalcommunicationsimulator;
 //
 packet AircraftPacket {
 	int aircraftID;
-	double creationTime;
+	double arrivalTime;
 }
