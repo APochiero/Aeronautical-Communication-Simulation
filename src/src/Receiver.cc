@@ -14,19 +14,29 @@
 // 
 
 #include "Receiver.h"
-
+#include "DiscoveryMessage_m.h"
+using namespace inet;
 namespace aeronauticalcommunicationsimulator {
 
 Define_Module(Receiver);
 
 void Receiver::initialize()
 {
-    // TODO - Generated method body
+    // Reference to own mobility module
+    mobility = check_and_cast<StaticGridMobility*> ( getModuleByPath("^.mobility") );
 }
 
 void Receiver::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+    if ( strcmp(msg->getName(), "Discovery") == 0 ) {
+        // Get own position and send back to the aircraft though the arrival gate
+        DiscoveryMessage* disc = (DiscoveryMessage*) msg;
+        inet::Coord position = mobility->getCurrentPosition();
+        disc->setBsID(getIndex());
+        disc->setX(position.getX());
+        disc->setY(position.getY());
+        send(disc, "in", msg->getArrivalGate()->getIndex());
+    }
 }
 
 } //namespace

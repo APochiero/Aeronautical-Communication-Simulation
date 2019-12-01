@@ -23,12 +23,12 @@ module Aircraft
 	   	@display("i=device/cellphone_s");
 	   	int nBS;
 	gates:
-	    output out[nBS];
+	    inout out[nBS];
     submodules:
         mobility: <> like IMobility;
         transmitter: Transmitter;
     connections:
     	for i=0..nBS-1 {
-    		transmitter.out[i] --> out[i];
+    		transmitter.out[i] <--> out[i];
     	}
 }

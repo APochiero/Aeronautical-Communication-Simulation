@@ -14,7 +14,7 @@
 // 
 
 #include "Transmitter.h"
-#include "inet/mobility/contract/IMobility.h"
+#include "DiscoveryMessage_m.h"
 #include <string>
 
 using namespace inet;
@@ -27,18 +27,27 @@ Define_Module(Transmitter);
 void Transmitter::initialize(int stage)
 {
     nBS = par("nBS").intValue();
-    mobility = reinterpret_cast<IMobility*> ( getModuleByPath(".mobility"));
-//    EV<< mobility->getCurrentPosition().getX()<<endl;
+    bsPositions = new Coord[nBS];
+
+    // Reference to own mobility module
+    mobility = check_and_cast<TurtleMobility*> ( getModuleByPath("^.mobility") );
+//    EV<< mobility->getCurrentPosition()<<endl;
+
+    DiscoveryMessage* msg = new DiscoveryMessage("Discovery");
+    // BS position discovery request
     for ( int i = 0; i < nBS; i++ ) {
-        string path = "bs[" + std::to_string(i) + "].mobility";
-        bsMobilities.push_back(reinterpret_cast<IMobility*> (getModuleByPath(path.c_str())));
+        send(msg, "out", i);
     }
-//        EV << "Closest BS " << getClosestBS()<<endl;
 }
 
 void Transmitter::handleMessage(cMessage *msg)
 {
-
+    if ( strcmp(msg->getName(), "Discovery") == 0 ) {
+        // Get bs position and store it into bsPositions vector
+        DiscoveryMessage* disc = (DiscoveryMessage*) msg;
+        bsPositions[disc->getBsID()].setX(disc->getX());
+        bsPositions[disc->getBsID()].setY(disc->getY());
+    }
 }
 
 int Transmitter::getClosestBS() {
@@ -47,8 +56,7 @@ int Transmitter::getClosestBS() {
     int closest;
     double distance;
     for ( int i = 0; i < nBS; i++ ) {
-        Coord bsPosition = bsMobilities.at(i)->getCurrentPosition();
-        distance = bsPosition.distance(aircraftPosition);
+        distance = bsPositions[i].distance(aircraftPosition);
         if ( distance > max ) {
             max = distance;
             closest = i;
