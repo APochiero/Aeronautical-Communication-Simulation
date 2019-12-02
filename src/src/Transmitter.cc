@@ -38,19 +38,22 @@ void Transmitter::initialize()
     int cols = getAncestorPar("cols").intValue();
     int M = getAncestorPar("M").intValue();
 
-    bsPositions = new Coord[nBS];
+    bsPositions = new Coord[nBS];   /* TODO shouldn't we share all these coordinates among all ACs? */
     transmitting = false;
     penalty = false;
     schedulePenalty = false;
 
+    /* Registering all signals for stats */
     packetSent = registerSignal("packetSent");
     newPacket = registerSignal("newPacket");
     handover = registerSignal("handover");
     avoidHandover = registerSignal("avoidHandover");
 
-    // Reference to own mobility module
+    /* Reference to own mobility module */
     mobility = reinterpret_cast<TurtleMobility*> ( getModuleByPath("^.mobility") );
 
+    /* setup base station positions */
+    /* TODO -- shouldn't these coordinates be shared among all transmitters? */
     for ( int i = 0; i < rows; i++ ) {
         for ( int j = 0; j < cols; j++ ) {
             bsPositions[i*rows+j].setX(M/2 + j*M);
@@ -64,7 +67,7 @@ void Transmitter::initialize()
 void Transmitter::handleMessage(cMessage *msg)
 {
     if ( msg->isSelfMessage() ) {
-        if ( strcmp(msg->getName(), "Initialize") == 0 ) {
+        if ( strcmp(msg->getName(), "Initialize") == 0 ) {  /* TODO multistage initialization? */
             handleInitialize(msg);
         } else if ( strcmp(msg->getName(),"packetArrival") == 0 ) {
             handlePacketArrival(msg);
@@ -89,7 +92,7 @@ void Transmitter::handleInitialize(cMessage *msg) {
     ap->setAircraftID(getIndex());
     sendPacket(ap);
 
-    // random offset in order to desynchronize aircrafts
+    // random offset in order to desynchronize aircrafts -- TODO needs to be removed, sooner or later
     scheduleAt(simTime() + k + uniform(0,0.5), new cMessage("packetArrival")); // first packet generated
     scheduleAt(simTime() + t + uniform(0,5), new cMessage("checkHandover")); // Start handover period
     delete msg;
@@ -119,28 +122,28 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
         emit(handover,1);
-        EV<<"HANDOVER, leaving "<< connectedBS<<", connecting to "<< closest <<endl;
+        EV << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
         penalty = true;
         if ( !transmitting ) {
-            EV<< "Penalty started, waiting for: " << p<<"s"<<endl;
+            EV << "Penalty started, waiting for: " << p << "s" <<endl;
             scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
         } else {
-            EV<<"Penalty starting after finishing the current transmission "<<endl;
+            EV << "Penalty starting after finishing the current transmission" << endl;
             schedulePenalty = true;
         }
     } else {
-        EV<< "Handover avoided"<<endl;
+        EV << "Handover avoided" << endl;
         emit(avoidHandover,1);
     }
-    scheduleAt(simTime() + t + uniform(0,5), msg); // Start handover period
+    scheduleAt(simTime() + t + uniform(0,5), msg); // Start handover period -- TODO what is this uniform() ? looks like something that needs to be removed, sooner or later
 }
 
 void Transmitter::handlePacketSent(cMessage *msg) {
-    EV<< "PacketSent with service time: "<< s <<endl;
+    EV << "PacketSent with service time:" << s <<endl;
 
     // s is the serviceTime computed for the last packet, who produced this PacketSent event
-    emit(packetSent, s );
+    emit(packetSent, s);
 
     transmitting = false;
     if ( !queue.isEmpty() && !penalty ) {
@@ -150,7 +153,7 @@ void Transmitter::handlePacketSent(cMessage *msg) {
     }
 
     if (schedulePenalty) {
-        EV<< "Penalty started, waiting for: " << p<<"s"<<endl;
+        EV << "Penalty started, waiting for: " << p << "s" <<endl;
         scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
         schedulePenalty = false;
     }
@@ -180,7 +183,7 @@ void Transmitter::sendPacket(cPacket* pkt) {
 }
 
 int Transmitter::getClosestBS() {
-    double min = getAncestorPar("rows").intValue()*getAncestorPar("M").intValue();
+    double min = getAncestorPar("rows").intValue() * getAncestorPar("M").intValue(); /* TODO isn't this M*sqrt(2) ? */
     int closest;
     double distance;
     for ( int i = 0; i < nBS; i++ ) {
@@ -195,19 +198,24 @@ int Transmitter::getClosestBS() {
     return closest;
 }
 
+/* computes distances between the Aircraft and the Base Station, taking in account a possible wrap around the region's edges */
 double Transmitter::getDistance(int bs) {
-    Coord acPos = mobility->getCurrentPosition();
+    // get width/height of simulated region
+    double L = getAncestorPar("rows").intValue() * getAncestorPar("M").intValue();
 
-    double bsX = bsPositions[bs].getX();
-    double bsY = bsPositions[bs].getY();
-    double L = getAncestorPar("rows").intValue()*getAncestorPar("M").intValue();
+    const Coord acPos = mobility->getCurrentPosition();
+    const Coord bsPosition = bsPositions[bs];
 
+    /* simulate translation due to wrap around, and take smallest distance */
     vector<double> distances;
-    distances.push_back(bsPositions[bs].distance(acPos));
-    distances.push_back(sqrt( pow(acPos.getX()- (bsX - L), 2) + pow(acPos.getY() - bsY, 2)  ));
-    distances.push_back(sqrt( pow(acPos.getX()- (bsX + L), 2) + pow(acPos.getY() - bsY, 2)  ));
-    distances.push_back(sqrt( pow(acPos.getX()- bsX, 2) + pow(acPos.getY() - (bsY - L), 2)  ));
-    distances.push_back(sqrt( pow(acPos.getX()- bsX, 2) + pow(acPos.getY() - (bsY + L ), 2)  ));
+    distances.push_back(bsPosition.distance(acPos));
+    distances.push_back(bsPosition.distance(acPos + Coord( L, 0)));
+    distances.push_back(bsPosition.distance(acPos + Coord(-L, 0)));
+    distances.push_back(bsPosition.distance(acPos + Coord(0,  L)));
+    distances.push_back(bsPosition.distance(acPos + Coord(0, -L)));
+
+    EV << "[D] acPos " << acPos << " + L " << L << " tot: " << acPos + Coord(L, 0) << endl;
+
     return *min_element(distances.begin(), distances.end());
 }
 
@@ -215,4 +223,4 @@ void Transmitter::finish() {
     queue.clear();
 }
 
-} //namespace
+}
