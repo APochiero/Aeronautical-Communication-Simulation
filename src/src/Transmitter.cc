@@ -95,7 +95,7 @@ void Transmitter::handleInitialize(cMessage *msg) {
 }
 
 void Transmitter::handlePacketArrival(cMessage *msg) {
-    EV<< "PacketArrival, queue length " << queue.length() << " transmitting " << transmitting <<endl;
+    EV<< "PacketArrival, queue length " << queue.getLength() << " transmitting " << transmitting <<endl;
 
     // Insert message into queue and schedule another arrival
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
@@ -109,7 +109,7 @@ void Transmitter::handlePacketArrival(cMessage *msg) {
     } else {
         EV<< "Queuing"<<endl;
         queue.insert(ap);
-        emit(newPacket, queue.length());
+        emit(newPacket, queue.getLength());
     }
     scheduleAt(simTime() + k, msg );
 }
