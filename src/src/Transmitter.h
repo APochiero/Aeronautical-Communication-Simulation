@@ -29,7 +29,8 @@ namespace aeronauticalcommunicationsimulator {
 class Transmitter : public cSimpleModule
 {
   protected:
-    virtual void initialize();
+    virtual void initialize(int stage);
+    virtual int numInitStages() const { return 21; }
     virtual void handleMessage(cMessage *msg);
     virtual void finish();
   private:
@@ -53,7 +54,7 @@ class Transmitter : public cSimpleModule
     cPacketQueue queue;
 
     int getClosestBS();
-    void handleInitialize(cMessage* msg);
+    void handleDesync(cMessage* msg);
     void handlePacketArrival(cMessage* msg);
     void handleCheckHandover(cMessage* msg);
     void handlePacketSent(cMessage* msg);

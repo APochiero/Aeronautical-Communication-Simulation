@@ -25,50 +25,59 @@ namespace aeronauticalcommunicationsimulator {
 
 Define_Module(Transmitter);
 
-void Transmitter::initialize()
-{
+void Transmitter::initialize(int stage) {
+    switch(stage) {
+        case 0: {
+            nBS = par("nBS").intValue();
+            k = getAncestorPar("k").doubleValue();
+            t = getAncestorPar("t").doubleValue();
+            T = getAncestorPar("T").doubleValue();
+            p = getAncestorPar("p").doubleValue();
 
-    nBS = par("nBS").intValue();
-    k = getAncestorPar("k").doubleValue();
-    t = getAncestorPar("t").doubleValue();
-    T = getAncestorPar("T").doubleValue();
-    p = getAncestorPar("p").doubleValue();
+            int rows = getAncestorPar("rows").intValue();
+            int cols = getAncestorPar("cols").intValue();
+            int M = getAncestorPar("M").intValue();
 
-    int rows = getAncestorPar("rows").intValue();
-    int cols = getAncestorPar("cols").intValue();
-    int M = getAncestorPar("M").intValue();
+            bsPositions = new Coord[nBS];   /* TODO shouldn't we share all these coordinates among all ACs? */
+            transmitting = false;
+            penalty = false;
+            schedulePenalty = false;
 
-    bsPositions = new Coord[nBS];   /* TODO shouldn't we share all these coordinates among all ACs? */
-    transmitting = false;
-    penalty = false;
-    schedulePenalty = false;
+            /* Registering all signals for stats */
+            packetSent = registerSignal("packetSent");
+            newPacket = registerSignal("newPacket");
+            handover = registerSignal("handover");
+            avoidHandover = registerSignal("avoidHandover");
 
-    /* Registering all signals for stats */
-    packetSent = registerSignal("packetSent");
-    newPacket = registerSignal("newPacket");
-    handover = registerSignal("handover");
-    avoidHandover = registerSignal("avoidHandover");
+            /* Reference to own mobility module */
+            mobility = reinterpret_cast<TurtleMobility*> ( getModuleByPath("^.mobility") );
 
-    /* Reference to own mobility module */
-    mobility = reinterpret_cast<TurtleMobility*> ( getModuleByPath("^.mobility") );
+            /* setup base station positions */
+            /* TODO -- shouldn't these coordinates be shared among all transmitters? */
+            for ( int i = 0; i < rows; i++ ) {
+                for ( int j = 0; j < cols; j++ ) {
+                    bsPositions[i*rows+j].setX(M/2 + j*M);
+                    bsPositions[i*rows+j].setY(M/2 + i*M );
+                    EV<<"BS " << i*rows+j << " in position "<< bsPositions[i*rows+j]<<endl;
+                }
+            }
+            break;
+        }
+        case 20: {   /* this stage nr comes surely after mobility module has been initialized */
+            connectedBS = getClosestBS();
 
-    /* setup base station positions */
-    /* TODO -- shouldn't these coordinates be shared among all transmitters? */
-    for ( int i = 0; i < rows; i++ ) {
-        for ( int j = 0; j < cols; j++ ) {
-            bsPositions[i*rows+j].setX(M/2 + j*M);
-            bsPositions[i*rows+j].setY(M/2 + i*M );
-            EV<<"BS " << i*rows+j << " in position "<< bsPositions[i*rows+j]<<endl;
+            // random offset in order to desynchronize aircrafts
+            scheduleAt(simTime() + uniform(0, 5), new cMessage("desync"));
+            break;
         }
     }
-    scheduleAt( simTime(), new cMessage("Initialize"));
 }
 
 void Transmitter::handleMessage(cMessage *msg)
 {
     if ( msg->isSelfMessage() ) {
-        if ( strcmp(msg->getName(), "Initialize") == 0 ) {  /* TODO multistage initialization? */
-            handleInitialize(msg);
+        if ( strcmp(msg->getName(), "desync") == 0 ) {
+            handleDesync(msg);
         } else if ( strcmp(msg->getName(),"packetArrival") == 0 ) {
             handlePacketArrival(msg);
         } else if ( strcmp(msg->getName(),"checkHandover") == 0 ) {
@@ -82,24 +91,24 @@ void Transmitter::handleMessage(cMessage *msg)
 
 }
 
-void Transmitter::handleInitialize(cMessage *msg) {
-    connectedBS = getClosestBS();
-    EV<<"Closest BS: " << connectedBS <<endl;
+/* in order to avoid that all ACs transmitters are synced (that is not possible in a real scenario) */
+void Transmitter::handleDesync(cMessage* msg) {
+    EV << "==> Desync" << endl;
 
-    //Send first packet
+    // Send first packet
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
     ap->setArrivalTime(simTime().dbl());
     ap->setAircraftID(getIndex());
     sendPacket(ap);
 
-    // random offset in order to desynchronize aircrafts -- TODO needs to be removed, sooner or later
-    scheduleAt(simTime() + k + uniform(0,0.5), new cMessage("packetArrival")); // first packet generated
-    scheduleAt(simTime() + t + uniform(0,5), new cMessage("checkHandover")); // Start handover period
+    scheduleAt(simTime() + k, new cMessage("packetArrival")); // first packet generated
+    scheduleAt(simTime() + t, new cMessage("checkHandover")); // start handover period
     delete msg;
 }
 
 void Transmitter::handlePacketArrival(cMessage *msg) {
-    EV<< "PacketArrival, queue length " << queue.getLength() << " transmitting " << transmitting <<endl;
+    EV << "==> PacketArrival";
+    EV << "queue length: " << queue.getLength() << ", transmitting: " << transmitting << endl;
 
     // Insert message into queue and schedule another arrival
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
@@ -119,6 +128,7 @@ void Transmitter::handlePacketArrival(cMessage *msg) {
 }
 
 void Transmitter::handleCheckHandover(cMessage *msg) {
+    EV << "==> CheckHandover" << endl;
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
         emit(handover,1);
@@ -136,11 +146,11 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
         EV << "Handover avoided" << endl;
         emit(avoidHandover,1);
     }
-    scheduleAt(simTime() + t + uniform(0,5), msg); // Start handover period -- TODO what is this uniform() ? looks like something that needs to be removed, sooner or later
+    scheduleAt(simTime() + t, msg); // Start handover period
 }
 
 void Transmitter::handlePacketSent(cMessage *msg) {
-    EV << "PacketSent with service time:" << s <<endl;
+    EV << "==> PacketSent with service time:" << s <<endl;
 
     // s is the serviceTime computed for the last packet, who produced this PacketSent event
     emit(packetSent, s);
@@ -161,7 +171,7 @@ void Transmitter::handlePacketSent(cMessage *msg) {
 }
 
 void Transmitter::handlePenaltyTimeElapsed(cMessage *msg) {
-    EV<<"Handover completed, transmissions restored" <<endl;
+    EV << "==> PenaltyTimeElapsed: handover completed, transmissions restored" << endl;
     penalty = false;
 
     // after penalty, check the queue to restart the transmission loop
@@ -175,15 +185,15 @@ void Transmitter::handlePenaltyTimeElapsed(cMessage *msg) {
 }
 
 void Transmitter::sendPacket(cPacket* pkt) {
-    s = T*pow(getDistance(connectedBS),2);
+    s = T*pow(getDistance(connectedBS), 2); /* formula given by specifications */
     send(pkt, "out", connectedBS);
     transmitting = true;
     scheduleAt(simTime() + s, new cMessage("packetSent"));
-    EV<<"Sending packet  "<< pkt->getId() << " with service time "<< s <<endl;
+    EV << "==> SendPacket "<< pkt->getId() << " with service time "<< s <<endl;
 }
 
 int Transmitter::getClosestBS() {
-    double min = getAncestorPar("rows").intValue() * getAncestorPar("M").intValue(); /* TODO isn't this M*sqrt(2) ? */
+    double min = getAncestorPar("rows").intValue() * getAncestorPar("M").intValue(); /* TODO don't we need to multiply this by sqrt(2) ? */
     int closest;
     double distance;
     for ( int i = 0; i < nBS; i++ ) {
@@ -194,7 +204,7 @@ int Transmitter::getClosestBS() {
             closest = i;
         }
     }
-    EV<<"closest BS " << closest<<endl;
+    EV << "Closest BS " << closest <<endl;
     return closest;
 }
 
@@ -214,13 +224,13 @@ double Transmitter::getDistance(int bs) {
     distances.push_back(bsPosition.distance(acPos + Coord(0,  L)));
     distances.push_back(bsPosition.distance(acPos + Coord(0, -L)));
 
-    EV << "[D] acPos " << acPos << " + L " << L << " tot: " << acPos + Coord(L, 0) << endl;
-
     return *min_element(distances.begin(), distances.end());
 }
 
 void Transmitter::finish() {
     queue.clear();
 }
+
+// TODO do we need a destructor?
 
 }
