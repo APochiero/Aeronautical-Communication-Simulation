@@ -31,13 +31,22 @@ class Transmitter : public cSimpleModule
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    virtual void finish();
   private:
     int nBS;
     int connectedBS;
     double k;
     double t;
     double T;
+    double p;
+    double s;
     bool transmitting;
+    bool penalty;
+    bool schedulePenalty;
+    simsignal_t packetSent;
+    simsignal_t newPacket;
+    simsignal_t handover;
+    simsignal_t avoidHandover;
 
     inet::TurtleMobility* mobility;
     inet::Coord* bsPositions;
@@ -48,7 +57,9 @@ class Transmitter : public cSimpleModule
     void handlePacketArrival(cMessage* msg);
     void handleCheckHandover(cMessage* msg);
     void handlePacketSent(cMessage* msg);
+    void handlePenaltyTimeElapsed(cMessage *msg);
     void sendPacket(cPacket* pkt);
+
 };
 
 } //namespace

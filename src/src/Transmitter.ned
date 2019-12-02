@@ -23,6 +23,16 @@ simple Transmitter
     parameters:
        // TODO
        int nBS;  
+       @signal[packetSent](type="double");
+       @signal[newPacket](type="int");
+       @signal[handover](type="int");
+       @signal[avoidHandover](type="int");
+       
+       @statistic[serviceTime](source="packetSent"; record=vector;); 
+       @statistic[queueLength](source="newPacket"; record=vector;);
+       @statistic[nHandover](source="handover"; record=sum;);
+       @statistic[nAvoidedHandover](source="avoidHandover"; record=sum;);
+       
     gates:
         output out[nBS];
 }

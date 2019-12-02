@@ -1,7 +1,7 @@
  <movement>
      <repeat>
          <set speed="236" borderPolicy="wrap" />
-		 <forward d = "uniform(1, 141421)"/>
+		 <forward d = "uniform(1, 50000)"/>
 		 <turn angle = "uniform(0, 360)"/>
      </repeat>
  </movement>
