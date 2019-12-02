@@ -9,4 +9,5 @@ src/AeronauticalCommunicationSimulator_dbg
 src/Makefile
 src/makefrag
 src/src
+*.anf
 
