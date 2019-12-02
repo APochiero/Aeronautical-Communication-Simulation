@@ -15,6 +15,7 @@
 
 #include "Transmitter.h"
 #include <string>
+#include <algorithm>
 #include "AircraftPacket_m.h"
 
 using namespace inet;
@@ -171,33 +172,19 @@ void Transmitter::handlePenaltyTimeElapsed(cMessage *msg) {
 }
 
 void Transmitter::sendPacket(cPacket* pkt) {
-    s = T*pow(bsPositions[connectedBS].distance(mobility->getCurrentPosition()),2);
-    if ( s < 20 ) {
-        send(pkt, "out", connectedBS);
-        transmitting = true;
-        scheduleAt(simTime() + s, new cMessage("packetSent"));
-        EV<<"Sending packet  "<< pkt->getId() << " with service time "<< s <<endl;
-    } else {
-        // Probably wrap, then wrong distance, force handover and drop this packet ?
-        int closest = getClosestBS();
-        if ( connectedBS != closest ) {
-            EV<<"FORCING HANDOVER, leaving "<< connectedBS<<", connecting to "<< closest <<endl;
-            connectedBS = closest;
-            penalty = true;
-            EV<< "Penalty started, waiting for: " << p<<"s"<<endl;
-            scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
-        }
-        delete pkt;
-    }
+    s = T*pow(getDistance(connectedBS),2);
+    send(pkt, "out", connectedBS);
+    transmitting = true;
+    scheduleAt(simTime() + s, new cMessage("packetSent"));
+    EV<<"Sending packet  "<< pkt->getId() << " with service time "<< s <<endl;
 }
 
 int Transmitter::getClosestBS() {
-    Coord aircraftPosition = mobility->getCurrentPosition();
     double min = getAncestorPar("rows").intValue()*getAncestorPar("M").intValue();
     int closest;
     double distance;
     for ( int i = 0; i < nBS; i++ ) {
-        distance = bsPositions[i].distance(aircraftPosition);
+        distance = getDistance(i);
         EV<< "distance from " << i << " " << distance <<endl;
         if ( distance < min ) {
             min = distance;
@@ -206,6 +193,22 @@ int Transmitter::getClosestBS() {
     }
     EV<<"closest BS " << closest<<endl;
     return closest;
+}
+
+double Transmitter::getDistance(int bs) {
+    Coord acPos = mobility->getCurrentPosition();
+
+    double bsX = bsPositions[bs].getX();
+    double bsY = bsPositions[bs].getY();
+    double L = getAncestorPar("rows").intValue()*getAncestorPar("M").intValue();
+
+    vector<double> distances;
+    distances.push_back(bsPositions[bs].distance(acPos));
+    distances.push_back(sqrt( pow(acPos.getX()- (bsX - L), 2) + pow(acPos.getY() - bsY, 2)  ));
+    distances.push_back(sqrt( pow(acPos.getX()- (bsX + L), 2) + pow(acPos.getY() - bsY, 2)  ));
+    distances.push_back(sqrt( pow(acPos.getX()- bsX, 2) + pow(acPos.getY() - (bsY - L), 2)  ));
+    distances.push_back(sqrt( pow(acPos.getX()- bsX, 2) + pow(acPos.getY() - (bsY + L ), 2)  ));
+    return *min_element(distances.begin(), distances.end());
 }
 
 void Transmitter::finish() {

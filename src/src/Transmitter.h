@@ -59,6 +59,7 @@ class Transmitter : public cSimpleModule
     void handlePacketSent(cMessage* msg);
     void handlePenaltyTimeElapsed(cMessage *msg);
     void sendPacket(cPacket* pkt);
+    double getDistance(int bs);
 
 };
 
