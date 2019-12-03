@@ -27,11 +27,13 @@ simple Transmitter
        @signal[newPacket](type="long");
        @signal[handover](type="long");
        @signal[avoidHandover](type="long");
+       @signal[distance](type="long");
        
        @statistic[serviceTime](source="packetSent"; record=vector;); 
        @statistic[queueLength](source="newPacket"; record=vector;);
        @statistic[nHandover](source="handover"; record=sum;);
        @statistic[nAvoidedHandover](source="avoidHandover"; record=sum;);
+       @statistic[distance](source="distance"; record=vector;);
        
     gates:
         output out[nBS];

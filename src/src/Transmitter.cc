@@ -42,13 +42,13 @@ void Transmitter::initialize(int stage) {
             transmitting = false;
             penalty = false;
             schedulePenalty = false;
-            justAfterPenalty = false;
 
             /* Registering all signals for stats */
             packetSent = registerSignal("packetSent");
             newPacket = registerSignal("newPacket");
             handover = registerSignal("handover");
             avoidHandover = registerSignal("avoidHandover");
+            distance = registerSignal("distance");
 
             /* Reference to own mobility module */
             mobility = reinterpret_cast<TurtleMobility*> ( getModuleByPath("^.mobility") );
@@ -154,11 +154,7 @@ void Transmitter::handlePacketSent(cMessage *msg) {
     EV_INFO << "==> PacketSent with service time:" << s <<endl;
 
     // s is the serviceTime computed for the last packet, who produced this PacketSent event
-    if ( justAfterPenalty ) {
-        emit(packetSent, s + p);
-        justAfterPenalty = false;
-    } else
-        emit(packetSent, s );
+    emit(packetSent, s );
 
     transmitting = false;
     if ( !queue.isEmpty() && !penalty ) {
@@ -184,7 +180,6 @@ void Transmitter::handlePenaltyTimeElapsed(cMessage *msg) {
         AircraftPacket* ap = (AircraftPacket*) queue.front();
         queue.pop();
         sendPacket(ap);
-        justAfterPenalty = true;
     }
 
     delete msg;
@@ -194,7 +189,9 @@ void Transmitter::sendPacket(cPacket* pkt) {
     send(pkt, "out", connectedBS);
 
     transmitting = true;
-    s = T*pow(getDistance(connectedBS), 2); /* formula given by specifications */
+    double d = getDistance(connectedBS);
+    emit(distance, d );
+    s = T*pow(d, 2); /* formula given by specifications */
     scheduleAt(simTime() + s, new cMessage("packetSent"));
     EV_INFO << "==> SendPacket "<< pkt->getId() << " with service time "<< s <<endl;
 }
@@ -235,7 +232,6 @@ double Transmitter::getDistance(int bs) {
     distances.push_back(bsPosition.distance(acPos + Coord( -L,  L)));
     distances.push_back(bsPosition.distance(acPos + Coord(  L, -L)));
     distances.push_back(bsPosition.distance(acPos + Coord( -L, -L)));
-
 
     return *min_element(distances.begin(), distances.end());
 }
