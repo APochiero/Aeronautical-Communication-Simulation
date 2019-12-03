@@ -1,0 +1,10 @@
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}% 
+\contentsline {subsection}{\numberline {1.1}Constant and variables summary}{1}{subsection.1.1}% 
+\contentsline {section}{\numberline {2}Model}{2}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}Movement of AC}{2}{subsection.2.1}% 
+\contentsline {section}{\numberline {3}Application}{3}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}Requirements}{3}{subsection.3.1}% 
+\contentsline {subsection}{\numberline {3.2}Compile}{3}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.3}Run}{3}{subsection.3.3}% 
+\contentsline {subsection}{\numberline {3.4}Repository}{3}{subsection.3.4}% 

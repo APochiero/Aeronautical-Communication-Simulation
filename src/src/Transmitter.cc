@@ -58,7 +58,7 @@ void Transmitter::initialize(int stage) {
                 for ( int j = 0; j < cols; j++ ) {
                     bsPositions[i*rows+j].setX(M/2 + j*M);
                     bsPositions[i*rows+j].setY(M/2 + i*M );
-                    EV<<"BS " << i*rows+j << " in position "<< bsPositions[i*rows+j]<<endl;
+                    EV_INFO<<"BS " << i*rows+j << " in position "<< bsPositions[i*rows+j]<<endl;
                 }
             }
             break;
@@ -93,7 +93,7 @@ void Transmitter::handleMessage(cMessage *msg)
 
 /* in order to avoid that all ACs transmitters are synced (that is not possible in a real scenario) */
 void Transmitter::handleDesync(cMessage* msg) {
-    EV << "==> Desync" << endl;
+    EV_INFO << "==> Desync" << endl;
 
     // Send first packet
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
@@ -107,8 +107,8 @@ void Transmitter::handleDesync(cMessage* msg) {
 }
 
 void Transmitter::handlePacketArrival(cMessage *msg) {
-    EV << "==> PacketArrival";
-    EV << "queue length: " << queue.getLength() << ", transmitting: " << transmitting << endl;
+    EV_INFO << "==> PacketArrival";
+    EV_INFO << "queue length: " << queue.getLength() << ", transmitting: " << transmitting << endl;
 
     // Insert message into queue and schedule another arrival
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
@@ -116,11 +116,11 @@ void Transmitter::handlePacketArrival(cMessage *msg) {
     ap->setAircraftID(getIndex());
     if ( !transmitting && !penalty ) {
         if ( queue.isEmpty() ) {
-            EV<< "Queue is empty, sending packet"<<endl;
+            EV_INFO<< "Queue is empty, sending packet"<<endl;
             sendPacket(ap);
         }
     } else {
-        EV<< "Queuing"<<endl;
+        EV_INFO<< "Queuing"<<endl;
         queue.insert(ap);
         emit(newPacket, queue.getLength());
     }
@@ -128,32 +128,36 @@ void Transmitter::handlePacketArrival(cMessage *msg) {
 }
 
 void Transmitter::handleCheckHandover(cMessage *msg) {
-    EV << "==> CheckHandover" << endl;
+    EV_INFO << "==> CheckHandover" << endl;
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
         emit(handover,1);
-        EV << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
+        EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
         penalty = true;
         if ( !transmitting ) {
-            EV << "Penalty started, waiting for: " << p << "s" <<endl;
+            EV_INFO << "Penalty started, waiting for: " << p << "s" <<endl;
             scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
         } else {
-            EV << "Penalty starting after finishing the current transmission" << endl;
+            EV_INFO << "Penalty starting after finishing the current transmission" << endl;
             schedulePenalty = true;
         }
     } else {
-        EV << "Handover avoided" << endl;
+        EV_INFO << "Handover avoided" << endl;
         emit(avoidHandover,1);
     }
     scheduleAt(simTime() + t, msg); // Start handover period
 }
 
 void Transmitter::handlePacketSent(cMessage *msg) {
-    EV << "==> PacketSent with service time:" << s <<endl;
+    EV_INFO << "==> PacketSent with service time:" << s <<endl;
 
     // s is the serviceTime computed for the last packet, who produced this PacketSent event
     emit(packetSent, s);
+
+    if ( s > 50 ) {
+        EV_ERROR << " ABNORMAL SERVICE TIME " <<endl;
+    }
 
     transmitting = false;
     if ( !queue.isEmpty() && !penalty ) {
@@ -163,7 +167,7 @@ void Transmitter::handlePacketSent(cMessage *msg) {
     }
 
     if (schedulePenalty) {
-        EV << "Penalty started, waiting for: " << p << "s" <<endl;
+        EV_INFO << "Penalty started, waiting for: " << p << "s" <<endl;
         scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
         schedulePenalty = false;
     }
@@ -171,7 +175,7 @@ void Transmitter::handlePacketSent(cMessage *msg) {
 }
 
 void Transmitter::handlePenaltyTimeElapsed(cMessage *msg) {
-    EV << "==> PenaltyTimeElapsed: handover completed, transmissions restored" << endl;
+    EV_INFO << "==> PenaltyTimeElapsed: handover completed, transmissions restored" << endl;
     penalty = false;
 
     // after penalty, check the queue to restart the transmission loop
@@ -189,7 +193,7 @@ void Transmitter::sendPacket(cPacket* pkt) {
     send(pkt, "out", connectedBS);
     transmitting = true;
     scheduleAt(simTime() + s, new cMessage("packetSent"));
-    EV << "==> SendPacket "<< pkt->getId() << " with service time "<< s <<endl;
+    EV_INFO << "==> SendPacket "<< pkt->getId() << " with service time "<< s <<endl;
 }
 
 int Transmitter::getClosestBS() {
@@ -198,13 +202,13 @@ int Transmitter::getClosestBS() {
     double distance;
     for ( int i = 0; i < nBS; i++ ) {
         distance = getDistance(i);
-        EV<< "distance from " << i << " " << distance <<endl;
+        EV_INFO<< "distance from " << i << " " << distance <<endl;
         if ( distance < min ) {
             min = distance;
             closest = i;
         }
     }
-    EV << "Closest BS " << closest <<endl;
+    EV_INFO << "Closest BS " << closest <<endl;
     return closest;
 }
 
@@ -223,6 +227,12 @@ double Transmitter::getDistance(int bs) {
     distances.push_back(bsPosition.distance(acPos + Coord(-L, 0)));
     distances.push_back(bsPosition.distance(acPos + Coord(0,  L)));
     distances.push_back(bsPosition.distance(acPos + Coord(0, -L)));
+    // considering 2 consecutive and near in time wraps
+    distances.push_back(bsPosition.distance(acPos + Coord(  L,  L)));
+    distances.push_back(bsPosition.distance(acPos + Coord( -L,  L)));
+    distances.push_back(bsPosition.distance(acPos + Coord(  L, -L)));
+    distances.push_back(bsPosition.distance(acPos + Coord( -L, -L)));
+
 
     return *min_element(distances.begin(), distances.end());
 }

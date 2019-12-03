@@ -24,9 +24,9 @@ simple Transmitter
        // TODO
        int nBS;  
        @signal[packetSent](type="double");
-       @signal[newPacket](type="int");
-       @signal[handover](type="int");
-       @signal[avoidHandover](type="int");
+       @signal[newPacket](type="long");
+       @signal[handover](type="long");
+       @signal[avoidHandover](type="long");
        
        @statistic[serviceTime](source="packetSent"; record=vector;); 
        @statistic[queueLength](source="newPacket"; record=vector;);
