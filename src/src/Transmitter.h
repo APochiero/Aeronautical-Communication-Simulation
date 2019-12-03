@@ -44,6 +44,8 @@ class Transmitter : public cSimpleModule
     bool transmitting;
     bool penalty;
     bool schedulePenalty;
+    bool justAfterPenalty;
+
     simsignal_t packetSent;
     simsignal_t newPacket;
     simsignal_t handover;

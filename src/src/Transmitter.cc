@@ -42,6 +42,7 @@ void Transmitter::initialize(int stage) {
             transmitting = false;
             penalty = false;
             schedulePenalty = false;
+            justAfterPenalty = false;
 
             /* Registering all signals for stats */
             packetSent = registerSignal("packetSent");
@@ -108,7 +109,7 @@ void Transmitter::handleDesync(cMessage* msg) {
 
 void Transmitter::handlePacketArrival(cMessage *msg) {
     EV_INFO << "==> PacketArrival";
-    EV_INFO << "queue length: " << queue.getLength() << ", transmitting: " << transmitting << endl;
+    EV_INFO << ", queue length: " << queue.getLength() << ", transmitting: " << transmitting << endl;
 
     // Insert message into queue and schedule another arrival
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
@@ -121,8 +122,8 @@ void Transmitter::handlePacketArrival(cMessage *msg) {
         }
     } else {
         EV_INFO<< "Queuing"<<endl;
-        queue.insert(ap);
         emit(newPacket, queue.getLength());
+        queue.insert(ap);
     }
     scheduleAt(simTime() + k, msg );
 }
@@ -153,11 +154,11 @@ void Transmitter::handlePacketSent(cMessage *msg) {
     EV_INFO << "==> PacketSent with service time:" << s <<endl;
 
     // s is the serviceTime computed for the last packet, who produced this PacketSent event
-    emit(packetSent, s);
-
-    if ( s > 50 ) {
-        EV_ERROR << " ABNORMAL SERVICE TIME " <<endl;
-    }
+    if ( justAfterPenalty ) {
+        emit(packetSent, s + p);
+        justAfterPenalty = false;
+    } else
+        emit(packetSent, s );
 
     transmitting = false;
     if ( !queue.isEmpty() && !penalty ) {
@@ -183,15 +184,17 @@ void Transmitter::handlePenaltyTimeElapsed(cMessage *msg) {
         AircraftPacket* ap = (AircraftPacket*) queue.front();
         queue.pop();
         sendPacket(ap);
+        justAfterPenalty = true;
     }
 
     delete msg;
 }
 
 void Transmitter::sendPacket(cPacket* pkt) {
-    s = T*pow(getDistance(connectedBS), 2); /* formula given by specifications */
     send(pkt, "out", connectedBS);
+
     transmitting = true;
+    s = T*pow(getDistance(connectedBS), 2); /* formula given by specifications */
     scheduleAt(simTime() + s, new cMessage("packetSent"));
     EV_INFO << "==> SendPacket "<< pkt->getId() << " with service time "<< s <<endl;
 }
