@@ -20,6 +20,7 @@
 #include "inet/mobility/single/TurtleMobility.h"
 
 using namespace omnetpp;
+using namespace std;
 
 namespace aeronauticalcommunicationsimulator {
 
@@ -41,6 +42,7 @@ class Transmitter : public cSimpleModule
     double T;
     double p;
     double s;
+    string interarrivalDistribution;
     bool transmitting;
     bool penalty;
     bool schedulePenalty;
@@ -50,6 +52,9 @@ class Transmitter : public cSimpleModule
     simsignal_t handover;
     simsignal_t avoidHandover;
     simsignal_t distance;
+    simsignal_t computeResponseTime;
+    simsignal_t computeWaitingTime;
+
 
     inet::TurtleMobility* mobility;
     inet::Coord* bsPositions;
@@ -63,6 +68,7 @@ class Transmitter : public cSimpleModule
     void handlePenaltyTimeElapsed(cMessage *msg);
     void sendPacket(cPacket* pkt);
     double getDistance(int bs);
+    void scheduleArrival(cMessage* msg);
 
 };
 

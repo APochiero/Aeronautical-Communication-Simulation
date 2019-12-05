@@ -11,3 +11,4 @@ src/makefrag
 src/src
 *.anf
 
+/.computed/

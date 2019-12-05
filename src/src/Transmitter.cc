@@ -14,7 +14,6 @@
 // 
 
 #include "Transmitter.h"
-#include <string>
 #include <algorithm>
 #include "AircraftPacket_m.h"
 
@@ -33,12 +32,13 @@ void Transmitter::initialize(int stage) {
             t = getAncestorPar("t").doubleValue();
             T = getAncestorPar("T").doubleValue();
             p = getAncestorPar("p").doubleValue();
+            interarrivalDistribution = getAncestorPar("interarrivalDistribution").stdstringValue();
+
 
             int rows = getAncestorPar("rows").intValue();
             int cols = getAncestorPar("cols").intValue();
             int M = getAncestorPar("M").intValue();
 
-            bsPositions = new Coord[nBS];   /* TODO shouldn't we share all these coordinates among all ACs? */
             transmitting = false;
             penalty = false;
             schedulePenalty = false;
@@ -49,12 +49,16 @@ void Transmitter::initialize(int stage) {
             handover = registerSignal("handover");
             avoidHandover = registerSignal("avoidHandover");
             distance = registerSignal("distance");
+            computeResponseTime = registerSignal("computeResponseTime");
+            computeWaitingTime = registerSignal("computeWaitingTime");
+
 
             /* Reference to own mobility module */
             mobility = reinterpret_cast<TurtleMobility*> ( getModuleByPath("^.mobility") );
 
             /* setup base station positions */
             /* TODO -- shouldn't these coordinates be shared among all transmitters? */
+            bsPositions = new Coord[nBS];   /* TODO shouldn't we share all these coordinates among all ACs? */
             for ( int i = 0; i < rows; i++ ) {
                 for ( int j = 0; j < cols; j++ ) {
                     bsPositions[i*rows+j].setX(M/2 + j*M);
@@ -102,7 +106,9 @@ void Transmitter::handleDesync(cMessage* msg) {
     ap->setAircraftID(getIndex());
     sendPacket(ap);
 
-    scheduleAt(simTime() + k, new cMessage("packetArrival")); // first packet generated
+    // first packet generated
+    scheduleArrival(new cMessage("packetArrival"));
+
     scheduleAt(simTime() + t, new cMessage("checkHandover")); // start handover period
     delete msg;
 }
@@ -110,6 +116,9 @@ void Transmitter::handleDesync(cMessage* msg) {
 void Transmitter::handlePacketArrival(cMessage *msg) {
     EV_INFO << "==> PacketArrival";
     EV_INFO << ", queue length: " << queue.getLength() << ", transmitting: " << transmitting << endl;
+
+    double d = getDistance(connectedBS);
+    emit(distance, d );
 
     // Insert message into queue and schedule another arrival
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
@@ -125,14 +134,15 @@ void Transmitter::handlePacketArrival(cMessage *msg) {
         emit(newPacket, queue.getLength());
         queue.insert(ap);
     }
-    scheduleAt(simTime() + k, msg );
+
+    scheduleArrival(msg);
 }
 
 void Transmitter::handleCheckHandover(cMessage *msg) {
     EV_INFO << "==> CheckHandover" << endl;
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
-        emit(handover,1);
+        emit(handover,10);
         EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
         penalty = true;
@@ -145,7 +155,7 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
         }
     } else {
         EV_INFO << "Handover avoided" << endl;
-        emit(avoidHandover,1);
+        emit(avoidHandover,10);
     }
     scheduleAt(simTime() + t, msg); // Start handover period
 }
@@ -190,8 +200,14 @@ void Transmitter::sendPacket(cPacket* pkt) {
 
     transmitting = true;
     double d = getDistance(connectedBS);
-    emit(distance, d );
     s = T*pow(d, 2); /* formula given by specifications */
+
+    AircraftPacket *ap = check_and_cast<AircraftPacket*> (pkt);
+    double arrivalTime = ap->getArrivalTime();
+    emit(computeResponseTime, simTime().dbl() + s - arrivalTime );
+    emit(computeWaitingTime, simTime().dbl() - arrivalTime );
+
+
     scheduleAt(simTime() + s, new cMessage("packetSent"));
     EV_INFO << "==> SendPacket "<< pkt->getId() << " with service time "<< s <<endl;
 }
@@ -234,6 +250,13 @@ double Transmitter::getDistance(int bs) {
     distances.push_back(bsPosition.distance(acPos + Coord( -L, -L)));
 
     return *min_element(distances.begin(), distances.end());
+}
+
+void Transmitter::scheduleArrival( cMessage* msg ) {
+    if ( strcmp(interarrivalDistribution.c_str(), "constant") == 0)
+        scheduleAt(simTime() + k, msg);
+    else if (strcmp(interarrivalDistribution.c_str(), "exponential") == 0 )
+        scheduleAt(simTime() + exponential(k), msg );
 }
 
 void Transmitter::finish() {

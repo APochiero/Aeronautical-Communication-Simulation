@@ -21,7 +21,6 @@ Define_Module(BaseStation);
 
 void BaseStation::initialize()
 {
-    // TODO - Generated method body
 }
 
 void BaseStation::handleMessage(cMessage *msg)

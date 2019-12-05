@@ -24,6 +24,8 @@ simple Transmitter
        // TODO
        int nBS;  
        @signal[packetSent](type="double");
+       @signal[computeResponseTime](type="double");
+       @signal[computeWaitingTime](type="double");      
        @signal[newPacket](type="long");
        @signal[handover](type="long");
        @signal[avoidHandover](type="long");
@@ -31,10 +33,12 @@ simple Transmitter
        
        @statistic[serviceTime](source="packetSent"; record=vector;); 
        @statistic[queueLength](source="newPacket"; record=vector;);
-       @statistic[nHandover](source="handover"; record=sum;);
-       @statistic[nAvoidedHandover](source="avoidHandover"; record=sum;);
+       @statistic[nHandover](source="handover"; record=vector;);
+       @statistic[nAvoidedHandover](source="avoidHandover"; record=vector;);
        @statistic[distance](source="distance"; record=vector;);
-       
+       @statistic[responseTime](source="computeResponseTime"; record=vector;);
+       @statistic[waitingTime](source="computeWaitingTime"; record=vector;);
+
     gates:
         output out[nBS];
 }
