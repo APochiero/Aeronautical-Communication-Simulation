@@ -1,4 +1,10 @@
 build/
 dist/
+*.aux
+*.out
+*.toc
+*.log
+*.pdf
 *.swp
+main.synctex.gz
 
