@@ -185,40 +185,5 @@ Movement of AC is given by the following algorithm, implemented using the \textt
   \item once reached new position, re-do from the beginning;
 \end{itemize}
 
-\section{Application}
-\subsection{Requirements}
-
-\subsection{Compile}
-To compile the application, just run:
-\begin{verbatim}
-  $ cd $REPO
-  $ make -j$(nproc)
-\end{verbatim}
-
-Application's two executables, \texttt{client} and \texttt{server}, will be found in the \texttt{bin} directory.
-For simplicity, it is suggested to run them from the repository's root directory.
-
-To compile this documentation, just run:
-\begin{verbatim}
-  $ cd $REPO/doc
-  $ make
-\end{verbatim}
-
-\subsection{Run}
-To run the application just type the following commands in your shell.
-
-\subsection{Repository}% TODO
-\projectname{}'s repository is organized in directories:
-\begin{itemize}
-  \item \texttt{bin} contains the \texttt{client} and \texttt{server} executable files;
-  \item \texttt{cert} contains all the certificates; if the application's server is run on the same host as the client, then this directory can be shared.
-  \item \texttt{conf} contains server configuration, eg. a file with authorized clients list;
-  \item \texttt{debug} contains some useful commands and configuration files for some common debugging tools like \emph{valgrind} and \emph{gdb};
-  \item \texttt{doc} contains the \LaTeX source code of this document;
-  \item \texttt{downloads} is the default location for files downloaded from the server by the client;
-  \item \texttt{obj} contains object files before their linking;
-  \item \texttt{root} is the default and only location allowed for files uploaded to the server;
-  \item \texttt{src} contains the application's source code.
-\end{itemize}
 
 \end{document}
