@@ -29,12 +29,14 @@ network AeronauticalCommunicationNetwork
         int nAircrafts;
         int nBS;
         string interarrivalDistribution = default("exponential");
-        @display("bgb=25000,25000,white;");
-    submodules:
+        @display("bgb=100000,100000,white;");
+//        @display("bgb=25000,25000,white;");
+        submodules:
         aircraft[nAircrafts]: Aircraft;
         bs[nBS]: BaseStation {
-	    	@display("i=device/antennatower_s");    
-//	    	@display("p=12500,12500,m,4,25000,25000");      
+	    	@display("i=device/antennatower_s"); 
+//	    	@display("p=12500, 12500");   
+	    	@display("p=12500,12500,m,4,25000,25000");      
         };
         controlTower: ControlTower { // utile per collezionare statistiche sull'intero sistema
 	    	@display("i=device/mainframe");   

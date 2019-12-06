@@ -142,7 +142,7 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
     EV_INFO << "==> CheckHandover" << endl;
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
-        emit(handover,10);
+        emit(handover,1);
         EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
         penalty = true;
@@ -155,7 +155,7 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
         }
     } else {
         EV_INFO << "Handover avoided" << endl;
-        emit(avoidHandover,10);
+        emit(avoidHandover,1);
     }
     scheduleAt(simTime() + t, msg); // Start handover period
 }
