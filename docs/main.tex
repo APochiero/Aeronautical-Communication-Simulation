@@ -24,6 +24,7 @@
 
 % Graphic packages
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{float}
 \usepackage{adjustbox}
 \usepackage{tikz}
@@ -109,11 +110,7 @@
 
 
 \clearpage
-~
-\clearpage
 \tableofcontents
-\clearpage
-~
 \clearpage
 \pagenumbering{arabic}
 
@@ -145,7 +142,16 @@ else
 endif
 \end{verbatim}
 
-\subsection{Constant and variables summary}
+\section{Objectives}
+Minimize end to end delay between AC and CT, using the maximum packet interarrival frequency, without destabilizing queues in the system.
+
+\section{Performance Indexes}
+\begin{itemize}
+  \item response time
+  \item queue length
+\end{itemize}
+
+\section{Scenario}
 \begin{itemize}
   \item \textbf{k}: it represents the interarrival time of packets;
   \item \textbf{M}: it represents the distance between two consecutive BS on the same row, or column, and it is fixed at 25 km;
@@ -156,26 +162,27 @@ endif
   \item \textbf{p}: it represents the handover penalty;
 \end{itemize}
 
-\section{Model}
-% TODO high level model
+\section{Calibration}
+% TODO Roberto 3.1.1 -- Parameter analysis
+% and always respect the stability condition
 
-Service time depends on distance between AC and BS.
-Distance between AC and BS, namely \emph{d}, belongs to interval $[ 0, d_{max} [$ where $d_{max}$ can be computed as $d_{max\_in} + d_{max\_out}$, where:
-\begin{itemize}
-  \item $d_{max\_in} = \frac{M \sqrt{2}}{2} $
-  \item $d_{max\_out} = vt$
-\end{itemize}
+
+
+
+\section{Model}
+The ACS can be modeled with the following system from queueing theory.
 
 \begin{figure}[H]
   \centering
-  \includegraphics{img/dmax.pdf}
-  \caption{Computation of $d_{max}$}
-  \label{fig:dmax}
+  \includegraphics{img/model.pdf}
+  \caption{M/G/1 system for ACS}
+  \label{fig:model}
 \end{figure}
 
-What is the worst case? Referring to Figure~\ref{fig:dmax}, let's assume that an AC is moving in direction $BS_g \rightarrow B$, and that, at a given time $t_g$, $\overrightarrow{AC} \in cell$ and $\overrightarrow{AC} - \overrightarrow{A} < \epsilon$ with $\epsilon$ small as you wish, eg. AC is at point A but still inside the cell where the nearest BS is $BS_g$; and let's assume that, at this time, AC initiates the handover procedure and discovers that the nearest BS is $BS_g$. Immediately after this handover procedure, performed without any penalty time, AC is out of the cell and will not initiate the handover procedure before $t$ time: this means that, when it is in point B, it has traveled for, $d_{max\_out} = v t$, since the last handover procedure, and that the longest distance $d_{max}$ between AC and BS is given by:
-
-$$ d_{max} = \frac{M \sqrt{2}}{2} + vt $$
+\section{Simulator}
+\subsection{Software}
+Simulator has been coded in C++ using the OMNeT++ environment and the INET framework.
+% TODO inserire qui disegnino del modulo AC, con dentro Transmitter e Mobility Module
 
 \subsection{Movement of AC}
 Movement of AC is given by the following algorithm, implemented using the \texttt{TurtleMobility} module from INET:
@@ -185,5 +192,107 @@ Movement of AC is given by the following algorithm, implemented using the \textt
   \item once reached new position, re-do from the beginning;
 \end{itemize}
 
+\section{Verification}
+In order to verify the correctness of our code, we recorded the service time for a simulation and looked at a small time interval in order to spot abviously wrong situations.
+
+In particular, here we can see that:
+% magari questo va fatto prima della validazione?
+% TODO The code correctly works
+% TODO some images of the service time
+% insomma verifico che il codice faccia davvero quello che deve fare a occhio
+
+\section{Validation tests}
+\subsection{Considerations on distance}
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics{img/dmax.pdf}
+    \caption{Computation of $d_{max}$}
+    \label{fig:dmax}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.45\textwidth}
+    \centering
+    \includegraphics{img/d-simplified.pdf}
+    \caption{Simplified distance computation}
+    \label{fig:d-simplified}
+  \end{subfigure}
+  \caption{Computation of distance between AC and BS}
+  \label{fig:d}
+\end{figure}
+
+Service time depends on distance between AC and BS.
+Distance between AC and BS, namely \emph{d}, belongs to interval $[ 0, d_{max} [$ where $d_{max}$ can be computed as $d_{max\_in} + d_{max\_out}$, where:
+\begin{itemize}
+  \item $d_{max\_in} = \frac{M \sqrt{2}}{2} $
+  \item $d_{max\_out} = vt$
+\end{itemize}
+
+What is the worst case? Referring to Figure~\ref{fig:dmax}, let's assume that an AC is moving in direction $BS_g \rightarrow B$, and that, at a given time $t_g$, $\overrightarrow{AC} \in cell$ and $\overrightarrow{AC} - \overrightarrow{A} < \epsilon$ with $\epsilon$ small as you wish, eg. AC is at point A but still inside the cell where the nearest BS is $BS_g$; and let's assume that, at this time, AC initiates the handover procedure and discovers that the nearest BS is $BS_g$. Immediately after this handover procedure, performed without any penalty time, AC is out of the cell and will not initiate the handover procedure before $t$ time: this means that, when it is in point B, it has traveled for, $d_{max\_out} = v t$, since the last handover procedure, and that the longest distance $d_{max}$ between AC and BS is given by:
+
+$$ d_{max} = \frac{M \sqrt{2}}{2} + vt $$
+
+This result can be used to validate our simulator.
+
+\subsection{Simplification on distance}
+In order to compute the distribution of service time, and to validate our model against a known queuing theory model, we had to make some simplifications for the computation of distance, and in particular: a single circle area around a single BS was used, as shown in Figure~\ref{fig:d-simplified}.
+
+This way, we did not take in account for:
+\begin{itemize}
+  \item handover, because its probability is difficult to compute;
+  \item area near cell's corners (coloured area), because it introduced a non-trivial-to-manage discontinuity in our formulas;
+\end{itemize}
+
+We want to compute $P\{D = x\}$, eg. probability that, picked a random position for AC inside the cell, distance $D$ between AC and BS equals to $x$.
+Intuition suggests that, with bigger circumferences (centered in BS) with radius $x$, in the real world, more points are suitable to satisfy $D = x$, thus $P\{D = x\}$ is proportional with circumference, which is proportional with radius.
+So, a reasonable PDF for D is:
+
+$$ f_D(x) = k \cdot 2 \pi x, 0 \leq x \leq \frac{M}{2} $$
+
+with $k = 2.03718 \times 10^{-9}$ (computed with normalization condition).
+
+Since our goal is computing the distribution for service time, we note that:
+
+$$ F_D(x) = \int_{0}^{x} f_D(x) dx = k \pi x^2 $$
+
+and also that
+
+$$ s = T \cdot x^2 \implies x = + \sqrt{\frac{s}{T}} $$
+
+and
+
+$$ F_S(s) = F_D\left(\sqrt{\frac{s}{T}}\right) = \frac{k \pi}{T} s $$
+
+then
+
+$$ f_S(s) = \frac{k \pi}{T}, s \in \left[0; \frac{TM^2}{4}\right] \implies S \in \mathcal{U}\left(0, \frac{TM^2}{4} \right)$$
+
+This result can be used to validate our simulator.
+%% TODO which we can fit?
+% we ran our simulation with 1 BS for 1M times, then deleted all distances above M/2 and fitted that distribution,
+% and we saw that is was there :-) QUESTA COSA VA FATTA NEI VALIDATION EXPERIMENTS
+
+\subsection{Handover convenience}
+Last test was on the handover convenience: it is straightforward that we want
+
+$$ s[t] \geq s[t + 1] $$
+
+for each $t, t + 1$ such that and handover has been performed in between, eg. service time never increases after an handover.
+% TODO inoltre: ha senso quello che stiamo facendo? controlliamo l'handover convenience
+
+\section{Validation experiments}
+
+
+
+
+
+
+
+
+
+\section{Experiments}
+% TODO da fare dopo che il simulatore sarà stato correttamente validato
+% TODO steady sate probability: ci serve un warmup time? Roberto 4.1, figura 8
 
 \end{document}
