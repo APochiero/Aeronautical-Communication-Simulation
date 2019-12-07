@@ -182,7 +182,13 @@ The ACS can be modeled with the following system from queueing theory.
 \section{Simulator}
 \subsection{Software}
 Simulator has been coded in C++ using the OMNeT++ environment and the INET framework.
-% TODO inserire qui disegnino del modulo AC, con dentro Transmitter e Mobility Module
+\begin{figure}[H]
+  \centering
+  \includegraphics{img/aircraft-ned.png}
+  \caption{Module structure of Aircraft}
+  \label{fig:aircraft-ned}
+\end{figure}
+% TODO inserire qui descrizione del disegnino del modulo AC, con dentro Transmitter e Mobility Module
 
 \subsection{Movement of AC}
 Movement of AC is given by the following algorithm, implemented using the \texttt{TurtleMobility} module from INET:
@@ -192,14 +198,26 @@ Movement of AC is given by the following algorithm, implemented using the \textt
   \item once reached new position, re-do from the beginning;
 \end{itemize}
 
+This algorithm is equivalent to \texttt{Random WayPoint}, but takes in account the possibility of a wrap around.
+
 \section{Verification}
 In order to verify the correctness of our code, we recorded the service time for a simulation and looked at a small time interval in order to spot abviously wrong situations.
 
-In particular, here we can see that:
-% magari questo va fatto prima della validazione?
-% TODO The code correctly works
-% TODO some images of the service time
-% insomma verifico che il codice faccia davvero quello che deve fare a occhio
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{img/verification-via-service-time.pdf}
+  \caption{Service time during a test simulation}
+  \label{fig:verification-via-service-time}
+\end{figure}
+
+We can see that:
+\begin{itemize}
+  \item service time has a paraboloid shape, which is expected since it is proportional with $d^2$, which $d$ increases linearly during time, because AC travel at costant speed;
+  \item graph discontinuity, like the one between 18950 and 19000, represent the penalty time, which can be observed after an handover; service time correctly decreases after the handover;
+  \item graph non derivability, like two points slightly before 19100 and 19150, represent the moment when AC randomly changes direction;
+\end{itemize}
+
+At this point, we are confident that the code for our simulator is correctly modeling the real world scenario, thus we can go through a more in-depth inspection by performing some validation test.
 
 \section{Validation tests}
 \subsection{Considerations on distance}
@@ -279,7 +297,8 @@ Last test was on the handover convenience: it is straightforward that we want
 $$ s[t] \geq s[t + 1] $$
 
 for each $t, t + 1$ such that and handover has been performed in between, eg. service time never increases after an handover.
-% TODO inoltre: ha senso quello che stiamo facendo? controlliamo l'handover convenience
+
+This result can be used to validate our simulator.
 
 \section{Validation experiments}
 
