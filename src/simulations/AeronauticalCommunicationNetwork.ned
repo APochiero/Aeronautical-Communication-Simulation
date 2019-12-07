@@ -29,6 +29,7 @@ network AeronauticalCommunicationNetwork
         int nAircrafts;
         int nBS;
         string interarrivalDistribution = default("exponential");
+        string configuration = default("general");
         @display("bgb=100000,100000,white;");
 //        @display("bgb=25000,25000,white;");
         submodules:

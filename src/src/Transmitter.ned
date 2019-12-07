@@ -23,19 +23,19 @@ simple Transmitter
     parameters:
        // TODO
        int nBS;  
-       @signal[packetSent](type="double");
+       @signal[computeServiceTime](type="double");
        @signal[computeResponseTime](type="double");
        @signal[computeWaitingTime](type="double");      
-       @signal[newPacket](type="long");
+       @signal[computeQueueLength](type="long");
        @signal[handover](type="long");
-       @signal[avoidHandover](type="long");
-       @signal[distance](type="long");
+	   @signal[handoverDone](type="long");
+       @signal[computeDistance](type="long");
        
-       @statistic[serviceTime](source="packetSent"; record=vector;); 
-       @statistic[queueLength](source="newPacket"; record=vector;);
-       @statistic[nHandover](source="handover"; record=vector;);
-       @statistic[nAvoidedHandover](source="avoidHandover"; record=vector;);
-       @statistic[distance](source="distance"; record=vector;);
+       @statistic[serviceTime](source="computeServiceTime"; record=vector;); 
+       @statistic[queueLength](source="computeQueueLength"; record=vector;);
+       @statistic[handover](source="handover"; record=vector;);
+       @statistic[handoverDone](source="handoverDone"; record=vector;);
+       @statistic[distance](source="computeDistance"; record=vector;);
        @statistic[responseTime](source="computeResponseTime"; record=vector;);
        @statistic[waitingTime](source="computeWaitingTime"; record=vector;);
 
