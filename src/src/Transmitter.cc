@@ -51,6 +51,8 @@ void Transmitter::initialize(int stage) {
             distance = registerSignal("distance");
             computeResponseTime = registerSignal("computeResponseTime");
             computeWaitingTime = registerSignal("computeWaitingTime");
+            serviceTimeBeforeHandover = registerSignal("serviceTimeBeforeHandover");
+            serviceTimeAfterHandover = registerSignal("serviceTimeAfterHandover");
 
 
             /* Reference to own mobility module */
@@ -142,9 +144,11 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
     EV_INFO << "==> CheckHandover" << endl;
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
-        emit(handover,1);
+        emit(handover, 1);
+        emit(serviceTimeBeforeHandover, T * pow(getDistance(connectedBS), 2));
         EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
+        emit(serviceTimeAfterHandover, T * pow(getDistance(connectedBS), 2));
         penalty = true;
         if ( !transmitting ) {
             EV_INFO << "Penalty started, waiting for: " << p << "s" <<endl;
