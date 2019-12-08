@@ -47,6 +47,8 @@ class Transmitter : public cSimpleModule
     bool transmitting;
     bool penalty;
     bool schedulePenalty;
+    bool firstAfterExit;
+    double timeAtExit;
 
     simsignal_t computeServiceTime;
     simsignal_t computeQueueLength;
