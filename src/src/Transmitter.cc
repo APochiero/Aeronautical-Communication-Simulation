@@ -50,6 +50,8 @@ void Transmitter::initialize(int stage) {
             computeDistance = registerSignal("computeDistance");
             computeResponseTime = registerSignal("computeResponseTime");
             computeWaitingTime = registerSignal("computeWaitingTime");
+            serviceTimeBeforeHandover = registerSignal("serviceTimeBeforeHandover");
+            serviceTimeAfterHandover = registerSignal("serviceTimeAfterHandover");
 
 
             /* Reference to own mobility module */
@@ -137,9 +139,11 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
         emit(handover,T*pow(getDistance(connectedBS), 2));
+        emit(serviceTimeBeforeHandover, T * pow(getDistance(connectedBS), 2));
         EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
-        emit(handoverDone,T*pow(getDistance(connectedBS), 2));
+        emit(handoverDone,T*pow(getDistance(connectedBS), 2));  // TODO non potremmo chiamare handover e handoverDone con dei nomi più significativi?
+        emit(serviceTimeAfterHandover, T * pow(getDistance(connectedBS), 2));
         penalty = true;
         if ( !transmitting ) {
             EV_INFO << "Penalty started, waiting for: " << p << "s" <<endl;

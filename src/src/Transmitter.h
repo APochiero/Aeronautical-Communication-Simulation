@@ -55,6 +55,8 @@ class Transmitter : public cSimpleModule
     simsignal_t computeDistance;
     simsignal_t computeResponseTime;
     simsignal_t computeWaitingTime;
+    simsignal_t serviceTimeBeforeHandover;
+    simsignal_t serviceTimeAfterHandover;
 
 
     inet::TurtleMobility* mobility;
