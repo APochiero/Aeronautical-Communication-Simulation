@@ -33,7 +33,6 @@ void Transmitter::initialize(int stage) {
             T = getAncestorPar("T").doubleValue();
             p = getAncestorPar("p").doubleValue();
             interarrivalDistribution = getAncestorPar("interarrivalDistribution").stdstringValue();
-            configuration = getAncestorPar("configuration").stdstringValue();
 
             int rows = getAncestorPar("rows").intValue();
             int cols = getAncestorPar("cols").intValue();
@@ -42,7 +41,6 @@ void Transmitter::initialize(int stage) {
             transmitting = false;
             penalty = false;
             schedulePenalty = false;
-            firstAfterExit = false;
 
             /* Registering all signals for stats */
             computeServiceTime = registerSignal("computeServiceTime");
@@ -121,21 +119,16 @@ void Transmitter::handlePacketArrival(cMessage *msg) {
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
     ap->setArrivalTime(simTime().dbl());
     ap->setAircraftID(getIndex());
+
     if ( !transmitting && !penalty ) {
         if ( queue.isEmpty() ) {
             EV_INFO<< "Queue is empty, sending packet"<<endl;
             sendPacket(ap);
         }
     } else {
-        // if general conf or ( singleBSValidation conf and in-circle ) packet can be queued
-        if (strcmp(configuration.c_str(), "general") == 0 || ( strcmp(configuration.c_str(), "singleBSValidation") == 0 && getDistance(connectedBS) <= getAncestorPar("M").intValue()/2 )) {
-            queue.insert(ap);
-            EV_INFO<< "Queuing"<<endl;
-        } else {
-            delete ap;
-        }
+        queue.insert(ap);
+        EV_INFO<< "Queuing"<<endl;
     }
-
     scheduleArrival(msg);
 }
 
@@ -162,31 +155,12 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
 }
 
 void Transmitter::handlePacketSent(cMessage *msg) {
-    EV_INFO << "==> PacketSent with service time:" << s <<endl;
-
+    EV_INFO << "==> Last Packet sent with service time:" << s <<endl;
     transmitting = false;
     if ( !queue.isEmpty() && !penalty ) {
-        // if general conf or ( singleBSValidation conf and in-circle )
-        if (strcmp(configuration.c_str(), "general") == 0 || (strcmp(configuration.c_str(), "singleBSValidation") == 0 && getDistance(connectedBS) <= getAncestorPar("M").intValue()/2 ) ) {
-            AircraftPacket* ap = (AircraftPacket*) queue.front();
-            queue.pop();
-
-            // check if aircratf just returned inside the circle and add offset to arrivalTime to fix response and waiting time
-            if ( !firstAfterExit ) {
-                firstAfterExit = true;
-                double offset = simTime().dbl() - timeAtExit;
-                ap->setArrivalTime(ap->getArrivalTime() + offset);
-            }
-            sendPacket(ap);
-        } else {
-            // packet that will be sent after aircraft returns inside the circle
-            if ( firstAfterExit ) {
-                timeAtExit = simTime().dbl();
-                firstAfterExit = false;
-            }
-            // check again this condition after 0.1s
-            scheduleAt(simTime() + 0.1, new cMessage("packetSent"));
-        }
+        AircraftPacket* ap = (AircraftPacket*) queue.front();
+        queue.pop();
+        sendPacket(ap);
     }
 
     if (schedulePenalty) {
@@ -271,16 +245,12 @@ void Transmitter::scheduleArrival( cMessage* msg ) {
         scheduleAt(simTime() + exponential(k), msg );
 }
 
-void Transmitter::computeStatistics(double distance, double serviceTime, double arrivalTime ) {
-    // if singleBSValidation and aircraft outside the circle do not computeStatistics
-    if ( strcmp(configuration.c_str(), "singleBSValidation") == 0 && distance > getAncestorPar("M").intValue()/2 )
-        return;
-
+void Transmitter::computeStatistics(double distance, double serviceTime, simtime_t arrivalTime ) {
     emit(computeDistance, distance );
     emit(computeServiceTime, serviceTime );
     emit(computeQueueLength, queue.getLength());
-    emit(computeResponseTime, simTime().dbl() + s - arrivalTime );
-    emit(computeWaitingTime, simTime().dbl() - arrivalTime );
+    emit(computeResponseTime, simTime() + s - arrivalTime  );
+    emit(computeWaitingTime, simTime() - arrivalTime  );
 }
 
 void Transmitter::finish() {

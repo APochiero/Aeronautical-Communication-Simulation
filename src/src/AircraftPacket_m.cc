@@ -237,12 +237,12 @@ void AircraftPacket::setAircraftID(int aircraftID)
     this->aircraftID = aircraftID;
 }
 
-double AircraftPacket::getArrivalTime() const
+::omnetpp::simtime_t AircraftPacket::getArrivalTime() const
 {
     return this->arrivalTime;
 }
 
-void AircraftPacket::setArrivalTime(double arrivalTime)
+void AircraftPacket::setArrivalTime(::omnetpp::simtime_t arrivalTime)
 {
     this->arrivalTime = arrivalTime;
 }
@@ -377,7 +377,7 @@ const char *AircraftPacketDescriptor::getFieldTypeString(int field) const
     }
     static const char *fieldTypeStrings[] = {
         "int",
-        "double",
+        "simtime_t",
         "double",
     };
     return (field>=0 && field<3) ? fieldTypeStrings[field] : nullptr;
@@ -448,7 +448,7 @@ std::string AircraftPacketDescriptor::getFieldValueAsString(void *object, int fi
     AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
         case 0: return long2string(pp->getAircraftID());
-        case 1: return double2string(pp->getArrivalTime());
+        case 1: return simtime2string(pp->getArrivalTime());
         case 2: return double2string(pp->getServiceTime());
         default: return "";
     }
@@ -465,7 +465,7 @@ bool AircraftPacketDescriptor::setFieldValueAsString(void *object, int field, in
     AircraftPacket *pp = (AircraftPacket *)object; (void)pp;
     switch (field) {
         case 0: pp->setAircraftID(string2long(value)); return true;
-        case 1: pp->setArrivalTime(string2double(value)); return true;
+        case 1: pp->setArrivalTime(string2simtime(value)); return true;
         case 2: pp->setServiceTime(string2double(value)); return true;
         default: return false;
     }

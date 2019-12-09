@@ -47,8 +47,6 @@ class Transmitter : public cSimpleModule
     bool transmitting;
     bool penalty;
     bool schedulePenalty;
-    bool firstAfterExit;
-    double timeAtExit;
 
     simsignal_t computeServiceTime;
     simsignal_t computeQueueLength;
@@ -72,7 +70,7 @@ class Transmitter : public cSimpleModule
     void sendPacket(cPacket* pkt);
     double getDistance(int bs);
     void scheduleArrival(cMessage* msg);
-    void computeStatistics( double distance, double serviceTime, double arrivalTime );
+    void computeStatistics( double distance, double serviceTime, simtime_t arrivalTime );
 
 };
 

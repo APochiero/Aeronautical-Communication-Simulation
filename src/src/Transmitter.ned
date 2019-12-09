@@ -24,8 +24,8 @@ simple Transmitter
        // TODO
        int nBS;  
        @signal[computeServiceTime](type="double");
-       @signal[computeResponseTime](type="double");
-       @signal[computeWaitingTime](type="double");      
+       @signal[computeResponseTime](type=simtime_t);
+       @signal[computeWaitingTime](type=simtime_t);      
        @signal[computeQueueLength](type="long");
        @signal[handover](type="long");
 	   @signal[handoverDone](type="long");
