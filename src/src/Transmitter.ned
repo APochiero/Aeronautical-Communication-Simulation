@@ -17,7 +17,6 @@ package aeronauticalcommunicationsimulator;
 simple Transmitter
 {
     parameters:
-       // TODO
        int nBS;
        @signal[packetSent](type="double");
        @statistic[serviceTime](source="packetSent"; record=vector;);
@@ -33,6 +32,12 @@ simple Transmitter
 
        @signal[distance](type="long");
        @statistic[distance](source="distance"; record=vector;);
+       
+       @signal[handoverDone](type="long");
+       @statistic[handoverDone](source="handoverDone"; record=vector;);
+       
+       @signal[handover](type="long");
+       @statistic[handover](source="handover"; record=vector;);
 
        @signal[computeResponseTime](type="double");
        @statistic[responseTime](source="computeResponseTime"; record=vector;);

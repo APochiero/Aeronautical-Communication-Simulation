@@ -43,15 +43,18 @@ class Transmitter : public cSimpleModule
     double p;
     double s;
     string interarrivalDistribution;
+    string configuration;
     bool transmitting;
     bool penalty;
     bool schedulePenalty;
+    bool firstAfterExit;
+    double timeAtExit;
 
-    simsignal_t packetSent;
-    simsignal_t newPacket;
+    simsignal_t computeServiceTime;
+    simsignal_t computeQueueLength;
     simsignal_t handover;
-    simsignal_t avoidHandover;
-    simsignal_t distance;
+    simsignal_t handoverDone;
+    simsignal_t computeDistance;
     simsignal_t computeResponseTime;
     simsignal_t computeWaitingTime;
     simsignal_t serviceTimeBeforeHandover;
@@ -71,6 +74,7 @@ class Transmitter : public cSimpleModule
     void sendPacket(cPacket* pkt);
     double getDistance(int bs);
     void scheduleArrival(cMessage* msg);
+    void computeStatistics( double distance, double serviceTime, double arrivalTime );
 
 };
 
