@@ -220,7 +220,7 @@ We can see that:
 At this point, we are confident that the code for our simulator is correctly modeling the real world scenario, thus we can go through a more in-depth inspection by performing some validation test.
 
 \section{Validation tests}
-\subsection{Considerations on distance}
+\subsection{Maximum distance considerations}
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
@@ -253,7 +253,7 @@ $$ d_{max} = \frac{M \sqrt{2}}{2} + vt $$
 
 This result can be used to validate our simulator.
 
-\subsection{Simplification on distance}
+\subsection{Distances distribution simplification}
 In order to compute the distribution of service time, and to validate our model against a known queuing theory model, we had to make some simplifications for the computation of distance, and in particular: a single circle area around a single BS was used, as shown in Figure~\ref{fig:d-simplified}.
 
 This way, we did not take in account for:
@@ -301,6 +301,9 @@ for each $t, t + 1$ such that and handover has been performed in between, eg. se
 This result can be used to validate our simulator.
 
 \section{Validation experiments}
+\subsection{Maximum distance considerations}
+\subsection{Distances distribution simplification}
+\subsection{Handover convenience}
 
 
 
