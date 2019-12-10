@@ -17,37 +17,18 @@ package aeronauticalcommunicationsimulator;
 simple Transmitter
 {
     parameters:
-<<<<<<< HEAD
        // TODO
        int nBS;  
-       @signal[computeServiceTime](type="double");
-       @signal[computeResponseTime](type=simtime_t);
-       @signal[computeWaitingTime](type=simtime_t);      
+   
+       @signal[computeServiceTime](type="simtime_t");
+       @statistic[serviceTime](source="computeServiceTime"; record=vector;);
+
        @signal[computeQueueLength](type="long");
-=======
-       int nBS;
-       @signal[packetSent](type="double");
-       @statistic[serviceTime](source="packetSent"; record=vector;);
+       @statistic[queueLength](source="computeQueueLength"; record=vector;);
 
-       @signal[newPacket](type="long");
-       @statistic[queueLength](source="newPacket"; record=vector;);
-
->>>>>>> 7ef571b8893ff62b7ea4ac50dc211e1ef3466548
-       @signal[handover](type="long");
-       @statistic[nHandover](source="handover"; record=vector;);
-
-       @signal[avoidHandover](type="long");
-       @statistic[nAvoidedHandover](source="avoidHandover"; record=vector;);
-
-       @signal[distance](type="long");
-       @statistic[distance](source="distance"; record=vector;);
+       @signal[computeDistance](type="long");
+       @statistic[distance](source="computeDistance"; record=vector;);
        
-       @signal[handoverDone](type="long");
-       @statistic[handoverDone](source="handoverDone"; record=vector;);
-       
-       @signal[handover](type="long");
-       @statistic[handover](source="handover"; record=vector;);
-
        @signal[computeResponseTime](type="double");
        @statistic[responseTime](source="computeResponseTime"; record=vector;);
 
@@ -60,6 +41,8 @@ simple Transmitter
        @signal[serviceTimeAfterHandover](type="double");
        @statistic[serviceTimeAfterHandover](source="serviceTimeAfterHandover"; record=vector;);
 
+       @signal[arrival](type="double");
+       @statistic[interarrivalTime](source="arrival"; record=vector;);
     gates:
         output out[nBS];
 }

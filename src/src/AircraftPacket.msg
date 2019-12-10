@@ -21,5 +21,4 @@ namespace aeronauticalcommunicationsimulator;
 packet AircraftPacket {
 	int aircraftID;
 	simtime_t arrivalTime;
-	double serviceTime;
 }
