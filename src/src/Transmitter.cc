@@ -91,6 +91,8 @@ void Transmitter::handleMessage(cMessage *msg)
             handlePacketSent(msg);
         } else if ( strcmp(msg->getName(),"penaltyTimeElapsed") == 0 ) {
             handlePenaltyTimeElapsed(msg);
+        } else if ( strcmp(msg->getName(),"computeRandomStats") == 0 ) {
+            handleComputeRandomStats(msg);
         }
     }
 
@@ -107,11 +109,28 @@ void Transmitter::handleDesync(cMessage* msg) {
     queue.insert(ap);
     sendPacket();
 
-    // first packet generated
+//     first packet generated
     scheduleArrival(new cMessage("packetArrival"));
-
+    scheduleAt(simTime() + uniform(0, 1), new cMessage("computeRandomStats"));
     scheduleAt(simTime() + t, new cMessage("checkHandover")); // start handover period
     delete msg;
+}
+
+void Transmitter::handleComputeRandomStats(cMessage *msg) {
+    double d = getDistance(connectedBS);
+    s = T*pow(d, 2);
+    emit(computeDistance, d );
+    emit(computeServiceTime, s );
+    emit(computeQueueLength, queue.getLength());
+
+    if ( !queue.isEmpty() ) {
+        AircraftPacket* ap = (AircraftPacket*) queue.front();
+        simtime_t arrivalTime = ap->getArrivalTime();
+        emit(computeResponseTime, simTime() + s - arrivalTime  );
+        emit(computeWaitingTime, simTime() - arrivalTime  );
+    }
+
+    scheduleAt(simTime() + uniform(0, 1), msg);
 }
 
 void Transmitter::handlePacketArrival(cMessage *msg) {
@@ -143,7 +162,7 @@ void Transmitter::sendPacket() {
         transmitting = true;
         double d = getDistance(connectedBS);
         s = T*pow(d, 2); /* formula given by specifications */
-        computeStatistics(d,s, ap->getArrivalTime());
+//        computeStatistics(d,s, ap->getArrivalTime());
 
         scheduleAt(simTime() + s, new cMessage("packetSent"));
         EV_INFO << "==> SendPacket "<< ap->getId() << " with service time "<< s << ", packet exit at: "<< simTime() + s <<endl;
