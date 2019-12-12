@@ -33,7 +33,6 @@ void Transmitter::initialize(int stage) {
             T = getAncestorPar("T").doubleValue();
             p = getAncestorPar("p").doubleValue();
             interarrivalDistribution = getAncestorPar("interarrivalDistribution").stdstringValue();
-            configuration = getAncestorPar("configuration").stdstringValue();
 
             int rows = getAncestorPar("rows").intValue();
             int cols = getAncestorPar("cols").intValue();
@@ -42,19 +41,18 @@ void Transmitter::initialize(int stage) {
             transmitting = false;
             penalty = false;
             schedulePenalty = false;
-            firstAfterExit = false;
 
             /* Registering all signals for stats */
             computeServiceTime = registerSignal("computeServiceTime");
             computeQueueLength = registerSignal("computeQueueLength");
-            handover = registerSignal("handover");
-            handoverDone = registerSignal("handoverDone");
             computeDistance = registerSignal("computeDistance");
             computeResponseTime = registerSignal("computeResponseTime");
             computeWaitingTime = registerSignal("computeWaitingTime");
             serviceTimeBeforeHandover = registerSignal("serviceTimeBeforeHandover");
             serviceTimeAfterHandover = registerSignal("serviceTimeAfterHandover");
+            arrival = registerSignal("arrival");
 
+            arrivalTime = 0.0;
 
             /* Reference to own mobility module */
             mobility = reinterpret_cast<TurtleMobility*> ( getModuleByPath("^.mobility") );
@@ -93,6 +91,8 @@ void Transmitter::handleMessage(cMessage *msg)
             handlePacketSent(msg);
         } else if ( strcmp(msg->getName(),"penaltyTimeElapsed") == 0 ) {
             handlePenaltyTimeElapsed(msg);
+        } else if ( strcmp(msg->getName(),"computeRandomStats") == 0 ) {
+            handleComputeRandomStats(msg);
         }
     }
 
@@ -106,50 +106,95 @@ void Transmitter::handleDesync(cMessage* msg) {
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
     ap->setArrivalTime(simTime().dbl());
     ap->setAircraftID(getIndex());
-    sendPacket(ap);
+    queue.insert(ap);
+    sendPacket();
 
-    // first packet generated
+//     first packet generated
     scheduleArrival(new cMessage("packetArrival"));
-
+    scheduleAt(simTime() + uniform(0, 1), new cMessage("computeRandomStats"));
     scheduleAt(simTime() + t, new cMessage("checkHandover")); // start handover period
     delete msg;
+}
+
+void Transmitter::handleComputeRandomStats(cMessage *msg) {
+    double d = getDistance(connectedBS);
+    s = T*pow(d, 2);
+    emit(computeDistance, d );
+    emit(computeServiceTime, s );
+    emit(computeQueueLength, queue.getLength());
+
+    if ( !queue.isEmpty() ) {
+        AircraftPacket* ap = (AircraftPacket*) queue.front();
+        simtime_t arrivalTime = ap->getArrivalTime();
+        emit(computeResponseTime, simTime() + s - arrivalTime  );
+        emit(computeWaitingTime, simTime() - arrivalTime  );
+    }
+
+    scheduleAt(simTime() + uniform(0, 1), msg);
 }
 
 void Transmitter::handlePacketArrival(cMessage *msg) {
     EV_INFO << "==> PacketArrival";
     EV_INFO << ", queue length: " << queue.getLength() << ", transmitting: " << transmitting << endl;
+    emit(arrival, simTime().dbl() - arrivalTime );
+    arrivalTime = simTime().dbl();
+
 
     // Insert message into queue and schedule another arrival
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
-    ap->setArrivalTime(simTime().dbl());
+    ap->setArrivalTime(simTime());
     ap->setAircraftID(getIndex());
-    if ( !transmitting && !penalty ) {
-        if ( queue.isEmpty() ) {
-            EV_INFO<< "Queue is empty, sending packet"<<endl;
-            sendPacket(ap);
-        }
-    } else {
-        // if general conf or ( singleBSValidation conf and in-circle ) packet can be queued
-        if (strcmp(configuration.c_str(), "general") == 0 || ( strcmp(configuration.c_str(), "singleBSValidation") == 0 && getDistance(connectedBS) <= getAncestorPar("M").intValue()/2 )) {
-            queue.insert(ap);
-            EV_INFO<< "Queuing"<<endl;
-        } else {
-            delete ap;
-        }
-    }
+    queue.insert(ap);
 
+    if ( !transmitting ) {
+        // Try to send a new packet
+       sendPacket();
+    }
     scheduleArrival(msg);
 }
+
+void Transmitter::sendPacket() {
+    if ( !queue.isEmpty() && !penalty ) {
+
+        AircraftPacket* ap = (AircraftPacket*) queue.front();
+        queue.pop();
+
+        transmitting = true;
+        double d = getDistance(connectedBS);
+        s = T*pow(d, 2); /* formula given by specifications */
+//        computeStatistics(d,s, ap->getArrivalTime());
+
+        scheduleAt(simTime() + s, new cMessage("packetSent"));
+        EV_INFO << "==> SendPacket "<< ap->getId() << " with service time "<< s << ", packet exit at: "<< simTime() + s <<endl;
+        send(ap, "out", connectedBS);
+    }
+}
+
+void Transmitter::handlePacketSent(cMessage *msg) {
+    EV_INFO << "==> Last Packet sent with service time:" << s << ", currentTime: "<< simTime() <<endl;
+    transmitting = false;
+    // Try to send a new packet
+    sendPacket();
+
+    if (schedulePenalty) {
+        EV_INFO << "Penalty started, waiting for: " << p << "s" <<endl;
+        scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
+        schedulePenalty = false;
+    }
+    delete msg;
+}
+
+/*********************************************************
+***************** HANDLING HANDOVER **********************
+**********************************************************/
 
 void Transmitter::handleCheckHandover(cMessage *msg) {
     EV_INFO << "==> CheckHandover" << endl;
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
-        emit(handover,T*pow(getDistance(connectedBS), 2));
         emit(serviceTimeBeforeHandover, T * pow(getDistance(connectedBS), 2));
         EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
-        emit(handoverDone,T*pow(getDistance(connectedBS), 2));  // TODO non potremmo chiamare handover e handoverDone con dei nomi più significativi?
         emit(serviceTimeAfterHandover, T * pow(getDistance(connectedBS), 2));
         penalty = true;
         if ( !transmitting ) {
@@ -165,68 +210,20 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
     scheduleAt(simTime() + t, msg); // Start handover period
 }
 
-void Transmitter::handlePacketSent(cMessage *msg) {
-    EV_INFO << "==> PacketSent with service time:" << s <<endl;
-
-    transmitting = false;
-    if ( !queue.isEmpty() && !penalty ) {
-        // if general conf or ( singleBSValidation conf and in-circle )
-        if (strcmp(configuration.c_str(), "general") == 0 || (strcmp(configuration.c_str(), "singleBSValidation") == 0 && getDistance(connectedBS) <= getAncestorPar("M").intValue()/2 ) ) {
-            AircraftPacket* ap = (AircraftPacket*) queue.front();
-            queue.pop();
-
-            // check if aircratf just returned inside the circle and add offset to arrivalTime to fix response and waiting time
-            if ( !firstAfterExit ) {
-                firstAfterExit = true;
-                double offset = simTime().dbl() - timeAtExit;
-                ap->setArrivalTime(ap->getArrivalTime() + offset);
-            }
-            sendPacket(ap);
-        } else {
-            // packet that will be sent after aircraft returns inside the circle
-            if ( firstAfterExit ) {
-                timeAtExit = simTime().dbl();
-                firstAfterExit = false;
-            }
-            // check again this condition after 0.1s
-            scheduleAt(simTime() + 0.1, new cMessage("packetSent"));
-        }
-    }
-
-    if (schedulePenalty) {
-        EV_INFO << "Penalty started, waiting for: " << p << "s" <<endl;
-        scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
-        schedulePenalty = false;
-    }
-    delete msg;
-}
-
 void Transmitter::handlePenaltyTimeElapsed(cMessage *msg) {
     EV_INFO << "==> PenaltyTimeElapsed: handover completed, transmissions restored" << endl;
     penalty = false;
 
     // after penalty, check the queue to restart the transmission loop
     if ( !queue.isEmpty() && !penalty ) {
-        AircraftPacket* ap = (AircraftPacket*) queue.front();
-        queue.pop();
-        sendPacket(ap);
+        sendPacket();
     }
     delete msg;
 }
 
-void Transmitter::sendPacket(cPacket* pkt) {
-    transmitting = true;
-    double d = getDistance(connectedBS);
-    s = T*pow(d, 2); /* formula given by specifications */
-
-    AircraftPacket *ap = check_and_cast<AircraftPacket*> (pkt);
-    ap->setServiceTime(s);
-    computeStatistics(d,s, ap->getArrivalTime());
-
-    scheduleAt(simTime() + s, new cMessage("packetSent"));
-    EV_INFO << "==> SendPacket "<< pkt->getId() << " with service time "<< s <<endl;
-    send(pkt, "out", connectedBS);
-}
+/***********************************************
+***************** UTILITY **********************
+************************************************/
 
 int Transmitter::getClosestBS() {
     double min = getAncestorPar("rows").intValue() * getAncestorPar("M").intValue();
@@ -275,16 +272,12 @@ void Transmitter::scheduleArrival( cMessage* msg ) {
         scheduleAt(simTime() + exponential(k), msg );
 }
 
-void Transmitter::computeStatistics(double distance, double serviceTime, double arrivalTime ) {
-    // if singleBSValidation and aircraft outside the circle do not computeStatistics
-    if ( strcmp(configuration.c_str(), "singleBSValidation") == 0 && distance > getAncestorPar("M").intValue()/2 )
-        return;
-
+void Transmitter::computeStatistics(double distance, simtime_t serviceTime, simtime_t arrivalTime ) {
     emit(computeDistance, distance );
     emit(computeServiceTime, serviceTime );
     emit(computeQueueLength, queue.getLength());
-    emit(computeResponseTime, simTime().dbl() + s - arrivalTime );
-    emit(computeWaitingTime, simTime().dbl() - arrivalTime );
+    emit(computeResponseTime, simTime() + s - arrivalTime  );
+    emit(computeWaitingTime, simTime() - arrivalTime  );
 }
 
 void Transmitter::finish() {

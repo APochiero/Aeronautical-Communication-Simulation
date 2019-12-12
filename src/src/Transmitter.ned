@@ -17,28 +17,18 @@ package aeronauticalcommunicationsimulator;
 simple Transmitter
 {
     parameters:
-       int nBS;
-       @signal[packetSent](type="double");
-       @statistic[serviceTime](source="packetSent"; record=vector;);
+       // TODO
+       int nBS;  
+   
+       @signal[computeServiceTime](type="simtime_t");
+       @statistic[serviceTime](source="computeServiceTime"; record=vector;);
 
-       @signal[newPacket](type="long");
-       @statistic[queueLength](source="newPacket"; record=vector;);
+       @signal[computeQueueLength](type="long");
+       @statistic[queueLength](source="computeQueueLength"; record=vector;);
 
-       @signal[handover](type="long");
-       @statistic[nHandover](source="handover"; record=vector;);
-
-       @signal[avoidHandover](type="long");
-       @statistic[nAvoidedHandover](source="avoidHandover"; record=vector;);
-
-       @signal[distance](type="long");
-       @statistic[distance](source="distance"; record=vector;);
+       @signal[computeDistance](type="long");
+       @statistic[distance](source="computeDistance"; record=vector;);
        
-       @signal[handoverDone](type="long");
-       @statistic[handoverDone](source="handoverDone"; record=vector;);
-       
-       @signal[handover](type="long");
-       @statistic[handover](source="handover"; record=vector;);
-
        @signal[computeResponseTime](type="double");
        @statistic[responseTime](source="computeResponseTime"; record=vector;);
 
@@ -51,6 +41,8 @@ simple Transmitter
        @signal[serviceTimeAfterHandover](type="double");
        @statistic[serviceTimeAfterHandover](source="serviceTimeAfterHandover"; record=vector;);
 
+       @signal[arrival](type="double");
+       @statistic[interarrivalTime](source="arrival"; record=vector;);
     gates:
         output out[nBS];
 }

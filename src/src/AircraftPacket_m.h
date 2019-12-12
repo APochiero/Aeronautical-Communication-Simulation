@@ -28,8 +28,7 @@ namespace aeronauticalcommunicationsimulator {
  * packet AircraftPacket
  * {
  *     int aircraftID;
- *     double arrivalTime;
- *     double serviceTime;
+ *     simtime_t arrivalTime;
  * }
  * </pre>
  */
@@ -37,8 +36,7 @@ class AircraftPacket : public ::omnetpp::cPacket
 {
   protected:
     int aircraftID;
-    double arrivalTime;
-    double serviceTime;
+    ::omnetpp::simtime_t arrivalTime;
 
   private:
     void copy(const AircraftPacket& other);
@@ -59,10 +57,8 @@ class AircraftPacket : public ::omnetpp::cPacket
     // field getter/setter methods
     virtual int getAircraftID() const;
     virtual void setAircraftID(int aircraftID);
-    virtual double getArrivalTime() const;
-    virtual void setArrivalTime(double arrivalTime);
-    virtual double getServiceTime() const;
-    virtual void setServiceTime(double serviceTime);
+    virtual ::omnetpp::simtime_t getArrivalTime() const;
+    virtual void setArrivalTime(::omnetpp::simtime_t arrivalTime);
 };
 
 inline void doParsimPacking(omnetpp::cCommBuffer *b, const AircraftPacket& obj) {obj.parsimPack(b);}

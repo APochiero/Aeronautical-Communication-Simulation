@@ -41,25 +41,22 @@ class Transmitter : public cSimpleModule
     double t;
     double T;
     double p;
-    double s;
+    simtime_t s;
     string interarrivalDistribution;
     string configuration;
     bool transmitting;
     bool penalty;
     bool schedulePenalty;
-    bool firstAfterExit;
-    double timeAtExit;
+    double arrivalTime;
 
     simsignal_t computeServiceTime;
     simsignal_t computeQueueLength;
-    simsignal_t handover;
-    simsignal_t handoverDone;
     simsignal_t computeDistance;
     simsignal_t computeResponseTime;
     simsignal_t computeWaitingTime;
     simsignal_t serviceTimeBeforeHandover;
     simsignal_t serviceTimeAfterHandover;
-
+    simsignal_t arrival;
 
     inet::TurtleMobility* mobility;
     inet::Coord* bsPositions;
@@ -71,10 +68,11 @@ class Transmitter : public cSimpleModule
     void handleCheckHandover(cMessage* msg);
     void handlePacketSent(cMessage* msg);
     void handlePenaltyTimeElapsed(cMessage *msg);
-    void sendPacket(cPacket* pkt);
+    void handleComputeRandomStats(cMessage *msg);
+    void sendPacket();
     double getDistance(int bs);
     void scheduleArrival(cMessage* msg);
-    void computeStatistics( double distance, double serviceTime, double arrivalTime );
+    void computeStatistics( double distance, simtime_t serviceTime, simtime_t arrivalTime );
 
 };
 
