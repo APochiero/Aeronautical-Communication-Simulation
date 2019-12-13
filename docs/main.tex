@@ -233,7 +233,7 @@ At this point, we are confident that the code for our simulator is correctly mod
   \begin{subfigure}[b]{0.45\textwidth}
     \centering
     \includegraphics{img/d-simplified.pdf}
-    \caption{Simplified distance computation}
+    \caption{Single-BS distance computation}
     \label{fig:d-simplified}
   \end{subfigure}
   \caption{Computation of distance between AC and BS}
@@ -253,43 +253,61 @@ $$ d_{max} = \frac{M \sqrt{2}}{2} + vt $$
 
 This result can be used to validate our simulator.
 
-\subsection{Distances distribution simplification}
-In order to compute the distribution of service time, and to validate our model against a known queuing theory model, we had to make some simplifications for the computation of distance, and in particular: a single circle area around a single BS was used, as shown in Figure~\ref{fig:d-simplified}.
-
-This way, we did not take in account for:
-\begin{itemize}
-  \item handover, because its probability is difficult to compute;
-  \item area near cell's corners (coloured area), because it introduced a non-trivial-to-manage discontinuity in our formulas;
-\end{itemize}
+\subsection{Single-BS distance distribution computation}
+In order to compute the distribution of service time, and to validate our model against a known queuing theory model, we had to make some simplifications for the computation of distance, and in particular: the cell around a single BS was used.
 
 We want to compute $P\{D = x\}$, eg. probability that, picked a random position for AC inside the cell, distance $D$ between AC and BS equals to $x$.
-Intuition suggests that, with bigger circumferences (centered in BS) with radius $x$, in the real world, more points are suitable to satisfy $D = x$, thus $P\{D = x\}$ is proportional with circumference, which is proportional with radius.
+As shown in Figure~\ref{fig:d-simplified}, intuition suggests that, with bigger circumferences (centered in BS) with radius $x$, in the real world, more points are suitable to satisfy $D = x$, thus $P\{D = x\}$ is proportional with circumference, which is proportional with radius.
+
+However, for distances such that $d > \frac{M}{2}$, only arcs of that circumference which lay inside the square cell have to be taken in account in this computation.
+
 So, a reasonable PDF for D is:
 
-$$ f_D(x) = k \cdot 2 \pi x, 0 \leq x \leq \frac{M}{2} $$
+$$
+f_D(x) = \begin{cases}
+k \cdot 2 \pi x & \mbox{if } 0 \leq x \leq \frac{M}{2} \\
+k \cdot \left( 2 \pi x - 8 x \cdot arccos \left(\frac{M}{2x}\right)\right) & \mbox{if } \frac{M}{2} \leq x \leq \frac{M \sqrt{2}}{2}\\
+0 & otherwise
+\end{cases}
+$$
 
-with $k = 2.03718 \times 10^{-9}$ (computed with normalization condition).
+where
+\begin{itemize}
+  \item the first interval represents the probability of AC laying over a circumpherence fully inside the square cell (eg. blue);
+  \item the second interval represents the probabilty of AC laying over the arcs given by the intersection of a circumpherence partially outside the square cell, and the square cell itself (eg. red);
+  \item $k$ has been computed using the normalization condition and is equal to $k = 1.6 \times 10^{-9}$;
+\end{itemize}
+
+% thanks to both Pietro and WolframAlpha
+% only two can be 100% sure of this computation, and I still have some doubts about the second
+
+% FROM HERE EVERYTHING IS WRONG -- vedere i conti di pietro con la nuova distribuzione teorica
+\begin{centering}
+  \texttt{TODO qui va sistemato il conto, magari mettiamoci i grafici delle pdf cdf}
+\end{centering}
 
 Since our goal is computing the distribution for service time, we note that:
 
-$$ F_D(x) = \int_{0}^{x} f_D(x) dx = k \pi x^2 $$
+%$$ F_D(x) = \int_{0}^{x} f_D(x) dx = k \pi x^2 $$
 
 and also that
 
-$$ s = T \cdot x^2 \implies x = + \sqrt{\frac{s}{T}} $$
+%$$ s = T \cdot x^2 \implies x = + \sqrt{\frac{s}{T}} $$
 
 and
 
-$$ F_S(s) = F_D\left(\sqrt{\frac{s}{T}}\right) = \frac{k \pi}{T} s $$
+%$$ F_S(s) = F_D\left(\sqrt{\frac{s}{T}}\right) = \frac{k \pi}{T} s $$
 
 then
 
-$$ f_S(s) = \frac{k \pi}{T}, s \in \left[0; \frac{TM^2}{4}\right] \implies S \in \mathcal{U}\left(0, \frac{TM^2}{4} \right)$$
+%$$ f_S(s) = \frac{k \pi}{T}, s \in \left[0; \frac{TM^2}{4}\right] \implies S \in \mathcal{U}\left(0, \frac{TM^2}{4} \right)$$
 
 This result can be used to validate our simulator.
 %% TODO which we can fit?
 % we ran our simulation with 1 BS for 1M times, then deleted all distances above M/2 and fitted that distribution,
 % and we saw that is was there :-) QUESTA COSA VA FATTA NEI VALIDATION EXPERIMENTS
+
+\texttt{FITTARE}
 
 \subsection{Handover convenience}
 Last test was on the handover convenience: it is straightforward that we want
