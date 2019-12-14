@@ -68,7 +68,7 @@ class Transmitter : public cSimpleModule
     void handleCheckHandover(cMessage* msg);
     void handlePacketSent(cMessage* msg);
     void handlePenaltyTimeElapsed(cMessage *msg);
-    void handleComputeRandomStats(cMessage *msg);
+    void handleSampleDistance(cMessage *msg);
     void sendPacket();
     double getDistance(int bs);
     void scheduleArrival(cMessage* msg);
