@@ -220,6 +220,7 @@ At this point, we are confident that the code for our simulator is correctly mod
 
 \section{Validation tests}
 \subsection{Maximum distance considerations}
+\label{sec:max-distance-considerations}
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
@@ -321,6 +322,15 @@ This result can be used to validate our simulator.
 
 \section{Validation experiments}
 \subsection{Maximum distance considerations}
+Using results from Section~\ref{sec:max-distance-considerations}, we ran 10 indpendent simulations, with 5 different handover periods $t$, and sampled maximum distance. Then we compared the samples with out theoretical computations, and, as we can see from Figure~\ref{fig:dmax-validation}, the experiment always confirmed the validity of our simulator.
+% for all the measurements, see DistanceValidation.xlsx
+\begin{figure}[H]
+  \centering
+  \includegraphics{img/dmax-validation.pdf}
+  \caption{Maximum distance sampled between an AC and the connected BS [m]}
+  \label{fig:dmax-validation}
+\end{figure}
+
 \subsection{Single-BS distance distribution computation}
 Using results from Section~\ref{sec:singlebs-ddc}, we ran 30 independent simulations and sampled distance and service time. Then we compared the samples distributions with our theoretical distributions using QQ plots.
 
