@@ -12,8 +12,8 @@ nameOrder = ['interarrival', 'serviceTime', 'queueLength', 'responseTime', 'wait
 '''
     Load and rename columnn using nameOrder list.
     CSV File must containt data with the following order:
-    time, interarrival, time, serviceTime, time, queueLength, time, responseTime, time, waitingTime 
-    repeated {repetition} times 
+    time, interarrival, time, serviceTime, time, queueLength, time, responseTime, time, waitingTime
+    repeated {repetition} times
 
     columns of time are deleted
 '''
@@ -22,7 +22,7 @@ def loadData(path, repetition) :
     names = []
     for i in range(repetition):
         for j in range(len(nameOrder)):
-            names.append('time') 
+            names.append('time')
             names.append(nameOrder[j] + str(i))
 
     df.columns = names
@@ -43,7 +43,7 @@ def splitStat(df, stat):
 def meanPerRow(df, stat):
     orderedStat = df.apply(lambda x: x.sort_values().values)
     return pd.DataFrame(orderedStat.mean(axis=1), columns = [stat])
- 
+
 def histogram(  df, nbin, path, name, k ) :
     plt.figure()
     n, bins, patches = plt.hist(df['Mean_' + name ], nbin, density=True, facecolor='g', alpha=0.75)
@@ -87,12 +87,12 @@ def findQuantile(quantile, name, maxError):
     if name == 'serviceTime':
         error = quantile - serviceTimeCDF(x)
         while error > maxError:
-            x += 0.1*error 
+            x += 0.1*error
             error = quantile - serviceTimeCDF(x)
     elif name == 'distance' :
         error = quantile - distanceCDF(x)
         while error > maxError:
-            x += 0.1*error 
+            x += 0.1*error
             error = quantile - distanceCDF(x)
     return x
 
@@ -138,9 +138,11 @@ def main():
     serviceTime = meanPerRow(serviceTime30Rep, 'serviceTime')
 
     serviceTime = serviceTime.sample(n=1000)
-    
+
     theoreticalQ, sampleQ = fitDistribution(serviceTime, 'serviceTime', 0.0001)
     qqPlot(theoreticalQ, sampleQ, 'serviceTime' )
+
+    plt.show()
 
     '''
         Distance Time fitting
@@ -150,12 +152,12 @@ def main():
     for i in range(30):
         names.append('time')
         names.append('distance' + str(i))
-    
+
     distance30Rep.columns = names
     distance30Rep = distance30Rep.drop(columns='time')
     distance = meanPerRow(distance30Rep, 'distance')
     distance = distance.sample(n=1000)
-    
+
     theoreticalQ, sampleQ = fitDistribution(distance, 'distance', 0.0001)
     qqPlot(theoreticalQ, sampleQ, 'distance' )
 
