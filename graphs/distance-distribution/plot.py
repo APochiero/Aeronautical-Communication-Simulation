@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 import csv
 
@@ -40,15 +41,20 @@ fig, ax1 = plt.subplots()
 color = 'tab:red'
 ax1.set_xlabel('d [m]')
 ax1.set_ylabel('fD(d)')
-ax1.plot(d, f, 'c,', label='fD')
+ax1.ticklabel_format(axis='y', style='sci', scilimits=(-4,-4))
+ax1.plot(d, f, 'r-')
 
 ax2 = ax1.twinx()
 
 color = 'tab:blue'
 ax2.set_ylabel('FD(d)')
-ax2.plot(d, integral, 'b,', label="FD")
+ax2.plot(d, integral, 'b-')
 
-plt.legend()
+handles = []
+handles.append(mpatches.Patch(color='red',  label=r'$f_D(d)$'))
+handles.append(mpatches.Patch(color='blue', label=r'$F_D(d)$'))
+plt.legend(handles=handles)
+plt.grid(True, axis='both')
 plt.show()
 
 def fs(s):
@@ -80,13 +86,17 @@ fig, ax1 = plt.subplots()
 color = 'tab:red'
 ax1.set_xlabel('s [s]')
 ax1.set_ylabel('fS(s)')
-ax1.plot(s, f, 'c,', label='fS')
+ax1.plot(s, f, 'r-')
 
 ax2 = ax1.twinx()
 
 color = 'tab:blue'
 ax2.set_ylabel('FD(d)')
-ax2.plot(s, integral, 'b,', label='FS')
+ax2.plot(s, integral, 'b-')
 
-plt.legend()
+handles = []
+handles.append(mpatches.Patch(color='red',  label=r'$f_S(s)$'))
+handles.append(mpatches.Patch(color='blue', label=r'$F_S(s)$'))
+plt.legend(handles=handles)
+plt.grid(True, axis='both')
 plt.show()

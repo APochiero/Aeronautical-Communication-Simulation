@@ -11,9 +11,9 @@ nameOrder = ['interarrival', 'serviceTime', 'queueLength', 'responseTime', 'wait
 
 '''
     Load and rename columnn using nameOrder list.
-    CSV File must containt data with the following order:
-    time, interarrival, time, serviceTime, time, queueLength, time, responseTime, time, waitingTime 
-    repeated {repetition} times 
+    CSV File must contain data with the following order:
+    time, interarrival, time, serviceTime, time, queueLength, time, responseTime, time, waitingTime
+    repeated {repetition} times
 
     columns of time are deleted
 '''
@@ -22,7 +22,7 @@ def loadData(path, repetition) :
     names = []
     for i in range(repetition):
         for j in range(len(nameOrder)):
-            names.append('time') 
+            names.append('time')
             names.append(nameOrder[j] + str(i))
 
     df.columns = names
@@ -43,7 +43,7 @@ def splitStat(df, stat):
 def meanPerRow(df, stat):
     orderedStat = df.apply(lambda x: x.sort_values().values)
     return pd.DataFrame(orderedStat.mean(axis=1), columns = [stat])
- 
+
 def histogram(  df, nbin, path, name, k ) :
     plt.figure()
     n, bins, patches = plt.hist(df['Mean_' + name ], nbin, density=True, facecolor='g', alpha=0.75)
@@ -87,22 +87,24 @@ def findQuantile(quantile, name, maxError):
     if name == 'serviceTime':
         error = quantile - serviceTimeCDF(x)
         while error > maxError:
-            x += 0.1*error 
+            x += 0.1*error
             error = quantile - serviceTimeCDF(x)
     elif name == 'distance' :
         error = quantile - distanceCDF(x)
         while error > maxError:
-            x += 0.1*error 
+            x += 0.1*error
             error = quantile - distanceCDF(x)
     return x
 
 '''
      find every quantile for both theoretical and sample distribution
 '''
-def fitDistribution(df, name, maxError):
+def fitDistribution(df, name, maxError, points = 0):
     theoreticalQ = []
     sampleQ = []
-    for i in range(1, len(df)):
+    if points == 0:
+        points = len(df)
+    for i in range(1, len(df), int(len(df) / points)):
         quantile = (i-0.5)/len(df)
         sq = df[name].quantile(quantile)
         tq = findQuantile(quantile, name, maxError)
@@ -114,14 +116,14 @@ def fitDistribution(df, name, maxError):
 '''
      draw a qq plot
 '''
-def qqPlot(theoreticalQ, sampleQ, name ):
+def qqPlot(theoreticalQ, sampleQ, name):
     slope, intercept, r_value, p_value, std_err = regr(theoreticalQ, sampleQ)
 
     plt.figure()
     plt.scatter(theoreticalQ, sampleQ, s=0.8, label=name)
     y = [ x*slope + intercept for x in theoreticalQ ]
-    plt.plot(theoreticalQ, y, 'r', label='Trend line')
-    plt.text(0, max(sampleQ)*0.6, '\n\nR^2 = ' + str('%.6f'%r_value**2))
+    plt.plot(theoreticalQ, y, 'r', linewidth=1, label='trend line')
+    plt.text(0, max(sampleQ)*0.6, r'R^2 = ' + str('%.6f'%r_value**2))
     plt.text(0, max(sampleQ)*0.55, 'y = ' + str('%.6f'%slope) + 'x + ' + str('%.6f'%intercept))
     plt.xlabel('Theoretical Quantile')
     plt.ylabel('Sample Quantile')
@@ -138,9 +140,11 @@ def main():
     serviceTime = meanPerRow(serviceTime30Rep, 'serviceTime')
 
     serviceTime = serviceTime.sample(n=1000)
-    
+
     theoreticalQ, sampleQ = fitDistribution(serviceTime, 'serviceTime', 0.0001)
     qqPlot(theoreticalQ, sampleQ, 'serviceTime' )
+
+    plt.show()
 
     '''
         Distance Time fitting
@@ -150,13 +154,13 @@ def main():
     for i in range(30):
         names.append('time')
         names.append('distance' + str(i))
-    
+
     distance30Rep.columns = names
     distance30Rep = distance30Rep.drop(columns='time')
     distance = meanPerRow(distance30Rep, 'distance')
     distance = distance.sample(n=1000)
-    
-    theoreticalQ, sampleQ = fitDistribution(distance, 'distance', 0.0001)
+
+    theoreticalQ, sampleQ = fitDistribution(distance, 'distance', 0.0001, 20)
     qqPlot(theoreticalQ, sampleQ, 'distance' )
 
     plt.show()
