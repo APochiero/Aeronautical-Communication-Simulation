@@ -48,6 +48,7 @@ class Transmitter : public cSimpleModule
     bool penalty;
     bool schedulePenalty;
     double arrivalTime;
+    simtime_t handoverTime;
 
     simsignal_t computeServiceTime;
     simsignal_t computeQueueLength;
@@ -57,6 +58,7 @@ class Transmitter : public cSimpleModule
     simsignal_t serviceTimeBeforeHandover;
     simsignal_t serviceTimeAfterHandover;
     simsignal_t arrival;
+    simsignal_t handover;
 
     inet::TurtleMobility* mobility;
     inet::Coord* bsPositions;

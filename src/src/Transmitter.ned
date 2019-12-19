@@ -43,6 +43,9 @@ simple Transmitter
 
        @signal[arrival](type="double");
        @statistic[interarrivalTime](source="arrival"; record=vector;);
+       
+       @signal[handover](type="simtime_t");
+       @statistic[interHandoverTime](source="handover"; record=mean;);
     gates:
         output out[nBS];
 }
