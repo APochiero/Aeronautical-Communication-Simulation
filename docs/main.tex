@@ -154,7 +154,6 @@ Minimize end to end delay between AC and CT, using the maximum packet interarriv
 \section{Scenario}
 \begin{itemize}
   \item \textbf{k}: it represents the interarrival time of packets;
-  \item \textbf{M}: it represents the distance between two consecutive BS on the same row, or column, and it is fixed at 25 km;
   \item \textbf{d}: it represents the distance between AC and BS;
   \item \textbf{s}: it represents the service time of a packet, and is given by $s = T \cdot d^{2}$;
   \item \textbf{T}: it is a tuning parameter for service time, whose value is costant for every AC in the system;
@@ -165,7 +164,15 @@ Minimize end to end delay between AC and CT, using the maximum packet interarriv
 \section{Calibration}
 % TODO Roberto 3.1.1 -- Parameter analysis
 % and always respect the stability condition
-\texttt{TODO scrivere qui perché abbiamo scelto M=25km, T=4.3e-9 eccetera, vedere Parametri.xlsx}
+%\texttt{TODO scrivere qui perché abbiamo scelto M=25km, T=4.3e-9 eccetera, vedere Parametri.xlsx}
+Parameters of simulator have been chosen in order to comply with reality as much as possible.
+\begin{itemize}
+  \item \textbf{M}: it represents the distance between two consecutive BS on the same row, or column, and it is fixed at 25 km;
+  \item \textbf{v}: it represents the speed of an AC, and is fixed at 236 m/s;
+\end{itemize}
+Moreover, we would like to check for an handover neither when the AC is too close to a cell edge, nor when it is too far.
+Fixing these values at a reasonable distance of 1km and 4km, and dividing the interval in 5 chunks, we find these possible values for $t$: $\left\{4.24s, 7.42s, 10.59s, 13.77s, 16.95s\right\}$.
+
 
 
 \section{Model}
