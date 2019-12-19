@@ -51,7 +51,7 @@ void Transmitter::initialize(int stage) {
             serviceTimeBeforeHandover = registerSignal("serviceTimeBeforeHandover");
             serviceTimeAfterHandover = registerSignal("serviceTimeAfterHandover");
             arrival = registerSignal("arrival");
-            handover = registerSignal("handover");
+//            handover = registerSignal("handover");
 
             arrivalTime = 0.0;
             handoverTime = simTime();
@@ -152,7 +152,7 @@ void Transmitter::sendPacket() {
         transmitting = true;
         double d = getDistance(connectedBS);
         s =  T*pow(d, 2); /* formula given by specifications */
-        //computeStatistics(d,s, ap->getArrivalTime());
+        computeStatistics(d,s, ap->getArrivalTime());
 
         scheduleAt(simTime() + s, new cMessage("packetSent"));
         EV_INFO << "==> SendPacket "<< ap->getId() << " with service time "<< s << ", packet exit at: "<< simTime() + s <<endl;
@@ -182,7 +182,7 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
     EV_INFO << "==> CheckHandover" << endl;
     int closest = getClosestBS();
     if ( connectedBS != closest ) {
-        emit(handover, simTime() - handoverTime );
+//        emit(handover, simTime() - handoverTime );
         handoverTime = simTime();
 //        emit(serviceTimeBeforeHandover, T * pow(getDistance(connectedBS), 2));
         EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;

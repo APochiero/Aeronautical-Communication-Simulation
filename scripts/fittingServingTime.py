@@ -139,7 +139,7 @@ def main():
     serviceTime30Rep = splitStat(data, 'serviceTime')
     serviceTime = meanPerRow(serviceTime30Rep, 'serviceTime')
 
-    serviceTime = serviceTime.sample(n=1000)
+    serviceTime = serviceTime.sample(n=100)
 
     theoreticalQ, sampleQ = fitDistribution(serviceTime, 'serviceTime', 0.0001)
     qqPlot(theoreticalQ, sampleQ, 'serviceTime' )
