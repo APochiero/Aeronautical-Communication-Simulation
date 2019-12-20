@@ -41,7 +41,6 @@ void Transmitter::initialize(int stage) {
             transmitting = false;
             penalty = false;
             schedulePenalty = false;
-            schedulePenaltyCheck = false;
 
             /* Registering all signals for stats */
             computeServiceTime = registerSignal("computeServiceTime");

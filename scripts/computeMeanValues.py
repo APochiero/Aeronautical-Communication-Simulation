@@ -7,8 +7,7 @@ import argparse
 
 # Order of statistics in the csv file 
 nameOrder = ['serviceTime', 'queueLength', 'responseTime', 'waitingTime']
-k = [0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 2.0, 3.0, 5.0, 10.0]
-# k = [0.2]
+k = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2]
 
 '''
     Load and rename columnn using nameOrder list.
@@ -45,7 +44,7 @@ def computeMeanValues(df, name, repetition):
     dropping NaN values of that column. 
     Return mean of all columns' variances
 '''
-def computeVariance(df, name, repetition):
+def computeAvgVariance(df, name, repetition):
     variances = pd.Series([])
     for i in range(repetition):
         series = df.iloc[:,[i] ].dropna().var()
@@ -53,19 +52,29 @@ def computeVariance(df, name, repetition):
         # print(variances)     
     return variances.mean()
 
+def computeSampleVariance(df, name, repetition):
+    sampleMean = computeMeanValues(df, name, repetition)
+    sampleVariance = 0.0
+    for i in range(repetition):
+        mean = df.iloc[:,[i] ].dropna().mean()
+        d = mean - sampleMean
+        sampleVariance += d.iloc[0]**2
+    return sampleVariance/(repetition - 1)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Compute Mean Values')
     parser.add_argument('dirPath', help='path of dir containing .csv files')
     parser.add_argument('rep', type=int, help='repetition')
-    parser.add_argument('t', type=int, help='value of t ( check handover period)')
+    parser.add_argument('t', help='value of t ( check handover period)')
     parser.add_argument('distr', help='type of arrival distribution ( const or exp )')
 
     args = parser.parse_args()
     repetition = args.rep
-    path = str(args.path)
+    path = str(args.dirPath)
     columnsNames = ['K = ' + str(x) + 's' for x in k ]
     # Names of result's rows
-    rowNames = ['Service Time Mean', 'Service Time Var', 'Queue Length Mean', 'Response Time Mean', 'Waiting Time Mean']
+    rowNames = ['Service Time Mean', 'Service Time Var', 'Queue Length Mean', 'Queue Length CI', 'Response Time Mean', 'Response Time CI', 'Waiting Time Mean']
     result = pd.DataFrame([])
     for h in range(len(k)):
         data = loadData(path + '/K' + str(k[h]) + 's', repetition )
@@ -79,8 +88,18 @@ def main():
             # for the serviceTime compute also the variance
             if nameOrder[i] == 'serviceTime':
                 stat = data[data.columns[pd.Series(data.columns).str.startswith(nameOrder[i])]]
-                var = computeVariance(stat, nameOrder[i], repetition)
+                var = computeAvgVariance(stat, nameOrder[i], repetition)
                 statList.append(var)
+
+            if  nameOrder[i] == 'responseTime' or nameOrder[i] == 'queueLength':
+                stat = data[data.columns[pd.Series(data.columns).str.startswith(nameOrder[i])]]
+                sampleVariance = computeSampleVariance(stat, nameOrder[i], repetition)
+                # 99% CI
+                confidenceInterval = math.sqrt(sampleVariance/repetition)*2.326
+                statList.append(confidenceInterval)
+                # print(confidenceInterval)
+
+
         # add series to the final result
         series = pd.Series(statList)
         series.index = rowNames
@@ -88,7 +107,7 @@ def main():
         print(result[columnsNames[h]])
 
     # save results in a new csv file
-    result.to_csv(path + '/ResultT' + args.t + args.distr + '.csv')
+    result.to_csv(path + '/ResultT' + str(args.t) + str(args.distr) + '.csv')
     print(result)
 
 if __name__ == "__main__":
