@@ -41,6 +41,7 @@ void Transmitter::initialize(int stage) {
             transmitting = false;
             penalty = false;
             schedulePenalty = false;
+            schedulePenaltyCheck = false;
 
             /* Registering all signals for stats */
             computeServiceTime = registerSignal("computeServiceTime");
@@ -167,9 +168,15 @@ void Transmitter::handlePacketSent(cMessage *msg) {
     sendPacket();
 
     if (schedulePenalty) {
-        EV_INFO << "Penalty started, waiting for: " << p << "s" <<endl;
-        scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
+        EV_INFO << "Penalty started, "<< simTime() <<endl;
+        EV_INFO << "Penalty should end at " << simTime().dbl() +p << endl;
+        scheduleAt(simTime().dbl() + p, new cMessage("penaltyTimeElapsed"));
         schedulePenalty = false;
+    } else if (schedulePenaltyCheck) {
+        EV_INFO << "Penalty Check started, " << simTime() <<endl;
+        EV_INFO << "Penalty should end at " << simTime().dbl() + getAncestorPar("penaltyCheck").doubleValue() << endl;
+        scheduleAt(simTime().dbl() + getAncestorPar("penaltyCheck").doubleValue(), new cMessage("penaltyTimeElapsed"));
+        schedulePenaltyCheck = false;
     }
     delete msg;
 }
@@ -179,8 +186,10 @@ void Transmitter::handlePacketSent(cMessage *msg) {
 **********************************************************/
 
 void Transmitter::handleCheckHandover(cMessage *msg) {
-    EV_INFO << "==> CheckHandover" << endl;
+    EV_INFO << "==> CheckHandover, "<< simTime() << endl;
     int closest = getClosestBS();
+    penalty = true;
+
     if ( connectedBS != closest ) {
 //        emit(handover, simTime() - handoverTime );
         handoverTime = simTime();
@@ -188,9 +197,9 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
         EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
 //        emit(serviceTimeAfterHandover, T * pow(getDistance(connectedBS), 2));
-        penalty = true;
         if ( !transmitting ) {
-            EV_INFO << "Penalty started, waiting for: " << p << "s" <<endl;
+            EV_INFO << "Penalty started, "<< simTime() <<endl;
+            EV_INFO << "Penalty should end at " << simTime().dbl() +p << endl;
             scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
         } else {
             EV_INFO << "Penalty starting after finishing the current transmission" << endl;
@@ -198,18 +207,25 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
         }
     } else {
         EV_INFO << "Handover avoided" << endl;
+        if ( !transmitting ) {
+            EV_INFO << "Penalty Check started, " << simTime() <<endl;
+            simtime_t pc = getAncestorPar("penaltyCheck");
+            EV_INFO << "Penalty should end at " << simTime().dbl() + pc << endl;
+            scheduleAt(simTime() + pc, new cMessage("penaltyTimeElapsed"));
+        } else {
+            EV_INFO << "Penalty starting after finishing the current transmission" << endl;
+            schedulePenaltyCheck = true;
+        }
     }
     scheduleAt(simTime() + t, msg); // Start handover period
 }
 
 void Transmitter::handlePenaltyTimeElapsed(cMessage *msg) {
-    EV_INFO << "==> PenaltyTimeElapsed: handover completed, transmissions restored" << endl;
+    EV_INFO << "==> PenaltyTimeElapsed: handover completed, transmissions restored, "<< simTime() << endl;
     penalty = false;
 
     // after penalty, check the queue to restart the transmission loop
-    if ( !queue.isEmpty() && !penalty ) {
-        sendPacket();
-    }
+    sendPacket();
     delete msg;
 }
 
