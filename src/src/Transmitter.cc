@@ -172,11 +172,6 @@ void Transmitter::handlePacketSent(cMessage *msg) {
         EV_INFO << "Penalty should end at " << simTime().dbl() +p << endl;
         scheduleAt(simTime().dbl() + p, new cMessage("penaltyTimeElapsed"));
         schedulePenalty = false;
-    } else if (schedulePenaltyCheck) {
-        EV_INFO << "Penalty Check started, " << simTime() <<endl;
-        EV_INFO << "Penalty should end at " << simTime().dbl() + getAncestorPar("penaltyCheck").doubleValue() << endl;
-        scheduleAt(simTime().dbl() + getAncestorPar("penaltyCheck").doubleValue(), new cMessage("penaltyTimeElapsed"));
-        schedulePenaltyCheck = false;
     }
     delete msg;
 }
@@ -197,25 +192,18 @@ void Transmitter::handleCheckHandover(cMessage *msg) {
         EV_INFO << "HANDOVER, leaving " << connectedBS << ", connecting to "<< closest <<endl;
         connectedBS = closest;
 //        emit(serviceTimeAfterHandover, T * pow(getDistance(connectedBS), 2));
-        if ( !transmitting ) {
-            EV_INFO << "Penalty started, "<< simTime() <<endl;
-            EV_INFO << "Penalty should end at " << simTime().dbl() +p << endl;
-            scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
-        } else {
-            EV_INFO << "Penalty starting after finishing the current transmission" << endl;
-            schedulePenalty = true;
-        }
     } else {
         EV_INFO << "Handover avoided" << endl;
-        if ( !transmitting ) {
-            EV_INFO << "Penalty Check started, " << simTime() <<endl;
-            simtime_t pc = getAncestorPar("penaltyCheck");
-            EV_INFO << "Penalty should end at " << simTime().dbl() + pc << endl;
-            scheduleAt(simTime() + pc, new cMessage("penaltyTimeElapsed"));
-        } else {
-            EV_INFO << "Penalty starting after finishing the current transmission" << endl;
-            schedulePenaltyCheck = true;
-        }
+    }
+
+    // Pay handover penalty time anyway
+    if ( !transmitting ) {
+        EV_INFO << "Penalty started, "<< simTime() <<endl;
+        EV_INFO << "Penalty should end at " << simTime().dbl() +p << endl;
+        scheduleAt(simTime() + p, new cMessage("penaltyTimeElapsed"));
+    } else {
+        EV_INFO << "Penalty starting after finishing the current transmission" << endl;
+        schedulePenalty = true;
     }
     scheduleAt(simTime() + t, msg); // Start handover period
 }

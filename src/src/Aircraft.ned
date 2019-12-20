@@ -29,7 +29,6 @@ module Aircraft
     	double k @unit(s);
     	double T;
     	double p @unit(s); 
-    	double penaltyCheck @unit(s);
 	gates:
 	    output out[nBS];
     submodules:
