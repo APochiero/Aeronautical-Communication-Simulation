@@ -47,6 +47,7 @@ class Transmitter : public cSimpleModule
     bool transmitting;
     bool penalty;
     bool schedulePenalty;
+    bool schedulePenaltyCheck;
     double arrivalTime;
     simtime_t handoverTime;
 
