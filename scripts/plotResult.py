@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math 
 # t = [4.24, 7.42, 10.59, 13.77, 16.95]
-t = [4.24, 7.42, 13.77, 16.95]
+t = [7.42, 10.59, 13.77, 32.84]
 k = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2]
 
 distribution = 'exp'
@@ -16,7 +16,7 @@ for i in range(len(t)):
 
         print('Plotting T' + str(t[i]) + ' ' + distribution)
         plt.figure(1)
-        plt.errorbar(k, pd.to_numeric(df.iloc[5], errors='coerce'), yerr=df.iloc[6], fmt='-x', label = 't= ' + str(t[i]))
+        plt.errorbar(k, pd.to_numeric(df.iloc[5], errors='coerce'), yerr=pd.to_numeric(df.iloc[6], errors='coerce'), fmt='-x', label = 't= ' + str(t[i]))
 
         plt.xlabel('Interarrival Time [s]')
         plt.ylabel('Delay [s]')
@@ -26,7 +26,7 @@ for i in range(len(t)):
         plt.grid(linestyle='--')
 
         plt.figure(2)
-        plt.errorbar(k, pd.to_numeric(df.iloc[3], errors='coerce'), yerr=df.iloc[4], fmt='-x', label = 't= ' + str(t[i]))
+        plt.errorbar(k, pd.to_numeric(df.iloc[3], errors='coerce'), yerr=pd.to_numeric(df.iloc[4], errors='coerce'), fmt='-x', label = 't= ' + str(t[i]))
         plt.xlabel('Interarrival Time [s]')
         plt.ylabel('Queue Length')
         plt.ticklabel_format(axis='x', style='sci')
