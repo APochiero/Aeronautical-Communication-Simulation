@@ -3,11 +3,15 @@ import numpy as np
 import pandas as pd
 import math
 import argparse
+import seaborn as sns
+import matplotlib
+matplotlib.rcParams['font.family'] = "serif"
+plt.style.use('ggplot')
 
 def main():
     parser = argparse.ArgumentParser(description='Split Data by K')
     parser.add_argument('path', help='path of .csv file to be splitted')
-    parser.add_argument('rep', type=int, help='repetition')
+    parser.add_argument('--rep', type=int, help='repetition', default=10)
     parser.add_argument('window', type=int, help='window size')
     parser.add_argument('k', help='k of csv file')
     args = parser.parse_args()
@@ -49,8 +53,9 @@ def main():
         dfMeans['mean ' + str(i)] = mean
         plt.figure(1)
         plt.plot(dfRep[regexTime[1:-1]], mean)
-        plt.xlabel('simTime (s)')
-        plt.ylabel('Delay (s)')
+        plt.xlabel('simTime [s]')
+        plt.ylabel('Delay [s]')
+        plt.title('Warm Up Analysis\n Window Size =' + str(window))
         plt.ticklabel_format(axis='x', style='sci')
         plt.grid(linestyle='--')
 
@@ -62,7 +67,7 @@ def main():
     print(len(dfMeans))
     
     # find the index of minimum variance
-    indexMin = dfMeans['Variance'].idxmin(axis=0)
+    indexMin = dfMeans.loc[100:,'Variance'].idxmin(axis=0)
     print('\nTime at minimum variance (window size: ' + str(window) + '): ' + str(dfMeans.loc[indexMin, 'k='+k+' time 0']) + ' with variance: ' + str(dfMeans.loc[indexMin, 'Variance']))
     plt.figure(2)
     plt.plot(dfMeans['k='+k+' time 0'], dfMeans['Variance'].apply(lambda x : math.log(x, 10)))

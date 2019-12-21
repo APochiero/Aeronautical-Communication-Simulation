@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 import math
 from scipy.stats import uniform as unif
 from scipy.stats import linregress as regr
+import seaborn as sns
+import matplotlib
+matplotlib.rcParams['font.family'] = "serif"
+plt.style.use('ggplot')
 
 M = 25000
 T = 0.00000000425603
@@ -42,6 +46,7 @@ def splitStat(df, stat):
 '''
 def meanPerRow(df, stat):
     orderedStat = df.apply(lambda x: x.sort_values().values)
+    orderedStat = orderedStat.apply(lambda x: x.dropna())
     return pd.DataFrame(orderedStat.mean(axis=1), columns = [stat])
  
 def histogram(  df, nbin, path, name, k ) :
@@ -92,7 +97,7 @@ def findQuantile(quantile, name, maxError):
     elif name == 'distance' :
         error = quantile - distanceCDF(x)
         while error > maxError:
-            x += 0.1*error 
+            x += 0.3*error 
             error = quantile - distanceCDF(x)
     return x
 
@@ -118,11 +123,15 @@ def qqPlot(theoreticalQ, sampleQ, name ):
     slope, intercept, r_value, p_value, std_err = regr(theoreticalQ, sampleQ)
 
     plt.figure()
-    plt.scatter(theoreticalQ, sampleQ, s=0.8, label=name)
+    plt.scatter(theoreticalQ, sampleQ, s=0.8, label=name, c='blue')
     y = [ x*slope + intercept for x in theoreticalQ ]
     plt.plot(theoreticalQ, y, 'r', label='Trend line')
-    plt.text(0, max(sampleQ)*0.6, '\n\nR^2 = ' + str('%.6f'%r_value**2))
-    plt.text(0, max(sampleQ)*0.55, 'y = ' + str('%.6f'%slope) + 'x + ' + str('%.6f'%intercept))
+    plt.text(0, max(sampleQ)*0.6, '\n\n$R^2$ = ' + str('%.6f'%r_value**2))
+    if intercept > 0 :
+        plt.text(0, max(sampleQ)*0.55, 'y = ' + str('%.6f'%slope) + 'x + ' + str('%.6f'%intercept))
+    else:
+        plt.text(0, max(sampleQ)*0.55, 'y = ' + str('%.6f'%slope) + 'x ' + str('%.6f'%intercept))
+
     plt.xlabel('Theoretical Quantile')
     plt.ylabel('Sample Quantile')
     plt.title('QQ plot ' + name)
@@ -133,18 +142,18 @@ def main():
     '''
         Service Time fitting
     '''
-    data = loadData('K2s', 30)
-    serviceTime30Rep = splitStat(data, 'serviceTime')
-    serviceTime = meanPerRow(serviceTime30Rep, 'serviceTime')
+    # data = loadData('K2s', 30)
+    # serviceTime30Rep = splitStat(data, 'serviceTime')
+    # serviceTime = meanPerRow(serviceTime30Rep, 'serviceTime')
 
-    serviceTime = serviceTime.sample(n=1000)
+    # serviceTime = serviceTime.sample(n=1000)
     
-    theoreticalQ, sampleQ = fitDistribution(serviceTime, 'serviceTime', 0.0001)
-    qqPlot(theoreticalQ, sampleQ, 'serviceTime' )
+    # theoreticalQ, sampleQ = fitDistribution(serviceTime, 'serviceTime', 0.0001)
+    # qqPlot(theoreticalQ, sampleQ, 'serviceTime' )
 
     '''
         Distance Time fitting
-    '''
+    # '''
     distance30Rep = pd.read_csv('distance.csv')
     names = []
     for i in range(30):
