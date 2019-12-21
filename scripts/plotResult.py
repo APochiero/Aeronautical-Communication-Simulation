@@ -7,8 +7,7 @@ import argparse
 import seaborn as sns
 matplotlib.rcParams['font.family'] = "serif"
 
-# t = [4.24, 7.42, 10.59, 13.77, 16.95]
-t = [7.42, 10.59, 13.77, 32.84]
+t = [4.24, 7.42, 10.59, 13.77, 32.84]
 k = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2]
 
 plt.style.use('ggplot')
@@ -29,6 +28,7 @@ for i in range(len(t)):
         queueLength = pd.to_numeric(df.iloc[3], errors='coerce')
         queueLengthCI = pd.to_numeric(df.iloc[4], errors='coerce')
         waitingTime = pd.to_numeric(df.iloc[7], errors='coerce')
+        waitingTimeCI = pd.to_numeric(df.iloc[8], errors='coerce')
 
         plt.figure(1)
         plt.errorbar(k, responseTime , yerr=responseTimeCI, fmt="--x", markeredgecolor='red', linewidth=0.8, capsize=4, label = 't= ' + str(t[i]))
@@ -51,7 +51,7 @@ for i in range(len(t)):
 
         plt.figure(10-i)
         plt.bar(k, responseTime, yerr=responseTimeCI, width=0.05, capsize=4, label='E[R]@t=' + str(t[i]) )
-        plt.bar(k, waitingTime, width=0.05, label='E[W]@t=' + str(t[i]))
+        plt.bar(k, waitingTime, yerr=waitingTimeCI, width=0.05,capsize=4, label='E[W]@t=' + str(t[i]))
         plt.xlabel('Interarrival Time [s]')
         plt.ylabel('Time [s]')
         plt.ticklabel_format(axis='x', style='sci')
