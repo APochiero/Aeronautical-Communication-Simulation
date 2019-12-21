@@ -65,7 +65,7 @@ def computeSampleVariance(df, name, repetition):
 def main():
     parser = argparse.ArgumentParser(description='Compute Mean Values')
     parser.add_argument('dirPath', help='path of dir containing .csv files')
-    parser.add_argument('rep', type=int, help='repetition')
+    parser.add_argument('--rep', type=int, help='repetition', default=30)
     parser.add_argument('t', help='value of t ( check handover period)')
     parser.add_argument('distr', help='type of arrival distribution ( const or exp )')
 
@@ -74,7 +74,7 @@ def main():
     path = str(args.dirPath)
     columnsNames = ['K = ' + str(x) + 's' for x in k ]
     # Names of result's rows
-    rowNames = ['Service Time Mean', 'Service Time Var', 'Queue Length Mean', 'Queue Length CI', 'Response Time Mean', 'Response Time CI', 'Waiting Time Mean']
+    rowNames = ['Service Time Mean', 'Service Time Var', 'Queue Length Mean', 'Queue Length CI', 'Response Time Mean', 'Response Time CI', 'Waiting Time Mean', 'Waiting Time CI']
     result = pd.DataFrame([])
     for h in range(len(k)):
         data = loadData(path + '/K' + str(k[h]) + 's', repetition )
@@ -91,7 +91,7 @@ def main():
                 var = computeAvgVariance(stat, nameOrder[i], repetition)
                 statList.append(var)
 
-            if  nameOrder[i] == 'responseTime' or nameOrder[i] == 'queueLength':
+            if  nameOrder[i] == 'responseTime' or nameOrder[i] == 'queueLength' or nameOrder[i] == 'waitingTime':
                 stat = data[data.columns[pd.Series(data.columns).str.startswith(nameOrder[i])]]
                 sampleVariance = computeSampleVariance(stat, nameOrder[i], repetition)
                 # 99% CI
