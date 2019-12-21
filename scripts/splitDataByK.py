@@ -12,22 +12,21 @@ nameOrder = ['serviceTime', 'queueLength', 'responseTime', 'waitingTime']
 nameOrderTime = [ 'time', 'serviceTime', 'time', 'queueLength', 'time', 'responseTime', 'time', 'waitingTime']
 
 # Values of k in th csv file
-# k = [0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 2.0, 3.0, 5.0, 10.0]
-k = [0.7]
+k = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2]
+
 
 def main():
     parser = argparse.ArgumentParser(description='Split Data by K')
     parser.add_argument('path', help='path of .csv file to be splitted')
-    parser.add_argument('rep', type=int, help='repetition')
-    parser.add_argument('kst', type=bool, help='keep simTime columns')
+    parser.add_argument('--rep', type=int, help='repetition', default=30)
+    parser.add_argument('--keepSimTime', help='keep simTime columns', action='store_true')
 
     args = parser.parse_args()
     repetition = args.rep
-    keepSimTime = args.kst 
+    keepSimTime = args.keepSimTime 
     path = str(args.path)[:-4]
     with open(path + '.csv') as file:
         df = pd.read_csv( file, nrows = 10)
-
         
         # Test if csv file has the expected number of columns 
         if not 2*len(nameOrder)*len(k)*repetition == len(df.columns):
