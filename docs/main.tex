@@ -132,15 +132,15 @@ $L$ is a shortcut to indicate $M \cdot n$, where $n$ is the number of BSs that l
 Each AC selects only one BS at a time as its serving BS, and can transmit only one packet at a time.
 Possibly, packets are backlogged in a queue on the AC.
 
-ACs execute the handover procedure every $t$ seconds, accordingly with the following algorithm:
-\begin{verbatim}
-if (serving BS is the closest one) then
-  do nothing
-else
-  select closest BS as serving BS
-  pause transmissions for penalty time (p)
-endif
-\end{verbatim}
+ACs execute the handover procedure every $t$ seconds, pausing transmissions for $p$ seconds as a penalty for this operation.%accordingly with the following algorithm:
+%\begin{verbatim}
+%if (serving BS is the closest one) then
+%  do nothing
+%else
+%  select closest BS as serving BS
+%  pause transmissions for penalty time (p)
+%endif
+%\end{verbatim}
 
 \section{Objectives}
 Minimize end to end delay between AC and CT, using the maximum packet interarrival frequency, without destabilizing queues in the system.
