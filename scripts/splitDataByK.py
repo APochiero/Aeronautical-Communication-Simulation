@@ -14,7 +14,6 @@ nameOrderTime = [ 'time', 'serviceTime', 'time', 'queueLength', 'time', 'respons
 # Values of k in th csv file
 k = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2]
 
-
 def main():
     parser = argparse.ArgumentParser(description='Split Data by K')
     parser.add_argument('path', help='path of .csv file to be splitted')
