@@ -31,6 +31,9 @@
 \usepackage{forest,array}
 \usetikzlibrary{shadows}
 
+% Data packages
+\usepackage{csvsimple}
+
 % Graphs styles
 \forestset{
   giombatree/.style={
@@ -82,7 +85,6 @@
 % Landscape format pdf pagess
 \usepackage{pdflscape}
 
-
 \begin{document}
 \pagenumbering{gobble}
 
@@ -132,48 +134,34 @@ $L$ is a shortcut to indicate $M \cdot n$, where $n$ is the number of BSs that l
 Each AC selects only one BS at a time as its serving BS, and can transmit only one packet at a time.
 Possibly, packets are backlogged in a queue on the AC.
 
-ACs execute the handover procedure every $t$ seconds, pausing transmissions for $p$ seconds as a penalty for this operation.%accordingly with the following algorithm:
-%\begin{verbatim}
-%if (serving BS is the closest one) then
-%  do nothing
-%else
-%  select closest BS as serving BS
-%  pause transmissions for penalty time (p)
-%endif
-%\end{verbatim}
+ACs execute the handover procedure every $t$ seconds, pausing transmissions for $p$ seconds as a penalty for this operation.
 
-\section{Objectives}
-Minimize end to end delay between AC and CT, using the maximum packet interarrival frequency, without destabilizing queues in the system.
+\subsection{Objectives}
+Study the end to end delay between AC and CT, and the queue length.
 
-\section{Performance Indexes}
+\subsection{Performance Indexes}
 \begin{itemize}
-  \item response time
   \item queue length
+  \item waiting time
+  \item response time
 \end{itemize}
 
-\section{Scenario}
+\subsection{Scenario}
 \begin{itemize}
   \item \textbf{k}: it represents the interarrival time of packets;
   \item \textbf{d}: it represents the distance between AC and BS;
   \item \textbf{s}: it represents the service time of a packet, and is given by $s = T \cdot d^{2}$;
-  \item \textbf{T}: it is a tuning parameter for service time, whose value is costant for every AC in the system;
   \item \textbf{t}: it represents the handover period;
-  \item \textbf{p}: it represents the handover penalty;
 \end{itemize}
 
 \section{Calibration}
-% TODO Roberto 3.1.1 -- Parameter analysis
-% and always respect the stability condition
-%\texttt{TODO scrivere qui perché abbiamo scelto M=25km, T=4.3e-9 eccetera, vedere Parametri.xlsx}
 Parameters of simulator have been chosen in order to comply with reality as much as possible.
 \begin{itemize}
   \item \textbf{M}: it represents the distance between two consecutive BS on the same row, or column, and it is fixed at 25 km;
   \item \textbf{v}: it represents the speed of an AC, and is fixed at 236 m/s;
+  \item \textbf{T}: it is a costant used to keep the service time in a reasonable range, and has been chosen to be $4.3 \times 10^{-9} \frac{s}{m^2}$;
+  \item \textbf{p}: it represents the penalty time spent to perform an handover, and has been chosen to be $2s$;
 \end{itemize}
-Moreover, we would like to check for an handover neither when the AC is too close to a cell edge, nor when it is too far.
-Fixing these values at a reasonable distance of 1km and 4km, and dividing the interval in 5 chunks, we find these possible values for $t$: $\left\{4.24s, 7.42s, 10.59s, 13.77s, 16.95s\right\}$.
-
-
 
 \section{Model}
 The ACS can be modeled with the following system from queueing theory.
@@ -231,9 +219,11 @@ At this point, we are confident that the code for our simulator is correctly mod
 \subsection{Warm-Up study}
 At the beginning of the simulation, the system could not be stable, and statistics recorded during this period of time produce meaningless results.
 Thus, we measured the end to end delay of the system by stressing it with small interarrival time of $k=0.5$, running 20 independent simulations, and smoothing the value using a moving average with a window of 20k samples.
+% k = 0.5, t = 16.95, p = 1 -- stress?
 
 \begin{figure}[H]
-  \includegraphics{img/warmup-study.pdf}
+  \centering
+  \includegraphics[width=.6\textwidth]{img/warmup-study.pdf}
   \caption{Warmup study}
   \label{fig:warmup-study}
 \end{figure}
@@ -356,8 +346,14 @@ Then we compared the samples with our theoretical computations, and, as we can s
 \end{figure}
 
 \subsection{Single-BS distance distribution computation}
-Using results from Section~\ref{sec:singlebs-ddc}, we ran 30 independent simulations and sampled distance and service time.
-Then we compared the samples distributions with our theoretical distributions using QQ plots.
+\subsubsection{M/D/1}
+We ran 30 independent simulations, keeping the AC at a fixed distance from a BS, and sampled the performance indexes.
+Then, we compared them with those computed using queueing theory.
+
+\subsubsection{M/G/1}
+We ran 30 independent simulations, and sampled distance and the performance indexes.
+
+Using results from Section~\ref{sec:singlebs-ddc}, we compared the samples of distance and service time with our theoretical distributions using QQ plots.
 
 \begin{figure}[H]
   \centering
@@ -379,14 +375,53 @@ Then we compared the samples distributions with our theoretical distributions us
   \label{fig:qqplots}
 \end{figure}
 
-As we can see from Figure~\ref{fig:qqplots}, this experiment confirmed the validity of our simulator.
+Once asserted the validity of the distribution, as can be seen in Figure~\ref{fig:qqplots}, we compared the measured performance indexes with those computed using queueing theory.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{img/MD1-error.pdf}
+    \caption{M/D/1}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{0.45\textwidth}
+    \includegraphics[width=\textwidth]{img/MG1-error.pdf}
+    \caption{M/G/1}
+  \end{subfigure}
+  \caption{Measured and theoretical performance indexes error}
+  \label{fig:perf-index-error}
+\end{figure}
+
+As we can see in Figure~\ref{fig:perf-index-error}, errors are small compared to the expected values, except for those closer to smaller interarrival time $k$, when the system tends to be less stable.
+
+As we can see, this experiment confirmed the validity of our simulator.
 
 \subsection{Handover convenience}
 Using results from Section~\ref{sec:handover-convenience}, we ran 10 independent simulations which always complied with the expected results.
 This experiment confirmed the validity of our simulator.
 
 \section{Experiments}
-% TODO da fare dopo che il simulatore sarà stato correttamente validato
-% TODO steady sate probability: ci serve un warmup time? Roberto 4.1, figura 8
+Once validated the simulator, experiments were carried out, in order to study the system performances, for what concerns the end-to-end delay of packets delivery, and the queues length.
+
+For every parameter, we run 30 independent simulations.
+
+\begin{figure}[H]
+  \centering
+  \begin{tabular}{| c | c | c | c |}\hline
+    \multicolumn{2}{|c|}{parameter} & values & unit \\ \hline
+    interarrival time & \texttt{k} & \texttt{\{ 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2 \}} & s \\ \hline
+    handover period & \texttt{t} & \texttt{\{ 4.24, 7.42, 10.59, 13.77, 16.95 \}} & s \\ \hline
+  \end{tabular}
+\end{figure}
+
+More in detail:
+\begin{itemize}
+  \item we would like to have an AC produce its position at most every 2 s, for air traffic control necessities.
+  We analyzed $k$ values with a lower bound of 0.5 because, at that edge, it started to become unstable due to very high utilization $\rho$;
+  \item we would like to check for an handover neither when the AC is too close to a cell edge, nor when it is too far.
+  Fixing these values at a reasonable distance of 1km and 4km, and dividing the interval in 5 chunks, we found the values for $t$;
+\end{itemize}
+
+\section{Conclusions}
 
 \end{document}
