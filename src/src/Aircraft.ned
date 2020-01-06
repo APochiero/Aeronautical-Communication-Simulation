@@ -20,22 +20,26 @@ module Aircraft
 {
     parameters:
         // TODO
-	   	@display("i=device/cellphone_s");
-	   	int nBS;
-    	int rows;
-    	int cols;
-    	int M;
-    	double t @unit(s);
-    	double k @unit(s);
-    	double T;
-    	double p @unit(s); 
-	gates:
-	    output out[nBS];
+        @display("i=device/cellphone_s;bgb=165,80");
+        int nBS;
+        int rows;
+        int cols;
+        int M;
+        double t @unit(s);
+        double k @unit(s);
+        double T;
+        double p @unit(s);
+    gates:
+        output out[nBS];
     submodules:
-        mobility: <> like IMobility;
-        transmitter: Transmitter;
+        mobility: <> like IMobility {
+            @display("p=131,32");
+        }
+        transmitter: Transmitter {
+            @display("p=50,32");
+        }
     connections:
-    	for i=0..nBS-1 {
-    		transmitter.out[i] --> out[i];
-    	}
+        for i=0..nBS-1 {
+            transmitter.out[i] --> out[i];
+        }
 }
