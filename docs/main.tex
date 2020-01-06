@@ -4,7 +4,7 @@
 \usepackage{setspace}
 
 % Larger borders -- we do not want do waste paper, even if it is only paper on screen =)
-\usepackage[top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 % Remove auto indentation of paragraphs.
 \setlength\parindent{0pt}
 
@@ -31,8 +31,6 @@
 \usepackage{forest,array}
 \usetikzlibrary{shadows}
 
-% Data packages
-\usepackage{csvsimple}
 
 % Graphs styles
 \forestset{
@@ -117,7 +115,7 @@
 \pagenumbering{arabic}
 
 \section{Introduction}
-\projectname{} is a cummunication system between aircrafts (AC) and a control tower (CT).
+\projectname{} is a communication system between aircrafts (AC) and a control tower (CT).
 Connection between AC and CT is provided by ground base stations (BS), which are deployed over a grid, at a distance M from neighbors.
 
 \begin{figure}[H]
@@ -137,22 +135,8 @@ Possibly, packets are backlogged in a queue on the AC.
 ACs execute the handover procedure every $t$ seconds, pausing transmissions for $p$ seconds as a penalty for this operation.
 
 \subsection{Objectives}
-Study the end to end delay between AC and CT, and the queue length.
-
-\subsection{Performance Indexes}
-\begin{itemize}
-  \item queue length
-  \item waiting time
-  \item response time
-\end{itemize}
-
-\subsection{Scenario}
-\begin{itemize}
-  \item \textbf{k}: it represents the interarrival time of packets;
-  \item \textbf{d}: it represents the distance between AC and BS;
-  \item \textbf{s}: it represents the service time of a packet, and is given by $s = T \cdot d^{2}$;
-  \item \textbf{t}: it represents the handover period;
-\end{itemize}
+Study the end to end delay between AC and CT and the queue length varying the interarrival time of packet \textbf{k} and the handover period \textbf{t}, knowing that 
+the service time is given by $s = T \cdot d^{2}$, where \textbf{d} is the distance between AC and the BS to which it is connected.
 
 \section{Calibration}
 Parameters of simulator have been chosen in order to comply with reality as much as possible.
@@ -163,23 +147,23 @@ Parameters of simulator have been chosen in order to comply with reality as much
   \item \textbf{p}: it represents the penalty time spent to perform an handover, and has been chosen to be $2s$;
 \end{itemize}
 
-\section{Model}
-The ACS can be modeled with the following system from queueing theory.
+% \section{Model}
+% The ACS can be modeled with the following system from queueing theory.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics{img/model.pdf}
-  \caption{M/G/1 system for ACS}
-  \label{fig:model}
-\end{figure}
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics{img/model.pdf}
+%   \caption{M/G/1 system for ACS}
+%   \label{fig:model}
+% \end{figure}
 
 \section{Simulator}
 \subsection{Software}
 Simulator has been coded in C++ using the OMNeT++ environment and the INET framework.
 \begin{figure}[H]
   \centering
-  \includegraphics{img/aircraft-ned.png}
-  \caption{Module structure of Aircraft}
+  \includegraphics[scale=0.7]{img/Implementation.png}
+  \caption{Communication Structure on Omnet++}
   \label{fig:aircraft-ned}
 \end{figure}
 % TODO inserire qui descrizione del disegnino del modulo AC, con dentro Transmitter e Mobility Module
@@ -202,7 +186,7 @@ In order to verify the correctness of our code, we recorded the service time for
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{img/verification-via-service-time.pdf}
+  \includegraphics[scale=0.6]{img/verification-via-service-time.pdf}
   \caption{Service time during a test simulation}
   \label{fig:verification-via-service-time}
 \end{figure}
@@ -323,16 +307,6 @@ $$
 
 This result can be used to validate our simulator.
 
-\subsection{Handover convenience}
-\label{sec:handover-convenience}
-Last test was on the handover convenience: it is straightforward that we want
-
-$$ s[t] \geq s[t + 1] $$
-
-for each $t, t + 1$ such that and handover has been performed in between, eg. service time never increases after an handover.
-
-This result can be used to validate our simulator.
-
 \section{Validation experiments}
 \subsection{Maximum distance considerations}
 Using results from Section~\ref{sec:max-distance-considerations}, we ran 10 independent simulations, with 5 different handover periods $t$, and sampled maximum distance.
@@ -340,7 +314,7 @@ Then we compared the samples with our theoretical computations, and, as we can s
 % for all the measurements, see DistanceValidation.xlsx
 \begin{figure}[H]
   \centering
-  \includegraphics{img/dmax-validation.pdf}
+  \includegraphics[scale=0.8]{img/dmax-validation.pdf}
   \caption{Maximum distance sampled between an AC and the connected BS [m]}
   \label{fig:dmax-validation}
 \end{figure}
@@ -348,7 +322,7 @@ Then we compared the samples with our theoretical computations, and, as we can s
 \subsection{Single-BS distance distribution computation}
 \subsubsection{M/D/1}
 We ran 30 independent simulations, keeping the AC at a fixed distance from a BS, and sampled the performance indexes.
-Then, we compared them with those computed using queueing theory.
+Then, we compared them with those computed using Pollaczek and Khinchin’s formula.
 
 \subsubsection{M/G/1}
 We ran 30 independent simulations, and sampled distance and the performance indexes.
@@ -375,17 +349,17 @@ Using results from Section~\ref{sec:singlebs-ddc}, we compared the samples of di
   \label{fig:qqplots}
 \end{figure}
 
-Once asserted the validity of the distribution, as can be seen in Figure~\ref{fig:qqplots}, we compared the measured performance indexes with those computed using queueing theory.
+Once asserted the validity of the distribution, as can be seen in Figure~\ref{fig:qqplots}, we compared the measured performance indexes with those computed using PK's formula.
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{img/MD1-error.pdf}
+  \begin{subfigure}[b]{0.40\textwidth}
+    \includegraphics[width=\textwidth]{img/MD1.pdf}
     \caption{M/D/1}
   \end{subfigure}
   ~
-  \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{img/MG1-error.pdf}
+  \begin{subfigure}[b]{0.40\textwidth}
+    \includegraphics[width=\textwidth]{img/MG1.pdf}
     \caption{M/G/1}
   \end{subfigure}
   \caption{Measured and theoretical performance indexes error}
@@ -397,7 +371,12 @@ As we can see in Figure~\ref{fig:perf-index-error}, errors are small compared to
 As we can see, this experiment confirmed the validity of our simulator.
 
 \subsection{Handover convenience}
-Using results from Section~\ref{sec:handover-convenience}, we ran 10 independent simulations which always complied with the expected results.
+\label{sec:handover-convenience}
+Last test was on the handover convenience: it is straightforward that we want
+
+$$ s[t] \geq s[t + 1] $$
+
+for each $t, t + 1$ such that and handover has been performed in between, eg. service time never increases after an handover. We ran 10 independent simulations which always complied with the expected results.
 This experiment confirmed the validity of our simulator.
 
 \section{Experiments}

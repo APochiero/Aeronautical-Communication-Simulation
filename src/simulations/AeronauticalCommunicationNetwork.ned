@@ -15,9 +15,9 @@
 
 package aeronauticalcommunicationsimulator.simulations;
 
-import aeronauticalcommunicationsimulator.Aircraft; 
-import aeronauticalcommunicationsimulator.ControlTower; 
-import aeronauticalcommunicationsimulator.BaseStation; 
+import aeronauticalcommunicationsimulator.Aircraft;
+import aeronauticalcommunicationsimulator.ControlTower;
+import aeronauticalcommunicationsimulator.BaseStation;
 
 
 import inet.visualizer.integrated.IntegratedVisualizer;
@@ -30,28 +30,29 @@ network AeronauticalCommunicationNetwork
         int nBS;
         string interarrivalDistribution = default("exponential");
         @display("bgb=100000,100000,white;");
-//        @display("bgb=25000,25000,white;");
-        submodules:
-        aircraft[nAircrafts]: Aircraft;
+    //        @display("bgb=25000,25000,white;");
+    submodules:
+        aircraft[nAircrafts]: Aircraft {
+            @display("p=25401.016,27401.096");
+        }
         bs[nBS]: BaseStation {
-	    	@display("i=device/antennatower_s"); 
-//	    	@display("p=12500, 12500");   
-	    	@display("p=12500,12500,m,4,25000,25000");      
-        };
+            @display("i=device/antennatower_s;p=25401.016,49801.992");
+            //	    	@display("p=12500, 12500");   
+            @display("p=12500,12500,m,4,25000,25000");
+        }
         controlTower: ControlTower { // utile per collezionare statistiche sull'intero sistema
-	    	@display("i=device/mainframe");   
-        };         
+            @display("i=device/mainframe");
+        }
         visualizer: IntegratedVisualizer {
             parameters:
                 @display("p=100,50");
         }
-      
-     connections:
-         for i=0..nAircrafts-1, for j=0..nBS-1 {
-    		aircraft[i].out[j] --> {@display("ls=,0");} -->  bs[j].in[i];
-//    		aircraft[i].out[j] -->  bs[j].in[i];
-         }
-         for i=0..nBS-1 {
-         	bs[i].out --> controlTower.in[i];
-         }
+
+    connections:
+        for i=0..nAircrafts-1, for j=0..nBS-1 {
+            aircraft[i].out[j] --> { @display("ls=,0"); } --> bs[j].in[i];
+        }
+        for i=0..nBS-1 {
+            bs[i].out --> controlTower.in[i];
+        }
 }
