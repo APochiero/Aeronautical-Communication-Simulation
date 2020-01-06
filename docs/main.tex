@@ -422,6 +422,28 @@ More in detail:
   Fixing these values at a reasonable distance of 1km and 4km, and dividing the interval in 5 chunks, we found the values for $t$;
 \end{itemize}
 
+\subsection{First experiments}
+As we can see from graphs in Figure~\ref{fig:result-0}, the fact that interarrival time has a costant or exponential distribution only slightly changes the system behavior, at such a point that it can be ignored.
+
+Anyhow we see that both end-to-end delay and queue length highly depend on the mean interarrival time: lower mean interarrival times lead to higher delays and longer queues, while higher mean interarrival times lead to lower delays and shorter queues.
+This fact can be phisically explained with service center usage: the lower the interarrival time, the higher is the system usage, and with $k \approx 0.5s$, $\rho \approx 0.9$.
+
+Using a long handover check period allows the AC to travel further from the BS it is connected to in that moment, thus giving an higher service time, but we already put an upper bound to this value by chosing $t = 16.95s$, which corresponds to a worst case of approximately $20 km$.
+What we expected is that, with smaller handover check periods, we could improve our system's performances by finding a proper tradeoff, but graphs show that the best system performances are obtained with higher
+
+This means that the penalty time, which has a fixed value, is particularly relevant in our analysis, and is of minor influence, and almost trascurable in certain cases, only as long as $t$ is an order of magnitude bigger than $p$.
+
+\subsection{Further analysis}
+Since end to end delay graph and queue length graph have a similar shape, we thought that higher end to end delay mainly depended on waiting time (eg. time that a packet has to wait in the queue before being serviced), so we decided to further investigate and compare the amount of service time with the amount of waiting time.
+Figure~\ref{fig:result-1} clearly shows that packets spend most of their response time in the queue.
+
+So we can assert that the proper way to improve this system's performances is by lowering the waiting time over response time ratio, preferaly by lowering the waiting time.
+
+\subsection{Possible improvements}
+In order to make a quick test and confirm the validity of this intuition, we assumed, for a moment, that $p$ could be lowered from $2s$ to $1s$.
+As can be seen in Figure~\ref{fig:result-2}, behavior has a similar shape, but different magnitude, and this confirmed the intuition.
+Note that, since exponential and costant interarrival time show almost the same behavior, we investigated only the former.
+
 \begin{figure}
   \centering
   \begin{subfigure}[b]{.45\textwidth}
@@ -447,8 +469,13 @@ More in detail:
     %\caption{}
     \label{fig:exp:exp:queue}
   \end{subfigure}
-  \\
-    \begin{subfigure}[b]{.45\textwidth}
+  \caption{Results: on the left, costant interarrival time; on the right, exponential interarrival time.}
+  \label{fig:result-0}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{.45\textwidth}
     \includegraphics[width=\textwidth]{img/WaitingTimeOverResponseTimeP2Const.pdf}
     %\caption{}
     \label{fig:exp:const:wor}
@@ -459,8 +486,25 @@ More in detail:
     %\caption{}
     \label{fig:exp:exp:wor}
   \end{subfigure}
-  \caption{ToDo Caption}
-  \label{fig:exp}
+  \caption{Fraction of waiting time over reponse time}
+  \label{fig:result-1}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{.3\textwidth}
+    \includegraphics[width=\textwidth]{img/DelayP1Exp.pdf}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{.3\textwidth}
+    \includegraphics[width=\textwidth]{img/QueueLengthP1Exp.pdf}
+  \end{subfigure}
+  ~
+  \begin{subfigure}[b]{.3\textwidth}
+    \includegraphics[width=\textwidth]{img/WaitingTimeOverResponseTimeP1Exp.pdf}
+  \end{subfigure}
+  \caption{Experiments performed with a reduced waiting time}
+  \label{fig:result-2}
 \end{figure}
 
 \section{Conclusions}
