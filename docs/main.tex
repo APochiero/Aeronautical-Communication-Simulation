@@ -423,18 +423,7 @@ What we expected is that, with smaller handover check periods, we could improve 
 
 This means that the penalty time, which has a fixed value, is particularly relevant in our analysis, and is of minor influence, and almost trascurable in certain cases, only as long as $t$ is an order of magnitude bigger than $p$.
 
-\subsection{Further analysis}
-Since end to end delay graph and queue length graph have a similar shape, we thought that higher end to end delay mainly depended on waiting time (eg. time that a packet has to wait in the queue before being served), so we decided to further investigate and compare the amount of response time with the amount of waiting time.
-Figure~\ref{fig:result-1}, bars of response time in red and waiting time in various colors are overlapped, and we can clearly see that packets spend most of their response time in the queue. 
-
-So we can assert that the proper way to improve this system's performances is by lowering the waiting time over response time ratio.
-
-\subsection{Possible improvements}
-In order to make a quick test and confirm the validity of this intuition, we assumed, for a moment, that $p$ could be lowered from $2s$ to $1s$.
-As can be seen in Figure~\ref{fig:result-2}, behavior has a similar shape, but different magnitude, and this confirmed the intuition.
-Note that, since exponential and costant interarrival time show almost the same behavior, we investigated only the former.
-
-\begin{figure}
+\begin{figure}[H]
   \centering
   \begin{subfigure}[b]{.45\textwidth}
     \includegraphics[width=\textwidth]{img/DelayP2Const.pdf}
@@ -463,7 +452,13 @@ Note that, since exponential and costant interarrival time show almost the same 
   \label{fig:result-0}
 \end{figure}
 
-\begin{figure}
+\subsection{Further analysis}
+Since end to end delay graph and queue length graph have a similar shape, we thought that higher end to end delay mainly depended on waiting time (eg. time that a packet has to wait in the queue before being served), so we decided to further investigate and compare the amount of response time with the amount of waiting time.
+Figure~\ref{fig:result-1}, bars of response time in red and waiting time in various colors are overlapped, and we can clearly see that packets spend most of their response time in the queue. 
+
+So we can assert that the proper way to improve this system's performances is by lowering the waiting time over response time ratio.
+
+\begin{figure}[H]
   \centering
   \begin{subfigure}[b]{.45\textwidth}
     \includegraphics[width=\textwidth]{img/WaitingTimeOverResponseTimeP2Const.pdf}
@@ -480,7 +475,12 @@ Note that, since exponential and costant interarrival time show almost the same 
   \label{fig:result-1}
 \end{figure}
 
-\begin{figure}
+\subsection{Possible improvements}
+In order to make a quick test and confirm the validity of this intuition, we assumed, for a moment, that $p$ could be lowered from $2s$ to $1s$.
+As can be seen in Figure~\ref{fig:result-2}, behavior has a similar shape, but different magnitude, and this confirmed the intuition.
+Note that, since exponential and costant interarrival time show almost the same behavior, we investigated only the former.
+
+\begin{figure}[H]
   \centering
   \begin{subfigure}[b]{.3\textwidth}
     \includegraphics[width=\textwidth]{img/DelayP1Exp.pdf}
@@ -497,9 +497,9 @@ Note that, since exponential and costant interarrival time show almost the same 
   \label{fig:result-2}
 \end{figure}
 
-\section{ $2^kr$ Factorial Analysis}
+\section{Factorial Analysis}
 Results clearly show that interarrival time has a huge impact on our system, so we expect that performing a factorial analysis should yield the same result. 
-
+\subsection{Method}
 Our study was conducted for both constant and exponential case on the 2 requested factors, interarrival time \textbf{k} and handover period \textbf{t}, adding penalty time \textbf{p} as third factor,
 using 30 replicas.  
 
@@ -515,15 +515,18 @@ Summing up, we have $2^3*30 = 240$ configurations per case, exploring the combin
   \end{tabular}
 \end{figure}
 
-During analysis we realize that the assumptions that residuals are IID normal RVs with null mean and costant standard deviation are not meet. 
+During analysis we realize that the assumptions that residuals are IID normal RVs with null mean and costant standard deviation do not hold. 
 In detail, comparing residuals quantiles and normal quantiles leads to a qq plot with poor linear behaviour ( $R^2 = 0.6704$ ). To fix this issue, we tested 
 different transformations and the best result is achieved using the following:
 
 $$y' = log(y)$$
 
-Once the hypothesis are meet, we are sure that nonlinear regression model works and leads to the result showed in \ref{fig:faxep} and \ref{fig:faconst}
+Thus, residuals become normal IID RVs with constant standard deviation since plots of Residuals vs Average Predicted Value and Residuals Vs Experiment Number do not show any particular trend.
 
-\begin{figure}
+\subsection{Results}
+Once hypothesis are met, we are sure that nonlinear regression model works and leads to the result showed in \ref{fig:faxep} and \ref{fig:faconst}
+
+\begin{figure}[H]
   \centering
   \begin{subfigure}[b]{.45\textwidth}
     \includegraphics[width=\textwidth]{img/FactorAnalysisResponseTimeEXP.pdf}
@@ -536,7 +539,7 @@ Once the hypothesis are meet, we are sure that nonlinear regression model works 
   \label{fig:faexp}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
   \centering
   \begin{subfigure}[b]{.45\textwidth}
     \includegraphics[width=\textwidth]{img/FactorAnalysisResponseTimeCONST.pdf}
@@ -548,6 +551,22 @@ Once the hypothesis are meet, we are sure that nonlinear regression model works 
   \caption{Factorial analysis on response time and queue length of case constant }
   \label{fig:faconst}
 \end{figure}
+
+It is pretty clear that varying the interarrival time leads to huge changes in both response time and queue length, while other factors are not so relevant as the first one.
+Interplays are almost not present, except for the queue length of the constant interarrival time distribution case. The latter could be attributed to the fact that some factors' combinations
+leads to $E[N_q] = 0$, i.e. :
+
+\begin{figure}[H]
+  \centering
+  \begin{tabular}{| c | c | c | c |}\hline
+    p & t & k & unit\\ \hline
+    1 & 4.24 & 2 & s \\ \hline
+    1 & 16.95 & 2 & s \\ \hline
+    2 & 16.95 & 2 & s \\ \hline
+  \end{tabular}
+\end{figure}
+
+For example, if we change $ t = 4.24s , k = 0.5s $ to $ t = 16.95s , k = 2s $, then $E[N_q]$ goes from $ \sim 55 $ to $0$ for $ p = 1s $ and from $\sim 160 $ to $0$ for $ p = 2 $, then $7.8815\%$ of t,k interplay is justified. 
 
 \section{Conclusions}
 
