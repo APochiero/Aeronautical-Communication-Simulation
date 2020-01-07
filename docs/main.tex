@@ -177,7 +177,9 @@ Simulator has been coded in C++ using the OMNeT++ environment and the INET frame
   \end{subfigure}
 \end{figure}
 Transmitter implements the behaviour of AC described in \ref{Introduction}. Base Stations are only responsible for delivering packets to the control tower,
-this communication is assumed to be instantaneous.  
+this communication is assumed to be instantaneous.
+Regarding randomness, mobility module and the exponential interarrival time have their own stream of random numbers.
+Moreover, repetitions are made independent by setting seeds of random generators equals to the repetition number. 
 
 \subsection{Movement of AC}
 Movement of AC is given by the following algorithm, implemented using the \texttt{TurtleMobility} module from INET:
@@ -524,7 +526,7 @@ $$y' = log(y)$$
 Thus, residuals become normal IID RVs with constant standard deviation since plots of Residuals vs Average Predicted Value and Residuals Vs Experiment Number do not show any particular trend.
 
 \subsection{Results}
-Once hypothesis are met, we are sure that nonlinear regression model works and leads to the result showed in \ref{fig:faxep} and \ref{fig:faconst}
+Once hypothesis are met, we are sure that nonlinear regression model works and leads to the result showed in \ref{fig:faexp} and \ref{fig:faconst}
 
 \begin{figure}[H]
   \centering
