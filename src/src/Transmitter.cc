@@ -103,6 +103,7 @@ void Transmitter::handleMessage(cMessage *msg)
 /* in order to avoid that all ACs transmitters are synced (that is not possible in a real scenario) */
 void Transmitter::handleDesync(cMessage* msg) {
     EV_INFO << "==> Desync" << endl;
+    delete msg;
 
     // Send first packet
     AircraftPacket* ap = new AircraftPacket("AircraftPacket");
@@ -111,11 +112,9 @@ void Transmitter::handleDesync(cMessage* msg) {
     queue.insert(ap);
     sendPacket();
 
-//     first packet generated
+    // first packet generated
     scheduleArrival(new cMessage("packetArrival"));
-//    scheduleAt(simTime() + uniform(0, 1), new cMessage("sampleDistance"));
     scheduleAt(simTime() + t, new cMessage("checkHandover")); // start handover period
-    delete msg;
 }
 
 void Transmitter::handleSampleDistance(cMessage *msg) {
