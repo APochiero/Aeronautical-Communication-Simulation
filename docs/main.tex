@@ -503,10 +503,17 @@ Note that, since exponential and costant interarrival time show almost the same 
 At this point, we can assert that a good tradeoff between the refresh rate of AC's state and end to end delay is obtained with $t=16.95s$ and $k \geq 1$.
 The most reasonable value for $k$ has to be chosen by a flight expert.
 
-The fact that the best $t$ is equal to a test parameter edge is due to the fact that the $t$ limit was chosen during the calibration (Section~\ref{sec:calibration}) in order to avoid obviously bad conditions.
-In order to be completely sure of the validity of this early prediction, we decided to quickly test the system with some bigger values for $t$, and discovered that these values leaded to indistinguishable (eg. with overlapping confidence intervals) results, both for end to end delay and queue length, as we can see in \ref{fig:result-3}. Besides, for high values of $t$, mean delay and queue length begin to increase due to high service time when AC is very far away from serving BS.
+The fact that the best $t$ is equal to a test parameter edge is due to the fact that the $t$ limit was chosen during the calibration (Section~\ref{sec:calibration}) in order to avoid obviously bad conditions: in a real communication system, where packet loss has to be considered, AC should not be able to go so far away to serving BS in order to maintain a stable connection.
+\\
+\\
+In order to be completely sure of the validity of this early prediction, we decided to quickly test the system, at least in the exponential case, with some bigger values for $t$, and discovered that these values leaded to indistinguishable (eg. with overlapping confidence intervals) results, both for end to end delay and queue length, as we can see in Figure~\ref{fig:result-3}. Besides, for high values of $t$, mean delay and queue length begin to increase due to high service time when AC is very far away from serving BS.
 
-Furthermore, in a real communication system, where packet loss has to be consider, AC should not be able to go so far away to serving BS in order to maintain a stable connection. For this reason we decided in section \ref{sec:calibration} to consider only such values of $t$.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.6\textwidth]{img/WaitingTimeOverResponseTimeHighT.pdf}
+  \caption{Experiment result with high values of $t$}
+  \label{fig:result-3}
+\end{figure}
 
 \section{Factorial Analysis}
 Results clearly show that interarrival time has a huge impact on our system, so we expect that performing a factorial analysis should yield the same result.
