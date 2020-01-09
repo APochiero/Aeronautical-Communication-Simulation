@@ -24,12 +24,10 @@ INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\geometry\geomet
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\geometry\geometry.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\keyval.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\keyval.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\iftex\ifvtex.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\iftex\ifvtex.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\iftex\iftex.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\iftex\iftex.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\geometry\geometry.cfg
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\geometry\geometry.cfg
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\mathtools\mathtools.sty
@@ -237,6 +235,10 @@ INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3kernel\expl3.
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3kernel\expl3.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3kernel\expl3-code.tex
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3kernel\expl3-code.tex
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\nul:.tex
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\nul:.tex
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\nul:.tex
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\nul:.tex
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmr10.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmr10.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmr10.tfm
@@ -249,10 +251,10 @@ INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmr10
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmr10.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\unicode-data\UnicodeData.txt
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\unicode-data\UnicodeData.txt
-INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\nul:.tex
-INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\nul:.tex
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3kernel\l3pdfmode.def
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3kernel\l3pdfmode.def
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3kernel\l3deprecation.def
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3kernel\l3deprecation.def
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3backend\l3backend-pdfmode.def
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\l3backend\l3backend-pdfmode.def
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\inlinedef\inlinedef.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\inlinedef\inlinedef.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\tools\array.sty
@@ -266,63 +268,56 @@ INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\pgf\libraries
 OUTPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.pdf
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hobsub\hobsub-hyperref.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hobsub\hobsub-hyperref.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hobsub\hobsub-hyperref.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\ltxcmds\ltxcmds.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\ltxcmds\ltxcmds.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\pdftexcmds\pdftexcmds.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\pdftexcmds\pdftexcmds.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\iftex\iftex.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\iftex\iftex.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\kvsetkeys.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\kvsetkeys.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\etexcmds.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\etexcmds.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\ifluatex.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\kvdefinekeys.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\kvdefinekeys.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\pdfescape.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\pdfescape.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\hycolor.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\hycolor.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\xcolor-patch.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\xcolor-patch.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\infwarerr\infwarerr.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\infwarerr\infwarerr.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\kvsetkeys\kvsetkeys.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\kvdefinekeys\kvdefinekeys.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\kvdefinekeys\kvdefinekeys.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\pdfescape\pdfescape.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hycolor\hycolor.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hycolor\hycolor.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hycolor\xcolor-patch.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hycolor\xcolor-patch.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\hopatch.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\hopatch.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\letltxmacro.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\letltxmacro.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\auxhook.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\letltxmacro\letltxmacro.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\letltxmacro\letltxmacro.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\auxhook\auxhook.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\auxhook\auxhook.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\kvoptions\kvoptions.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\kvoptions\kvoptions.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\intcalc.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\intcalc.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\intcalc\intcalc.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\intcalc\intcalc.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\etexcmds\etexcmds.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\etexcmds\etexcmds.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\url\url.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\url\url.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\bitset.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\bitset.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\bigintcalc.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\bigintcalc.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\atbegshi.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\atbegshi.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\bitset\bitset.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\bitset\bitset.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\bigintcalc\bigintcalc.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\bigintcalc\bigintcalc.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\atbegshi\atbegshi.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\atbegshi\atbegshi.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\atveryend.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\atveryend.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\uniquecounter.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\uniquecounter.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\pdflscape.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\pdflscape.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\atveryend\atveryend.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\atveryend\atveryend.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\rerunfilecheck\rerunfilecheck.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\rerunfilecheck\rerunfilecheck.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\uniquecounter\uniquecounter.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\pdflscape\pdflscape.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\pdflscape\pdflscape.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\lscape.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\graphics\lscape.sty
 INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.aux
@@ -330,16 +325,20 @@ INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\do
 OUTPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.aux
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\context\base\mkii\supp-pdf.mkii
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\context\base\mkii\supp-pdf.mkii
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\epstopdf-base.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\grfext.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\epstopdf-pkg\epstopdf-base.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\epstopdf-pkg\epstopdf-base.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\nameref.sty
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\hyperref\nameref.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\refcount.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\oberdiek\refcount.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\refcount\refcount.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\refcount\refcount.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\gettitlestring\gettitlestring.sty
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\generic\gettitlestring\gettitlestring.sty
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.out
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.out
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.out
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.out
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.out
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.out
 OUTPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.out
 INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\unipi.pdf
 INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\unipi.pdf
@@ -352,13 +351,9 @@ INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmcsc
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmr12.tfm
 INPUT C:\Users\nabow\AppData\Local\MiKTeX\2.9\pdftex\config\pdftex.map
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm
-OUTPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.toc
-INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\grid.pdf
-INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\grid.pdf
-INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\grid.pdf
-INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\grid.pdf
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.toc
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.toc
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm
-INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmti12.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmr8.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmr6.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmmi12.tfm
@@ -380,6 +375,12 @@ INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\tex\latex\amsfonts\umsb.f
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
+OUTPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\main.toc
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\grid.pdf
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\grid.pdf
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\grid.pdf
+INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\grid.pdf
+INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmti12.tfm
 INPUT C:\Users\nabow\AppData\Local\Programs\MiKTeX 2.9\fonts\tfm\public\cm\cmbx12.tfm
 INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\Implementation.png
 INPUT c:\Users\nabow\OneDrive\Documenti\Aeronautical Communication Simulation\docs\img\Implementation.png
