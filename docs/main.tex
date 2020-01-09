@@ -135,10 +135,11 @@ Possibly, packets are backlogged in a queue on the AC.
 ACs execute the handover procedure every $t$ seconds, pausing transmissions for $p$ seconds as a penalty for this operation.
 
 \subsection{Objectives}
-Study the end to end delay between AC and CT and the queue length varying the interarrival time of packet \textbf{k} and the handover period \textbf{t}, knowing that 
+Study the end to end delay between AC and CT and the queue length varying the interarrival time of packet \textbf{k} and the handover period \textbf{t}, knowing that
 the service time is given by $s = T \cdot d^{2}$, where \textbf{d} is the distance between AC and the BS to which it is connected.
 
 \section{Calibration}
+\label{sec:calibration}
 Parameters of simulator have been chosen in order to comply with reality as much as possible.
 \begin{itemize}
   \item \textbf{M}: it represents the distance between two consecutive BS on the same row, or column, and it is fixed at 25 km;
@@ -159,7 +160,7 @@ Parameters of simulator have been chosen in order to comply with reality as much
 
 \section{Simulator}
 \subsection{Software}
-Simulator has been coded in C++ using the OMNeT++ environment and the INET framework. As data analysis tools we used a mixture of \textit{Python Pandas} and \textit{MS Excel}. 
+Simulator has been coded in C++ using the OMNeT++ environment and the INET framework. As data analysis tools we used a mixture of \textit{Python Pandas} and \textit{MS Excel}.
 \begin{figure}[H]
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
@@ -179,7 +180,7 @@ Simulator has been coded in C++ using the OMNeT++ environment and the INET frame
 Transmitter implements the behaviour of AC described in \ref{Introduction}. Base Stations are only responsible for delivering packets to the control tower,
 this communication is assumed to be instantaneous.
 Regarding randomness, mobility module and the exponential interarrival time have their own stream of random numbers.
-Moreover, repetitions are made independent by setting seeds of random generators equals to the repetition number. 
+Moreover, repetitions are made independent by setting seeds of random generators equals to the repetition number.
 
 \subsection{Movement of AC}
 Movement of AC is given by the following algorithm, implemented using the \texttt{TurtleMobility} module from INET:
@@ -456,7 +457,7 @@ This means that the penalty time, which has a fixed value, is particularly relev
 
 \subsection{Further analysis}
 Since end to end delay graph and queue length graph have a similar shape, we thought that higher end to end delay mainly depended on waiting time (eg. time that a packet has to wait in the queue before being served), so we decided to further investigate and compare the amount of response time with the amount of waiting time.
-Figure~\ref{fig:result-1}, bars of response time in red and waiting time in various colors are overlapped, and we can clearly see that packets spend most of their response time in the queue. 
+Figure~\ref{fig:result-1}, bars of response time in red and waiting time in various colors are overlapped, and we can clearly see that packets spend most of their response time in the queue.
 
 So we can assert that the proper way to improve this system's performances is by lowering the waiting time over response time ratio.
 
@@ -499,13 +500,20 @@ Note that, since exponential and costant interarrival time show almost the same 
   \label{fig:result-2}
 \end{figure}
 
-\section{Factorial Analysis}
-Results clearly show that interarrival time has a huge impact on our system, so we expect that performing a factorial analysis should yield the same result. 
-\subsection{Method}
-Our study was conducted for both constant and exponential case on the 2 requested factors, interarrival time \textbf{k} and handover period \textbf{t}, adding penalty time \textbf{p} as third factor,
-using 30 replicas.  
+At this point, we can assert that a good tradeoff between the refresh rate of AC's state and end to end delay is obtained with $t=16.95s$ and $k \geq 1$.
+The most reasonable value for $k$ has to be chosen by a flight expert.
 
-Summing up, we have $2^3*30 = 240$ configurations per case, exploring the combinations of the following factors' extremes:
+The fact that the best $t$ is equal to a test parameter edge is due to the fact that the $t$ limit was chosen during the calibration (Section~\ref{sec:calibration}) in order to avoid obviously bad conditions.
+In order to be completely sure of the validity of this early prediction, we decided to test the system with some bigger values for $t$, and discovered that these values leaded to indistinguishable results, both for end to end delay and queue length.
+
+% TODO inserire qui immagini finali
+
+\section{Factorial Analysis}
+Results clearly show that interarrival time has a huge impact on our system, so we expect that performing a factorial analysis should yield the same result.
+\subsection{Method}
+Our study was conducted for both constant and exponential case on the 2 requested factors, interarrival time \textbf{k} and handover period \textbf{t}, adding penalty time \textbf{p} as third factor, using 30 repetitions.
+
+Summing up, we have $2^3 \times 30 = 240$ configurations per case, exploring the combinations of the following factors' extremes:
 
 \begin{figure}[H]
   \centering
@@ -517,9 +525,8 @@ Summing up, we have $2^3*30 = 240$ configurations per case, exploring the combin
   \end{tabular}
 \end{figure}
 
-During analysis we realize that the assumptions that residuals are IID normal RVs with null mean and costant standard deviation do not hold. 
-In detail, comparing residuals quantiles and normal quantiles leads to a qq plot with poor linear behaviour ( $R^2 = 0.6704$ ). To fix this issue, we tested 
-different transformations and the best result is achieved using the following:
+During analysis we realize that the assumptions that residuals are IID normal RVs with null mean and costant standard deviation do not hold.
+In detail, comparing residuals quantiles and normal quantiles leads to a qq plot with poor linear behaviour ( $R^2 = 0.6704$ ). To fix this issue, we tested different transformations and the best result is achieved using the following:
 
 $$y' = log(y)$$
 
@@ -568,8 +575,12 @@ leads to $E[N_q] = 0$, i.e. :
   \end{tabular}
 \end{figure}
 
-For example, if we change $ t = 4.24s , k = 0.5s $ to $ t = 16.95s , k = 2s $, then $E[N_q]$ goes from $ \sim 55 $ to $0$ for $ p = 1s $ and from $\sim 160 $ to $0$ for $ p = 2 $, then $7.8815\%$ of t,k interplay is justified. 
-This behaviour does not appear in other cases because mean values of those same combinations are still low but not completely null. 
+For example, if we change $ t = 4.24s , k = 0.5s $ to $ t = 16.95s , k = 2s $, then $E[N_q]$ goes from $ \sim 55 $ to $0$ for $ p = 1s $ and from $\sim 160 $ to $0$ for $ p = 2 $, then $7.8815\%$ of t,k interplay is justified.
+This behaviour does not appear in other cases because mean values of those same combinations are still low but not completely null.
+
 \section{Conclusions}
+
+
+
 
 \end{document}
