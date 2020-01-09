@@ -422,7 +422,7 @@ Anyhow we see that both end-to-end delay and queue length highly depend on the m
 This fact can be physically explained with service center usage: the lower the interarrival time, the higher is the system usage, and with $k \approx 0.5s$, $\rho \approx 0.9$.
 
 Using a long handover check period allows the AC to travel further from the BS it is connected to in that moment, thus giving an higher service time, but we already put an upper bound to this value by chosing $t = 16.95s$, which corresponds to a worst case of approximately $20 km$.
-What we expected is that, with smaller handover check periods, we could improve our system's performances by finding a proper tradeoff, but graphs show that the best system performances are obtained with higher
+What we expected is that, with smaller handover check periods, we could improve our system's performances by finding a proper trade-off, but graphs show that the best system performances are obtained with higher
 
 This means that the penalty time, which has a fixed value, is particularly relevant in our analysis, and is of minor influence, and almost trascurable in certain cases, only as long as $t$ is an order of magnitude bigger than $p$.
 
@@ -500,7 +500,7 @@ Note that, since exponential and costant interarrival time show almost the same 
   \label{fig:result-2}
 \end{figure}
 
-At this point, we can assert that a good tradeoff between the refresh rate of AC's state and end to end delay is obtained with $t=16.95s$ and $k \geq 1$.
+At this point, we can assert that a good trade-off between the refresh rate of AC's state and end to end delay is obtained with $t=16.95s$ and $k \geq 1$.
 The most reasonable value for $k$ has to be chosen by a flight expert.
 
 The fact that the best $t$ is equal to a test parameter edge is due to the fact that the $t$ limit was chosen during the calibration (Section~\ref{sec:calibration}) in order to avoid obviously bad conditions: in a real communication system, where packet loss has to be considered, AC should not be able to go so far away to serving BS in order to maintain a stable connection.
@@ -586,8 +586,12 @@ For example, if we change $ t = 4.24s , k = 0.5s $ to $ t = 16.95s , k = 2s $, t
 This behaviour does not appear in other cases because mean values of those same combinations are still low but not completely null.
 
 \section{Conclusions}
+Aeronautical Communication Systems is a communication system which keeps in contact aircrafts and control towers, using a network of base stations deployed over a grid.
+Link between aircraft and base stations has to be kept up to date performing an handover to keep the service time low.
 
+In our analysis of the system, we were able to fix a certain value for the handover check period $t$ parameter, because that is the best for the performances.
 
-
+For what concerns the interarrival time $k$, instead, a better trade-off has to be found by a flight expert, who should choose between having a fresher piece of information, but less frequently, or a less frequent piece of information but fresher.
+Suggested values for $k$ are above $1 s$ because, for lower values, end to end delay and queue length begin to be relevant.
 
 \end{document}
