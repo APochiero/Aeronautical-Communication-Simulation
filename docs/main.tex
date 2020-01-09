@@ -138,7 +138,7 @@ ACs execute the handover procedure every $t$ seconds, pausing transmissions for 
 Study the end to end delay between AC and CT and the queue length varying the interarrival time of packet \textbf{k} and the handover period \textbf{t}, knowing that
 the service time is given by $s = T \cdot d^{2}$, where \textbf{d} is the distance between AC and the BS to which it is connected.
 
-\section{Calibration}
+\subsection{Calibration}
 \label{sec:calibration}
 Parameters of simulator have been chosen in order to comply with reality as much as possible.
 \begin{itemize}
@@ -192,7 +192,6 @@ Movement of AC is given by the following algorithm, implemented using the \textt
 
 This algorithm is equivalent to \texttt{Random WayPoint}, but takes in account the possibility of a wrap around.
 
-\section{Verification}
 \subsection{Code verification}
 The simulator has been checked for bugs and memory leaks using Valgrind.
 
@@ -214,10 +213,11 @@ We can see that:
 
 At this point, we are confident that the code for our simulator is correctly modeling the real world scenario, thus we can go through a more in-depth inspection by performing some validation test.
 
-\subsection{Warm-Up study}
+\section{Warm-Up study}
 At the beginning of the simulation, the system could not be stable, and statistics recorded during this period of time produce meaningless results.
 Thus, we measured the end to end delay of the system by stressing it with small interarrival time of $k=0.5$, running 20 independent simulations, and smoothing the value using a moving average with a window of 20k samples.
-% k = 0.5, t = 16.95, p = 1 -- stress?
+% k = 0.5, t = 16.95, p = 1
+From Figure~\ref{fig:warmup-study} we decided to use 10 ks as warmup time.
 
 \begin{figure}[H]
   \centering
@@ -225,8 +225,6 @@ Thus, we measured the end to end delay of the system by stressing it with small 
   \caption{Warmup study}
   \label{fig:warmup-study}
 \end{figure}
-
-From Figure~\ref{fig:warmup-study} we decided to use 10 ks as warmup time.
 
 \section{Validation tests}
 \subsection{Maximum distance considerations}
@@ -533,7 +531,7 @@ Summing up, we have $2^3 \times 30 = 240$ configurations per case, exploring the
 \end{figure}
 
 During analysis we realize that the assumptions that residuals are IID normal RVs with null mean and costant standard deviation do not hold.
-In detail, comparing residuals quantiles and normal quantiles leads to a qq plot with poor linear behaviour ( $R^2 = 0.6704$ ). To fix this issue, we tested different transformations and the best result is achieved using the following:
+In detail, comparing residuals quantiles and normal quantiles leads to a qq plot with poor linear behaviour ( $R^2 = 0.67$ ). To fix this issue, we tested different transformations and the best result is achieved using the following:
 
 $$y' = log(y)$$
 
