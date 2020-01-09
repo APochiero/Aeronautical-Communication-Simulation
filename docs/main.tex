@@ -170,11 +170,20 @@ Simulator has been coded in C++ using the OMNeT++ environment and the INET frame
     \label{fig:aircraft-ned}
   \end{subfigure}
   ~
-  \begin{subfigure}[b]{0.45\textwidth}
+  \begin{subfigure}[b]{.45\textwidth}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics{img/aircraft-ned.png}
+        \caption{Module structure of Aircraft}
+        \label{fig:aircraft-ned}
+    \end{subfigure}
+    \\
+    \begin{subfigure}[b]{\textwidth}
       \centering
-      \includegraphics{img/aircraft-ned.png}
-      \caption{Module structure of Aircraft}
-      \label{fig:aircraft-ned}
+      \includegraphics[width=\textwidth]{img/model.pdf}
+      \caption{M/G/1 or D/G/1 system for ACS}
+      \label{fig:model}
+    \end{subfigure}
   \end{subfigure}
 \end{figure}
 Transmitter implements the behaviour of AC described in \ref{Introduction}. Base Stations are only responsible for delivering packets to the control tower,
